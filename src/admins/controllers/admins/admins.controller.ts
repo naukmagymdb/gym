@@ -6,9 +6,4 @@ export class AdminsController {
     constructor(
         private readonly adminsService: AdminsService
     ) {}
-
-    @Get()
-    getAdminDashboard(@Request() req) {
-
-    }
 }
