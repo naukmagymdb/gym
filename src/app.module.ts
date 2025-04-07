@@ -5,6 +5,7 @@ import { IndexModule } from './index/index.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseService } from './database/database.service';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -21,7 +22,7 @@ import { DatabaseService } from './database/database.service';
       synchronize: false,
       retryAttempts: 3
     }),
-    IndexModule, UsersModule, AdminsModule
+    IndexModule, UsersModule, AdminsModule, AuthModule
   ],
   controllers: [],
   providers: [DatabaseService],

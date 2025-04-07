@@ -1,7 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Exclude, Transform } from 'class-transformer';
 
 @Entity()
 export class Visitor {
+    constructor(partial: Partial<Visitor>) {
+        Object.assign(this, partial);
+    }
+
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -27,5 +33,7 @@ export class Visitor {
     age: number;
 
     @Column({ nullable: false })
+    // @Transform(() => undefined)
+    @Exclude()
     login_password: string;
 }

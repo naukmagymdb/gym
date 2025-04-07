@@ -6,7 +6,7 @@ import { DatabaseService } from './database/database.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('gymdb');
+  app.setGlobalPrefix('gym');
 
   const databaseService = app.get(DatabaseService);
   await databaseService.initializeDatabase();

@@ -1,8 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import { Department } from "./department.entity";
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class Staff {
+    constructor(partial: Partial<Staff>) {
+        Object.assign(this, partial);
+    }
+
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -30,11 +36,11 @@ export class Staff {
     @Column({ nullable: true })
     email: string;
 
-    @Column({ nullable: false })
-    @OneToOne(() => Department, department => department.id)
+    @OneToOne(() => Department)
     @JoinColumn({ name: 'dep_id' })
     dep_id: Department;
 
     @Column({ nullable: true })
+    @Exclude()
     login_password: string;
 }

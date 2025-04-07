@@ -1,19 +1,13 @@
-import { Controller, Get, Request } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { ClassSerializerInterceptor, Controller, Get, Request, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Authenticated } from 'src/auth/utils/Authenticated';
 import { Department } from 'src/database/entities/department.entity';
-import { Staff } from 'src/database/entities/staff.entity';
-import { Visitor } from 'src/database/entities/visitor.entity';
 import { IndexService } from 'src/index/services/index/index.service';
-import { Repository } from 'typeorm';
 
 
 @Controller()
 export class IndexController {
     constructor(
-        private readonly indexService: IndexService,
-        @InjectRepository(Visitor) private visitorRepository: Repository<Visitor>,
-        @InjectRepository(Staff) private staffRepository: Repository<Staff>,
-        @InjectRepository(Department) private departmentRepository: Repository<Department>
+        private readonly indexService: IndexService
     ) { }
 
     @Get()
@@ -22,16 +16,9 @@ export class IndexController {
         return await this.indexService.getDashboard(role, id);
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get('test')
     async testFunc() {
-        const visitors = await this.visitorRepository.find();
-        const departments = await this.departmentRepository.find();
-        const staff = await this.staffRepository.find();
-
-        return {
-            visitors: visitors,
-            departments: departments,
-            staff: staff
-        }
+        return await this.indexService.testFunc();
     }
 }
