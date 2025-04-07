@@ -8,18 +8,20 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './utils/LocalStrategy';
 import { AdminsService } from 'src/admins/services/admins/admins.service';
 import { UsersService } from 'src/users/services/users/users.service';
+import { SessionSerializer } from './utils/SessionSerializer';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Visitor, Staff]),
-    PassportModule
+    PassportModule.register({ session: true })
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
     LocalStrategy,
     AdminsService,
-    UsersService
+    UsersService,
+    SessionSerializer
   ]
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -5,6 +5,7 @@ import { Department } from 'src/database/entities/department.entity';
 import { Staff } from 'src/database/entities/staff.entity';
 import { Visitor } from 'src/database/entities/visitor.entity';
 import { UsersService } from 'src/users/services/users/users.service';
+import { Role } from 'src/auth/utils/role.enum';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -17,11 +18,11 @@ export class IndexService {
         @InjectRepository(Department) private departmentRepository: Repository<Department>
     ) { }
 
-    getDashboard(role: string, id) {
-        if (role === 'admin') {
-            return this.adminsService.getAdminDashboard(id);
+    getDashboard(role: Role, phone: string) {
+        if (role === 'user') {
+            return this.usersService.getUserDashboard(phone);
         } else {
-            return this.usersService.getUserDashboard(id);
+            return this.adminsService.getAdminDashboard(phone, role);
         }
     }
 

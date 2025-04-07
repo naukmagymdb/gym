@@ -8,7 +8,7 @@ import { Request } from "express";
 export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private readonly authService: AuthService) {
         super({
-            usernameField: 'phone_num',
+            usernameField: 'phone',
             passReqToCallback: true
         });
     }
@@ -20,6 +20,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         if (!logged) {
             throw new UnauthorizedException();
         }
-        return logged;
+
+        return {
+            role,
+            ...logged
+        };
     }
 }

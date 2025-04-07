@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
-import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { TypeormStore } from 'connect-typeorm';
+import { Session } from './entities/session.entity';
 
 @Injectable()
 export class DatabaseService {
-    constructor(@InjectDataSource() private readonly dataSource: DataSource) { }
+    constructor(
+        @InjectDataSource() private readonly dataSource: DataSource,
+        @InjectRepository(Session) private sessionRepository: Repository<Session>
+    ) { }
 
     async initializeDatabase() {
         try {
@@ -20,5 +25,12 @@ export class DatabaseService {
             console.error(err);
             throw err;
         }
+    }
+
+    getSessionStore() {
+        return new TypeormStore({
+            ttl: 60,
+            cleanupLimit: 3
+        }).connect(this.sessionRepository);
     }
 }

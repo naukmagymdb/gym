@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Staff } from 'src/database/entities/staff.entity';
+import { Role } from 'src/auth/utils/role.enum';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -9,17 +10,20 @@ export class AdminsService {
         @InjectRepository(Staff) private readonly staffRepository: Repository<Staff>
     ) { }
 
-    async getAdminDashboard(phone: string) {
+    async getAdminDashboard(phone: string, role: Role) {
         const admin = await this.getAdminByPhone(phone);
         if (!admin) throw new NotFoundException('Admin Not Found!');
 
-        return {
-            role: 'admin',
-            ...admin
-        }
+        return admin;
     }
 
-    getAdminByPhone(phone: string) {
-        return this.staffRepository.findOneBy({ phone_num: phone });
+    async getAdminByPhone(phone: string) {
+        const admin = await this.staffRepository.findOneBy({ phone_num: phone })
+
+        if (!admin) return null;
+        return {
+            role: Role.Admin,
+            ...admin
+        }
     }
 }
