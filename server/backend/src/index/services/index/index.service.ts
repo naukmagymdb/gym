@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AdminsService } from 'src/admins/services/admins/admins.service';
+import { Role } from 'src/auth/utils/role.enum';
 import { Department } from 'src/database/entities/department.entity';
 import { Staff } from 'src/database/entities/staff.entity';
 import { Visitor } from 'src/database/entities/visitor.entity';
 import { UsersService } from 'src/users/services/users/users.service';
-import { Role } from 'src/auth/utils/role.enum';
 import { Repository } from 'typeorm';
 
 @Injectable()

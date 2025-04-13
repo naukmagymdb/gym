@@ -1,9 +1,8 @@
-import { ClassSerializerInterceptor, Controller, Get, Post, Request, UseGuards, UseInterceptors } from '@nestjs/common';
-import { RolesGuard } from 'src/auth/utils/roles.guard';
-import { Department } from 'src/database/entities/department.entity';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { IndexService } from 'src/index/services/index/index.service';
-import { Role } from 'src/auth/utils/role.enum';
+import { Controller, Get, UseGuards, UseInterceptors, ClassSerializerInterceptor, Request } from "@nestjs/common";
+import { Roles } from "src/auth/decorators/roles.decorator";
+import { Role } from "src/auth/utils/role.enum";
+import { RolesGuard } from "src/auth/utils/roles.guard";
+import { IndexService } from "src/index/services/index/index.service";
 
 
 @Controller()

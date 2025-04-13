@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Staff } from 'src/database/entities/staff.entity';
 import { Role } from 'src/auth/utils/role.enum';
+import { Staff } from 'src/database/entities/staff.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
