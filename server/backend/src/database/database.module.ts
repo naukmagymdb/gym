@@ -1,5 +1,5 @@
 import { DynamicModule, Module } from "@nestjs/common";
-import { DatabaseService } from "./services/database/database.service";
+import { DatabaseService } from "./database.service";
 import { DbOptions } from "./utils/db.options";
 
 @Module({})

@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DatabaseService } from './database/services/database/database.service';
+import { DatabaseService } from './database/database.service';
 import * as session from 'express-session';
 import * as passport from 'passport';
 

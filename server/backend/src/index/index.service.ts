@@ -1,25 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { AdminsService } from 'src/admins/services/admins/admins.service';
-import { Role } from 'src/auth/utils/role.enum';
-import { DatabaseService } from 'src/database/services/database/database.service';
-import { UsersService } from 'src/users/services/users/users.service';
+import { DatabaseService } from 'src/database/database.service';
 
 
 @Injectable()
 export class IndexService {
     constructor(
-        private readonly adminsService: AdminsService,
-        private readonly usersService: UsersService,
         private readonly databaseService: DatabaseService
     ) { }
-
-    getDashboard(role: Role, phone: string) {
-        if (role === Role.User) {
-            return this.usersService.getUserDashboard(phone);
-        } else if (role === Role.Admin) {
-            return this.adminsService.getAdminDashboard(phone, role);
-        }
-    }
 
     async testFunc() {
         const pool = this.databaseService.getPool();

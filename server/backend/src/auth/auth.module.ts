@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { AdminsService } from 'src/admins/services/admins/admins.service';
-import { UsersService } from 'src/users/services/users/users.service';
-import { AuthController } from './controllers/auth/auth.controller';
-import { AuthService } from './services/auth/auth.service';
+import { AuthController } from './auth.controller';
 import { LocalStrategy } from './utils/LocalStrategy';
 import { SessionSerializer } from './utils/SessionSerializer';
-import { AuthHelperService } from './services/auth/authHelper.service';
+import { AuthService } from './auth.service';
+
 
 @Module({
   imports: [
@@ -16,10 +14,7 @@ import { AuthHelperService } from './services/auth/authHelper.service';
   providers: [
     AuthService,
     LocalStrategy,
-    AdminsService,
-    UsersService,
-    SessionSerializer,
-    AuthHelperService
+    SessionSerializer
   ]
 })
 export class AuthModule { }
