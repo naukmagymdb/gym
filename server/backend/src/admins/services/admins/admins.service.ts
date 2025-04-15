@@ -1,13 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from 'src/auth/utils/role.enum';
-import { Staff } from 'src/database/entities/staff.entity';
-import { Repository } from 'typeorm';
+import { DatabaseService } from 'src/database/services/database/database.service';
 
 @Injectable()
 export class AdminsService {
     constructor(
-        @InjectRepository(Staff) private readonly staffRepository: Repository<Staff>
+        private readonly databaseService: DatabaseService
     ) { }
 
     async getAdminDashboard(phone: string, role: Role) {
@@ -18,7 +16,13 @@ export class AdminsService {
     }
 
     async getAdminByPhone(phone: string) {
-        const admin = await this.staffRepository.findOneBy({ phone_num: phone })
+        const pool = this.databaseService.getPool();
+
+        const res = await pool.query(
+            "SELECT * FROM staff WHERE phone_num = $1",
+            [phone]
+        );
+        const admin = res.rows[0];
 
         if (!admin) return null;
         return {

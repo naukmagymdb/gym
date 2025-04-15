@@ -1,40 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { AdminsService } from 'src/admins/services/admins/admins.service';
 import { Role } from 'src/auth/utils/role.enum';
-import { Department } from 'src/database/entities/department.entity';
-import { Staff } from 'src/database/entities/staff.entity';
-import { Visitor } from 'src/database/entities/visitor.entity';
+import { DatabaseService } from 'src/database/services/database/database.service';
 import { UsersService } from 'src/users/services/users/users.service';
-import { Repository } from 'typeorm';
+
 
 @Injectable()
 export class IndexService {
     constructor(
         private readonly adminsService: AdminsService,
         private readonly usersService: UsersService,
-        @InjectRepository(Visitor) private visitorRepository: Repository<Visitor>,
-        @InjectRepository(Staff) private staffRepository: Repository<Staff>,
-        @InjectRepository(Department) private departmentRepository: Repository<Department>
+        private readonly databaseService: DatabaseService
     ) { }
 
     getDashboard(role: Role, phone: string) {
-        if (role === 'user') {
+        if (role === Role.User) {
             return this.usersService.getUserDashboard(phone);
-        } else {
+        } else if (role === Role.Admin) {
             return this.adminsService.getAdminDashboard(phone, role);
         }
     }
 
     async testFunc() {
-        const visitors = await this.visitorRepository.find();
-        const departments = await this.departmentRepository.find();
-        const staff = await this.staffRepository.find();
+        const pool = this.databaseService.getPool();
+        const client = await pool.connect();
 
-        return {
-            visitors: visitors,
-            departments: departments,
-            staff: staff
+        try {
+            const resVisitors = await client.query('SELECT * FROM visitor');
+            const resDepartments = await client.query('SELECT * FROM department');
+            const resStaff = await client.query('SELECT * FROM staff');
+    
+            return {
+                visitors: resVisitors.rows,
+                departments: resDepartments.rows,
+                staff: resStaff.rows
+            };
+        } finally {
+            client.release();
         }
     }
 }

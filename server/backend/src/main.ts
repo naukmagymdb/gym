@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DatabaseService } from './database/database.service';
+import { DatabaseService } from './database/services/database/database.service';
 import * as session from 'express-session';
 import * as passport from 'passport';
+
 
 
 async function bootstrap() {
@@ -10,10 +11,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix('gym');
 
-  const databaseService = app.get(DatabaseService);
-  await databaseService.initializeDatabase();
-
-  const typeormStore = databaseService.getSessionStore();
+  const dbService = app.get(DatabaseService);
+  await dbService.waitForConnection();
 
   app.use(
     session({
@@ -23,14 +22,17 @@ async function bootstrap() {
       saveUninitialized: false,
       rolling: true,
       cookie: {
-        maxAge: 60 * 1000
+        maxAge: 60 * 1000,
+        httpOnly: true
       },
-      store: typeormStore
+      store: dbService.getSessionStore()
     }));
 
   app.use(passport.initialize());
   app.use(passport.session());
 
-  await app.listen(process.env.PORT || 3001);
+  await app.listen(process.env.PORT || 3001, () => {
+    console.log(`The server is running on port ${process.env.PORT}`)
+  });
 }
 bootstrap();

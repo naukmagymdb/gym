@@ -1,13 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from 'src/auth/utils/role.enum';
-import { Visitor } from 'src/database/entities/visitor.entity';
-import { Repository } from 'typeorm';
+import { DatabaseService } from 'src/database/services/database/database.service';
+
 
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectRepository(Visitor) private readonly vistorRepository: Repository<Visitor>
+        private readonly databaseService: DatabaseService
     ) { }
 
     async getUserDashboard(phone: string) {
@@ -18,7 +17,13 @@ export class UsersService {
     }
 
     async getUserByPhone(phone: string) {
-        const user = await this.vistorRepository.findOneBy({ phone_num: phone })
+        const pool = this.databaseService.getPool();
+
+        const res = await pool.query(
+            "SELECT * FROM visitor WHERE phone_num = $1",
+            [phone]
+        );
+        const user = res.rows[0];
         
         if (!user) return null;
         return {

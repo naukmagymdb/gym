@@ -1,14 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { PassportSerializer } from "@nestjs/passport";
-import { AdminsService } from "src/admins/services/admins/admins.service";
-import { Visitor } from "src/database/entities/visitor.entity";
-import { UsersService } from "src/users/services/users/users.service";
+import { VisitorDto } from "src/database/dtos/visitor.dto";
+import { StaffDto } from "src/database/dtos/staff.dto";
+import { AuthHelperService } from "../services/auth/authHelper.service";
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
     constructor(
-        private readonly usersService: UsersService,
-        private readonly adminsService: AdminsService
+        private readonly authHelperService: AuthHelperService
     ) {
         super();
     }
@@ -18,17 +17,10 @@ export class SessionSerializer extends PassportSerializer {
         done(null, { phone: logged.phone_num, role: logged.role });
     }
 
-    async deserializeUser(payload, done: (err, user: Visitor) => void) {
+    async deserializeUser(payload, done: (err, user: VisitorDto | StaffDto) => void) {
         console.log('Deserializing...');
 
-        let loggedDB;
-
-        if (payload.role === 'user') {
-            loggedDB = await this.usersService.getUserByPhone(payload.phone);
-        } else if (payload.role === 'admin') {
-            loggedDB = await this.adminsService.getAdminByPhone(payload.phone);
-        }
-
+        const loggedDB = await this.authHelperService.getByPhone(payload.role, payload.phone)
         return loggedDB ? done(null, loggedDB) : done(null, null);
     } 
 }

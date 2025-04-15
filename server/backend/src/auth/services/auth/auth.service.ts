@@ -1,23 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { AdminsService } from 'src/admins/services/admins/admins.service';
-import { UsersService } from 'src/users/services/users/users.service';
+import { Role } from 'src/auth/utils/role.enum';
 import { comparePasswords } from 'src/utils/bcrypt';
+import { AuthHelperService } from './authHelper.service';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly usersService: UsersService,
-        private readonly adminsService: AdminsService
+        private readonly authHelperService: AuthHelperService
     ) { }
 
-    async validate(username: string, password: string, role: string) {
-        let loggedDB;
-
-        if (role === 'user') {
-            loggedDB = await this.usersService.getUserByPhone(username);
-        } else {
-            loggedDB = await this.adminsService.getAdminByPhone(username);
-        }
+    async validate(username: string, password: string, role: Role) {
+        const loggedDB = await this.authHelperService.getByPhone(role, username)
 
         if (loggedDB) {
             console.log(loggedDB)
