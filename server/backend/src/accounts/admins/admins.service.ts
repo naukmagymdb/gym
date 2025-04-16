@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Role } from 'src/auth/utils/role.enum';
-import { DashboardStrategy } from 'src/common/interfaces/DashboardStrategy.interface';
-import { PhoneLookupStrategy } from 'src/common/interfaces/PhoneLookupStrategy.interface';
+import { AccountStrategy } from 'src/common/interfaces/account.strategy';
 import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
-export class AdminsService implements PhoneLookupStrategy, DashboardStrategy {
+export class AdminsService implements AccountStrategy {
     constructor(
         private readonly databaseService: DatabaseService
     ) { }
