@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { AdminsModule } from './admins/admins.module';
-import { PhoneLookupHandler } from './services/PhoneLookupHandler';
-import { DashboardHandler } from './services/DashboardHandler';
+import { AccountsHandler } from './accountsHandler.service';
 
 @Module({
   imports: [
@@ -10,12 +9,10 @@ import { DashboardHandler } from './services/DashboardHandler';
     AdminsModule
   ],
   providers: [
-    PhoneLookupHandler,
-    DashboardHandler
+    AccountsHandler
   ],
   exports: [
-    PhoneLookupHandler,
-    DashboardHandler
+    AccountsHandler
   ]
 })
 export class AccountsModule {}

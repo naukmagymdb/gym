@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './utils/LocalStrategy';
 import { SessionSerializer } from './utils/SessionSerializer';
 import { AuthService } from './auth.service';
+import { AccountsHandler } from 'src/accounts/accountsHandler.service';
 
 
 @Module({
@@ -14,7 +15,8 @@ import { AuthService } from './auth.service';
   providers: [
     AuthService,
     LocalStrategy,
-    SessionSerializer
+    SessionSerializer,
+    AccountsHandler
   ]
 })
 export class AuthModule { }
