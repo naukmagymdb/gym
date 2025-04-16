@@ -13,6 +13,6 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('admin/login')
     async logInAdmin(@Request() req) {
-        return req.body;
+        return req.body; 
     }
 }

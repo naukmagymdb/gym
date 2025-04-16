@@ -4,19 +4,19 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './utils/LocalStrategy';
 import { SessionSerializer } from './utils/SessionSerializer';
 import { AuthService } from './auth.service';
-import { AccountsHandler } from 'src/accounts/accountsHandler.service';
+import { AccountsModule } from 'src/accounts/accounts.module';
 
 
 @Module({
   imports: [
-    PassportModule.register({ session: true })
+    PassportModule.register({ session: true }),
+    AccountsModule
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
     LocalStrategy,
-    SessionSerializer,
-    AccountsHandler
+    SessionSerializer
   ]
 })
 export class AuthModule { }

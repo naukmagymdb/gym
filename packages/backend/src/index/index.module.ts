@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
 import { IndexController } from "./index.controller";
 import { IndexService } from "./index.service";
-import { AccountsHandler } from 'src/accounts/accountsHandler.service';
+import { AccountsModule } from 'src/accounts/accounts.module';
 
 @Module({
-  imports: [],
+  imports: [AccountsModule],
   controllers: [IndexController],
   providers: [
-    IndexService,
-    AccountsHandler
+    IndexService
   ]
 })
 export class IndexModule {}

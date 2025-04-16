@@ -22,7 +22,7 @@ async function bootstrap() {
       saveUninitialized: false,
       rolling: true,
       cookie: {
-        maxAge: 60 * 1000,
+        maxAge: 14 * 24 * 60 * 60 * 1000,
         httpOnly: true
       },
       store: dbService.getSessionStore()
