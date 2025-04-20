@@ -9,7 +9,7 @@ import * as passport from 'passport';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('gym');
+  app.setGlobalPrefix('api');
 
   const dbService = app.get(DatabaseService);
   await dbService.waitForConnection();

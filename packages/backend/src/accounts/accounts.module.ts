@@ -12,6 +12,7 @@ import { AccountsHandler } from './accountsHandler.service';
     AccountsHandler
   ],
   exports: [
+    UsersModule, AdminsModule,
     AccountsHandler
   ]
 })

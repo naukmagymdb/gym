@@ -1,3 +1,3 @@
 export interface DashboardStrategy {
-    getDashboard(phone: string): Promise<any>;
+    getDashboard(id: number): Promise<any>;
 }

@@ -9,8 +9,8 @@ export class AdminsService implements AccountStrategy {
         private readonly databaseService: DatabaseService
     ) { }
 
-    async getDashboard(phone: string) {
-        const admin = await this.getByPhone(phone);
+    async getDashboard(id: number): Promise<Express.User> {
+        const admin = await this.getById(id);
         if (!admin) throw new NotFoundException('Admin Not Found!');
 
         return admin;
@@ -22,6 +22,22 @@ export class AdminsService implements AccountStrategy {
         const res = await pool.query(
             "SELECT * FROM staff WHERE phone_num = $1",
             [phone]
+        );
+        const admin = res.rows[0];
+
+        if (!admin) return null;
+        return {
+            role: Role.Admin,
+            ...admin
+        }
+    }
+
+    async getById(id: number) {
+        const pool = this.databaseService.getPool();
+
+        const res = await pool.query(
+            "SELECT * FROM staff WHERE id = $1",
+            [id]
         );
         const admin = res.rows[0];
 

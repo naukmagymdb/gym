@@ -10,8 +10,8 @@ export class UsersService implements AccountStrategy {
         private readonly databaseService: DatabaseService
     ) { }
 
-    async getDashboard(phone: string) {
-        const user = await this.getByPhone(phone);
+    async getDashboard(id: number): Promise<Express.User> {
+        const user = await this.getById(id);
         if (!user) throw new NotFoundException('User Not Found!');
 
         return user;
@@ -26,6 +26,22 @@ export class UsersService implements AccountStrategy {
         );
         const user = res.rows[0];
         
+        if (!user) return null;
+        return {
+            role: Role.User,
+            ...user
+        }
+    }
+
+    async getById(id: number) {
+        const pool = this.databaseService.getPool();
+
+        const res = await pool.query(
+            "SELECT * FROM visitor WHERE id = $1",
+            [id]
+        );
+        const user = res.rows[0];
+
         if (!user) return null;
         return {
             role: Role.User,

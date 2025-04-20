@@ -1,7 +1,9 @@
-import { Controller, Get, UseGuards, UseInterceptors, ClassSerializerInterceptor, Request } from "@nestjs/common";
+import { Controller, Get, UseGuards, UseInterceptors, ClassSerializerInterceptor, Request, Param, ParseIntPipe, UsePipes } from "@nestjs/common";
 import { AccountsHandler } from "src/accounts/accountsHandler.service";
 import { Roles } from "src/auth/decorators/roles.decorator";
-import { RolesGuard } from "src/auth/guards/roles.guard";
+import { AuthenticatedGuard } from "src/auth/guards/Authenticated.guard";
+import { RolesGuard } from "src/auth/guards/Roles.guard";
+import { SelfGuard } from "src/auth/guards/Self.guard";
 import { Role } from "src/auth/utils/role.enum";
 import { IndexService } from "src/index/index.service";
 
@@ -13,17 +15,22 @@ export class IndexController {
         private readonly accountsHandler: AccountsHandler
     ) { }
 
-    @Get()
-    async getDashboard(@Request() req) {
-        const { role, phone_num } = req.logged;
-        return this.accountsHandler.getDashboard(role, phone_num)
+    @Get(':id')
+    @UseGuards(AuthenticatedGuard, SelfGuard)
+    @UsePipes(ParseIntPipe)
+    getDashboard(
+        @Request() req,
+        @Param('id', ParseIntPipe) id: number
+    ) {
+        const { role } = req.user;
+        return this.accountsHandler.getDashboard(role, id)
     }
 
     @Roles(Role.Admin)
-    @UseGuards(RolesGuard)
+    @UseGuards(AuthenticatedGuard, RolesGuard)
     @UseInterceptors(ClassSerializerInterceptor)
-    @Get('test')
-    async testFunc() { 
-        return await this.indexService.testFunc();
+    @Get('test/test')
+    testFunc() {
+        return this.indexService.testFunc();
     }
 }

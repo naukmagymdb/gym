@@ -18,11 +18,15 @@ export class AccountsHandler {
             }
         }
     
-        getDashboard(role: Role, phone: string) {
-            return this.strategies[role].getDashboard(phone);
+        getDashboard(role: Role, id: number) {
+            return this.strategies[role].getDashboard(id);
         }
 
-        async getByPhone(role: Role, phone: string) {
-                return this.strategies[role].getByPhone(phone);
+        getByPhone(role: Role, phone: string) {
+            return this.strategies[role].getByPhone(phone);
         }
+
+        getById(role: Role, phone: string) {
+            return this.strategies[role].getByPhone(phone);
+    }
 }
