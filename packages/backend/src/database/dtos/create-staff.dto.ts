@@ -1,13 +1,11 @@
 import { Exclude } from "class-transformer";
 import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
 
-export class StaffDto {
-    constructor(partial: Partial<StaffDto>) {
+export class CreateStaffDto {
+    constructor(partial: Partial<CreateStaffDto>) {
         Object.assign(this, partial);
     }
 
-    // id: number;
-    
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
@@ -51,6 +49,7 @@ export class StaffDto {
     dep_id: number;
     
     @IsString()
+    @IsNotEmpty()
     @Exclude()
     login_password: string;
 }

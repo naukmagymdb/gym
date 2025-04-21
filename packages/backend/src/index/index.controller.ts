@@ -1,36 +1,32 @@
-import { Controller, Get, UseGuards, UseInterceptors, ClassSerializerInterceptor, Request, Param, ParseIntPipe, UsePipes } from "@nestjs/common";
-import { AccountsHandler } from "src/accounts/accountsHandler.service";
-import { Roles } from "src/auth/decorators/roles.decorator";
+import { Controller, Get, UseGuards, Request, Body, UsePipes, ValidationPipe, Patch } from "@nestjs/common";
+import { AccountsHandler } from "src/accounts/services/accountsHandler.service";
 import { AuthenticatedGuard } from "src/auth/guards/Authenticated.guard";
-import { RolesGuard } from "src/auth/guards/Roles.guard";
-import { SelfGuard } from "src/auth/guards/Self.guard";
-import { Role } from "src/auth/utils/role.enum";
-import { IndexService } from "src/index/index.service";
+import { UpdateStaffDto } from "src/database/dtos/update-staff.dto";
+import { UpdateVisitorDto } from "src/database/dtos/update-visitor.dto";
 
 
-@Controller()
+@Controller('dashboard')
 export class IndexController {
     constructor(
-        private readonly indexService: IndexService,
         private readonly accountsHandler: AccountsHandler
     ) { }
 
-    @Get(':id')
-    @UseGuards(AuthenticatedGuard, SelfGuard)
-    @UsePipes(ParseIntPipe)
-    getDashboard(
-        @Request() req,
-        @Param('id', ParseIntPipe) id: number
-    ) {
-        const { role } = req.user;
-        return this.accountsHandler.getDashboard(role, id)
+    @Get('')
+    @UseGuards(AuthenticatedGuard)
+    async getDashboard(@Request() req) {
+        const { role, id } = req.user;
+        const dashboard = await this.accountsHandler.getDashboard(role, id);
+        return this.accountsHandler.serialize(role, dashboard);
     }
 
-    @Roles(Role.Admin)
-    @UseGuards(AuthenticatedGuard, RolesGuard)
-    @UseInterceptors(ClassSerializerInterceptor)
-    @Get('test/test')
-    testFunc() {
-        return this.indexService.testFunc();
+    @Patch('')
+    @UseGuards(AuthenticatedGuard)
+    async updateAccountInfo(
+        @Request() req,
+        @Body() updateDto: UpdateStaffDto | UpdateVisitorDto
+    ) {
+        const { role, id } = req.user;
+        const patched = await this.accountsHandler.updateAccountInfo(role, id, updateDto);
+        return this.accountsHandler.serialize(role, patched);
     }
 }

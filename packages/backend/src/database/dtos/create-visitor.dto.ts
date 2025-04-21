@@ -1,13 +1,11 @@
 import { Exclude } from "class-transformer";
 import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
 
-export class VisitorDto {
-    constructor(partial: Partial<VisitorDto>) {
+export class CreateVisitorDto {
+    constructor(partial: Partial<CreateVisitorDto>) {
         Object.assign(this, partial);
     }
 
-    // id: number;
-    
     @IsDate()
     @IsNotEmpty()
     birth_date: string;

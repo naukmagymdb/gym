@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AccountsHandler } from 'src/accounts/accountsHandler.service';
+import { AccountsHandler } from 'src/accounts/services/accountsHandler.service';
 import { Role } from 'src/auth/utils/role.enum';
 import { comparePasswords } from 'src/common/utils/bcrypt';
 

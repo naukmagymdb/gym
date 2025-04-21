@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { PassportSerializer } from "@nestjs/passport";
-import { VisitorDto } from "src/database/dtos/visitor.dto";
-import { StaffDto } from "src/database/dtos/staff.dto";
-import { AccountsHandler } from "src/accounts/accountsHandler.service";
+import { AccountsHandler } from "src/accounts/services/accountsHandler.service";
+import { CreateStaffDto } from "src/database/dtos/create-staff.dto";
+import { CreateVisitorDto } from "src/database/dtos/create-visitor.dto";
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
@@ -17,10 +17,12 @@ export class SessionSerializer extends PassportSerializer {
         done(null, { phone: logged.phone_num, role: logged.role });
     }
 
-    async deserializeUser(payload, done: (err, user: VisitorDto | StaffDto) => void) {
+    async deserializeUser(payload, done: (err, user: CreateStaffDto | CreateVisitorDto) => void) {
         console.log('Deserializing...');
 
         const loggedDB = await this.accountsHandler.getByPhone(payload.role, payload.phone)
-        return loggedDB ? done(null, loggedDB) : done(null, null);
+        const deserialized = {...loggedDB, role: payload.role};
+        
+        return loggedDB ? done(null, deserialized) : done(null, null);
     } 
 }

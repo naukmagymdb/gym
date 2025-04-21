@@ -1,19 +1,39 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Role } from 'src/auth/utils/role.enum';
-import { AccountStrategy } from 'src/common/interfaces/account.strategy';
+import { AccountStrategy } from 'src/common/strategies/account.strategy';
 import { DatabaseService } from 'src/database/database.service';
+import { UpdateStaffDto } from 'src/database/dtos/update-staff.dto';
+import { UtilsService } from '../services/utils.service';
+
 
 @Injectable()
 export class AdminsService implements AccountStrategy {
     constructor(
-        private readonly databaseService: DatabaseService
+        private readonly databaseService: DatabaseService,
+        private readonly utilsService: UtilsService
     ) { }
 
-    async getDashboard(id: number): Promise<Express.User> {
+    async getDashboard(id: number) {
         const admin = await this.getById(id);
         if (!admin) throw new NotFoundException('Admin Not Found!');
-
         return admin;
+    }
+
+    async updateInfo(id: number, updateDto: UpdateStaffDto): Promise<any> {
+        const pool = this.databaseService.getPool();
+
+        const { values, rawQuery } = this.utilsService.prepareUpdateData(updateDto);
+        const query = rawQuery.replace('$1', 'staff')
+
+        try {
+            const res = await pool.query(
+                query,
+                [...values, id]
+            );
+            return res.rows[0];
+        } catch (error) {
+            console.error('Error executing query:', error);
+            throw new Error('Failed to update the record.');
+        }
     }
 
     async getByPhone(phone: string) {
@@ -26,10 +46,7 @@ export class AdminsService implements AccountStrategy {
         const admin = res.rows[0];
 
         if (!admin) return null;
-        return {
-            role: Role.Admin,
-            ...admin
-        }
+        return admin;
     }
 
     async getById(id: number) {
@@ -42,9 +59,6 @@ export class AdminsService implements AccountStrategy {
         const admin = res.rows[0];
 
         if (!admin) return null;
-        return {
-            role: Role.Admin,
-            ...admin
-        }
+        return admin;
     }
 }
