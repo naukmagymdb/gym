@@ -4,10 +4,6 @@ import { StaffModule } from './staff/staff.module';
 import { VisitorModule } from './visitors/visitor.module';
 
 @Module({
-  imports: [
-    DepartmentModule,
-    StaffModule,
-    VisitorModule
-  ]
+  imports: [DepartmentModule, StaffModule, VisitorModule],
 })
 export class RepositoryModule {}

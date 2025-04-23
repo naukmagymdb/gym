@@ -37,6 +37,8 @@ async function bootstrap() {
     }),
   );
 
+  // app.useGlobalFilters(new HttpExceptionFilter());
+
   await app.listen(process.env.PORT || 3001, () => {
     console.log(`The server is running on port ${process.env.PORT}`);
   });

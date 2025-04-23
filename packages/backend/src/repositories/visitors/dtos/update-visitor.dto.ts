@@ -1,37 +1,36 @@
-import { Exclude } from "class-transformer";
-import { IsDate, IsOptional, IsString, MaxLength, IsPhoneNumber, IsEmail } from "class-validator";
+import { IsDate, IsEmail, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
 
 export class UpdateVisitorDto  {
         @IsDate()
         @IsOptional()
-        birth_date?: string;
+        birth_date?: string = null;
     
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        first_name?: string;
+        first_name?: string = null;
         
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        last_name?: string;
+        last_name?: string = null;
     
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        patronymic?: string;
+        patronymic?: string = null;
     
         @IsPhoneNumber()
         @IsOptional()
         @MaxLength(50)
-        phone_num?: string;
+        phone_num?: string = null;
     
         @IsEmail()
         @IsOptional()
-        email?: string;
+        email?: string = null;
         
         @IsString()
-        @Exclude()
+        // @Exclude()
         @IsOptional()
-        login_password?: string;
+        login_password?: string = null;
 }

@@ -1,7 +1,8 @@
 import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
 import * as connectPgSimple from 'connect-pg-simple';
 import * as session from 'express-session';
-import pgPromise, { IDatabase } from 'pg-promise';
+import * as pgPromise from 'pg-promise';
+import { IDatabase } from 'pg-promise';
 import { DbOptions } from 'src/database/utils/db.options';
 
 @Injectable()

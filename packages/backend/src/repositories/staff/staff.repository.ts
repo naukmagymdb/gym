@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import pgPromise from 'pg-promise';
+import { encodePassword } from 'src/common/utils/bcrypt';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateStaffDto } from './dtos/create-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
-import { encodePassword } from 'src/common/utils/bcrypt';
 
 @Injectable()
 export class StaffRepository {

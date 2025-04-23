@@ -1,5 +1,4 @@
-import { Exclude } from "class-transformer";
-import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
+import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class CreateStaffDto {
     constructor(partial: Partial<CreateStaffDto>) {
@@ -21,16 +20,16 @@ export class CreateStaffDto {
     @MaxLength(50)
     last_name: string;
 
-    @IsString()
+    @IsString() 
     @IsOptional()
     @MaxLength(50)
-    patronymic?: string;
+    patronymic?: string = null;
 
     @IsInt()
     @IsNotEmpty()
     salary: number;
 
-    @IsPhoneNumber()
+    // @IsPhoneNumber()
     @IsNotEmpty()
     @MaxLength(50)
     phone_num: string;
@@ -38,18 +37,18 @@ export class CreateStaffDto {
     @IsString()
     @IsOptional()
     @MaxLength(50)
-    certificate_couch_number?: string;
+    certificate_couch_number?: string = null;
 
     @IsEmail()
     @IsOptional()
-    email?: string;
+    email?: string = null;
 
     @IsInt()
     @IsNotEmpty()
     dep_id: number;
     
     @IsString()
-    @IsNotEmpty()
-    @Exclude()
+    @IsNotEmpty() 
+    // @Exclude()
     login_password: string;
 }
