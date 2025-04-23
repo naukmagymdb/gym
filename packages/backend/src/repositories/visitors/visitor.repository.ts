@@ -3,6 +3,7 @@ import pgPromise from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateVisitorDto } from './dtos/create-visitor.dto';
 import { UpdateVisitorDto } from './dtos/update-visitor.dto';
+import { encodePassword } from 'src/common/utils/bcrypt';
 
 @Injectable()
 export class VisitorRepository {
@@ -32,6 +33,8 @@ export class VisitorRepository {
   }
 
   async create(createVisitorDto: CreateVisitorDto) {
+    createVisitorDto.login_password = encodePassword(createVisitorDto.login_password);
+
     const sql = `
       INSERT INTO visitor 
         (first_name, last_name, patronymic, phone_num, email, birth_date, login_password) 
@@ -43,6 +46,10 @@ export class VisitorRepository {
   }
 
   async update(id: number, updateVisitorDto: UpdateVisitorDto) {
+    if (updateVisitorDto.login_password) {
+      updateVisitorDto.login_password = encodePassword(updateVisitorDto.login_password);
+    }
+
     const sql = `
       UPDATE visitor SET 
         first_name = COALESCE($(first_name), first_name),

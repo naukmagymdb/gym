@@ -3,6 +3,7 @@ import pgPromise from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateStaffDto } from './dtos/create-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
+import { encodePassword } from 'src/common/utils/bcrypt';
 
 @Injectable()
 export class StaffRepository {
@@ -39,6 +40,8 @@ export class StaffRepository {
   }
 
   async create(createStaffDto: CreateStaffDto) {
+    createStaffDto.login_password = encodePassword(createStaffDto.login_password);
+
     const sql = `
       INSERT INTO staff 
         (contract_num, first_name, last_name, patronymic, salary, phone_num, certificate_couch_number, email, dep_id, login_password) 
@@ -46,10 +49,15 @@ export class StaffRepository {
         ($(contract_num), $(first_name), $(last_name), $(patronymic), $(salary), $(phone_num), $(certificate_couch_number), $(email), $(dep_id), $(login_password)) 
       RETURNING *
     `;
+
     return await this.db.one(sql, createStaffDto);
   }
 
   async update(id: number, updateStaffDto: UpdateStaffDto) {
+    if (updateStaffDto.login_password) {
+      updateStaffDto.login_password = encodePassword(updateStaffDto.login_password);
+    }
+
     const sql = `
       UPDATE staff SET 
         contract_num = COALESCE($(contract_num), contract_num),
