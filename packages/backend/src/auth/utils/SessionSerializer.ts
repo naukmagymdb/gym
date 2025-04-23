@@ -1,26 +1,32 @@
-import { Injectable } from "@nestjs/common";
-import { PassportSerializer } from "@nestjs/passport";
-import { VisitorDto } from "src/database/dtos/visitor.dto";
-import { StaffDto } from "src/database/dtos/staff.dto";
-import { AccountsHandler } from "src/accounts/accountsHandler.service";
+import { Injectable } from '@nestjs/common';
+import { PassportSerializer } from '@nestjs/passport';
+import { AccountsHandler } from 'src/accounts/services/accountsHandler.service';
+import { CreateStaffDto } from 'src/repositories/staff/dtos/create-staff.dto';
+import { CreateVisitorDto } from 'src/repositories/visitors/dtos/create-visitor.dto';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
-    constructor(
-        private readonly accountsHandler: AccountsHandler
-    ) {
-        super();
-    }
+  constructor(private readonly accountsHandler: AccountsHandler) {
+    super();
+  }
 
-    serializeUser(logged, done: (err, user) => void) {
-        console.log('Serializing...');
-        done(null, { phone: logged.phone_num, role: logged.role });
-    }
+  serializeUser(logged, done: (err, user) => void) {
+    console.log('Serializing...');
+    done(null, { phone: logged.phone_num, role: logged.role });
+  }
 
-    async deserializeUser(payload, done: (err, user: VisitorDto | StaffDto) => void) {
-        console.log('Deserializing...');
+  async deserializeUser(
+    payload,
+    done: (err, user: CreateStaffDto | CreateVisitorDto) => void,
+  ) {
+    console.log('Deserializing...');
 
-        const loggedDB = await this.accountsHandler.getByPhone(payload.role, payload.phone)
-        return loggedDB ? done(null, loggedDB) : done(null, null);
-    } 
+    const loggedDB = await this.accountsHandler.getByPhone(
+      payload.role,
+      payload.phone,
+    );
+    const deserialized = { ...loggedDB, role: payload.role };
+
+    return loggedDB ? done(null, deserialized) : done(null, null);
+  }
 }

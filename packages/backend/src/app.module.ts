@@ -4,8 +4,6 @@ import { DatabaseModule } from './database/database.module';
 import { IndexModule } from './index/index.module';
 import { AuthModule } from './auth/auth.module';
 import { AccountsModule } from './accounts/accounts.module';
-import { UsersModule } from './accounts/users/users.module';
-import { AdminsModule } from './accounts/admins/admins.module';
 
 
 @Module({
@@ -18,7 +16,7 @@ import { AdminsModule } from './accounts/admins/admins.module';
       retryAttempts: 5,
       delay: 3000
     }),
-    IndexModule, AuthModule, AccountsModule, UsersModule, AdminsModule
+    IndexModule, AuthModule, AccountsModule
   ],
   controllers: [],
   providers: [],
