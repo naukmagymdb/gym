@@ -721,6 +721,11 @@
     path-to-regexp "3.3.0"
     tslib "2.8.1"
 
+"@nestjs/mapped-types@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/mapped-types/-/mapped-types-2.1.0.tgz#b9b536b7c3571567aa1d0223db8baa1a51505a19"
+  integrity sha512-W+n+rM69XsFdwORF11UqJahn4J3xi4g/ZEOlJNL6KoW5ygWSmBB2p0S2BZ4FQeS/NDH72e6xIcu35SfJnE8bXw==
+
 "@nestjs/passport@^11.0.5":
   version "11.0.5"
   resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-11.0.5.tgz#dd3e506c2fb7ddc80fd1321c01cc1a0ca6d6b609"
@@ -1052,6 +1057,13 @@
   integrity sha512-aciLyx+wDwT2t2/kJGJR2AEeBz0nJU4WuRX04Wu9Dqc5lSUtwu0WERPHYsLhF9PtseiAMPBGNUOtFjxZ56prsg==
   dependencies:
     "@types/express" "*"
+
+"@types/pg-promise@^5.4.3":
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/@types/pg-promise/-/pg-promise-5.4.3.tgz#e9628ff43fe7738ee57ac00e11982139b2fb5c5f"
+  integrity sha512-ABgy5hzmcyRZxLNG6HUafpxbpmXGeVJ5dopKwssEsFeA7rpRakdoodt75HJNIjQB4He+s3PTfG1AoWQWm7OuCg==
+  dependencies:
+    pg-promise "*"
 
 "@types/qs@*":
   version "6.9.18"
@@ -4236,7 +4248,7 @@ pg-pool@^3.8.0:
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-3.8.0.tgz#e6bce7fc4506a8d6106551363fc5283e5445b776"
   integrity sha512-VBw3jiVm6ZOdLBTIcXLNdSotb6Iy3uOCwDGFAksZCXmi10nyRvnP2v3jl4d+IsLYRyXf6o9hIm/ZtUzlByNUdw==
 
-pg-promise@^11.13.0:
+pg-promise@*, pg-promise@^11.13.0:
   version "11.13.0"
   resolved "https://registry.yarnpkg.com/pg-promise/-/pg-promise-11.13.0.tgz#90c2c7c5cd638a3ca6e8cde9f18d29dae333297d"
   integrity sha512-NWCsh1gnELfYRF5hNhfXPcSxuCk9C3FyM9MhmGkVTmepczAC2aXuBkyXhipVlHzp0V/IVzyCZOrlH48Ma3i7YQ==
