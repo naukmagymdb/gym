@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { AdminsModule } from './admins/admins.module';
-import { AccountsHandler } from './accountsHandler.service';
+import { AccountsHandler } from './services/accountsHandler.service';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { AccountsHandler } from './accountsHandler.service';
     AccountsHandler
   ],
   exports: [
-    AccountsHandler
+     AccountsHandler
   ]
 })
 export class AccountsModule {}
