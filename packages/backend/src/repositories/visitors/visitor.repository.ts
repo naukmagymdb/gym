@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import pgPromise from 'pg-promise';
+import { encodePassword } from 'src/common/utils/bcrypt';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateVisitorDto } from './dtos/create-visitor.dto';
 import { UpdateVisitorDto } from './dtos/update-visitor.dto';
-import { encodePassword } from 'src/common/utils/bcrypt';
 
 @Injectable()
 export class VisitorRepository {
@@ -12,7 +12,7 @@ export class VisitorRepository {
   constructor(private readonly databaseService: DatabaseService) {
     this.db = databaseService.getDb();
   }
-  
+
   async findAll({
     sortBy,
     order,
@@ -37,9 +37,9 @@ export class VisitorRepository {
 
     const sql = `
       INSERT INTO visitor 
-        (first_name, last_name, patronymic, phone_num, email, birth_date, login_password) 
+        (visitor_name, surname, patronymic, phone_num, email, birth_date, login_password) 
       VALUES 
-        ($(first_name), $(last_name), $(patronymic), $(phone_num), $(email), $(birth_date), $(login_password)) 
+        ($(visitor_name), $(surname), $(patronymic), $(phone_num), $(email), $(birth_date), $(login_password)) 
       RETURNING *
     `;
     return await this.db.one(sql, createVisitorDto);
@@ -52,8 +52,8 @@ export class VisitorRepository {
 
     const sql = `
       UPDATE visitor SET 
-        first_name = COALESCE($(first_name), first_name),
-        last_name = COALESCE($(last_name), last_name),
+        visitor_name = COALESCE($(visitor_name), visitor_name),
+        surname = COALESCE($(surname), surname),
         patronymic = COALESCE($(patronymic), patronymic),
         phone_num = COALESCE($(phone_num), phone_num),
         email = COALESCE($(email), email),

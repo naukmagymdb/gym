@@ -44,9 +44,9 @@ export class StaffRepository {
 
     const sql = `
       INSERT INTO staff 
-        (contract_num, first_name, last_name, patronymic, salary, phone_num, certificate_couch_number, email, dep_id, login_password) 
+        (contract_num, staff_name, surname, patronymic, salary, phone_num, certificate_couch_number, email, dep_id, login_password) 
       VALUES 
-        ($(contract_num), $(first_name), $(last_name), $(patronymic), $(salary), $(phone_num), $(certificate_couch_number), $(email), $(dep_id), $(login_password)) 
+        ($(contract_num), $(staff_name), $(surname), $(patronymic), $(salary), $(phone_num), $(certificate_couch_number), $(email), $(dep_id), $(login_password)) 
       RETURNING *
     `;
 
@@ -61,8 +61,8 @@ export class StaffRepository {
     const sql = `
       UPDATE staff SET 
         contract_num = COALESCE($(contract_num), contract_num),
-        first_name = COALESCE($(first_name), first_name),
-        last_name = COALESCE($(last_name), last_name),
+        staff_name = COALESCE($(staff_name), staff_name),
+        surname = COALESCE($(surname), surname),
         patronymic = COALESCE($(patronymic), patronymic),
         salary = COALESCE($(salary), salary),
         phone_num = COALESCE($(phone_num), phone_num),

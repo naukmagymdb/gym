@@ -7,14 +7,22 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/utils/role.enum';
 import { CreateVisitorDto } from './dtos/create-visitor.dto';
 import { UpdateVisitorDto } from './dtos/update-visitor.dto';
 import { VisitorRepository } from './visitor.repository';
 
+
+@Roles(Role.Admin)
+@UseGuards(AuthenticatedGuard, RolesGuard)
 @Controller('visitor')
 export class VisitorController {
-  constructor(private readonly visitorRepository: VisitorRepository) {}
+  constructor(private readonly visitorRepository: VisitorRepository) { }
 
   @Get()
   async findAll(
@@ -22,8 +30,8 @@ export class VisitorController {
     @Query('order') order: 'asc' | 'desc' = 'asc',
   ) {
     return await this.visitorRepository.findAll({
-        sortBy: sortBy,
-        order: order
+      sortBy: sortBy,
+      order: order
     });
   }
 

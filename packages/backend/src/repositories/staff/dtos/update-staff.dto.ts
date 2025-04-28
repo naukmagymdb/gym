@@ -4,45 +4,45 @@ export class UpdateStaffDto {
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        contract_num?: string = null;
-    
+        Contract_num?: string = null;
+
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        first_name?: string = null;
-        
+        staff_name?: string = null;
+
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        last_name?: string = null;
-    
+        surname?: string = null;
+
         @IsString()
         @IsOptional()
         @MaxLength(50)
         patronymic?: string = null;
-    
+
         @IsInt()
         @IsOptional()
         salary?: number = null;
-    
+
         @IsPhoneNumber()
         @IsOptional()
         @MaxLength(50)
         phone_num?: string = null;
-    
+
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        certificate_couch_number?: string = null;
-    
+        Qualification_cert_number_of_coach?: string = null;
+
         @IsEmail()
         @IsOptional()
         email?: string = null;
-    
+
         @IsInt()
         @IsOptional()
-        dep_id?: number = null;
-        
+        Department_id?: number = null;
+
         @IsString()
         @IsOptional()
         // @Exclude()

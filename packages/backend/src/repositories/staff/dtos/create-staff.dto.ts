@@ -8,19 +8,19 @@ export class CreateStaffDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    contract_num: string;
+    Contract_num: string;
 
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    first_name: string;
-    
+    staff_name: string;
+
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    last_name: string;
+    surname: string;
 
-    @IsString() 
+    @IsString()
     @IsOptional()
     @MaxLength(50)
     patronymic?: string = null;
@@ -37,7 +37,7 @@ export class CreateStaffDto {
     @IsString()
     @IsOptional()
     @MaxLength(50)
-    certificate_couch_number?: string = null;
+    Qualification_cert_number_of_coach?: string = null;
 
     @IsEmail()
     @IsOptional()
@@ -45,10 +45,10 @@ export class CreateStaffDto {
 
     @IsInt()
     @IsNotEmpty()
-    dep_id: number;
-    
+    Department_id: number;
+
     @IsString()
-    @IsNotEmpty() 
+    @IsNotEmpty()
     // @Exclude()
     login_password: string;
 }

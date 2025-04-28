@@ -12,12 +12,12 @@ export class CreateVisitorDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    first_name: string;
-    
+    visitor_name: string;
+
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    last_name: string;
+    surname: string;
 
     @IsString()
     @IsNotEmpty()
@@ -32,7 +32,7 @@ export class CreateVisitorDto {
     @IsEmail()
     @IsOptional()
     email?: string = null;
-    
+
     @IsString()
     // @Exclude()
     login_password: string;
