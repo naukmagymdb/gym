@@ -2,7 +2,7 @@
 
 -- Visitor table
 CREATE TABLE Visitor (
-  IPN INTEGER PRIMARY KEY,
+  ID SERIAL PRIMARY KEY,
   Birth_date DATE NOT NULL,
   Visitor_name VARCHAR(50) NOT NULL,
   Surname VARCHAR(50) NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE Department_Email (
 
 -- Staff and hierarchy
 CREATE TABLE Staff (
-  IPN INTEGER PRIMARY KEY,
+  ID SERIAL PRIMARY KEY,
   Contract_num VARCHAR(50) NOT NULL,
   Staff_Name VARCHAR(50) NOT NULL,
   Surname VARCHAR(50) NOT NULL,
@@ -55,12 +55,12 @@ CREATE TABLE Staff (
 );
 
 CREATE TABLE Staff_Manager_Subordinate (
-  IPN_of_Manager INTEGER NOT NULL,
-  IPN_of_Subordinate INTEGER NOT NULL,
-  PRIMARY KEY (IPN_of_Manager, IPN_of_Subordinate),
-  FOREIGN KEY (IPN_of_Manager) REFERENCES Staff(IPN)
+  Manager_ID INTEGER NOT NULL,
+  Subordinate_ID INTEGER NOT NULL,
+  PRIMARY KEY (Manager_ID, Subordinate_ID),
+  FOREIGN KEY (Manager_ID) REFERENCES Staff(ID)
     ON DELETE NO ACTION ON UPDATE CASCADE,
-  FOREIGN KEY (IPN_of_Subordinate) REFERENCES Staff(IPN)
+  FOREIGN KEY (Subordinate_ID) REFERENCES Staff(ID)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -97,10 +97,10 @@ CREATE TABLE Abonement (
   Start_date DATE NOT NULL,
   End_date DATE NOT NULL,
   Is_active BOOLEAN NOT NULL,
-  IPN INTEGER NOT NULL,
+  Visitor_ID INTEGER NOT NULL,
   Abonement_type VARCHAR(50) NOT NULL,
   Department_id INTEGER NOT NULL,
-  FOREIGN KEY (IPN) REFERENCES Visitor(IPN)
+  FOREIGN KEY (Visitor_ID) REFERENCES Visitor(ID)
     ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (Abonement_type) REFERENCES Abonementtype(Abonement_type)
     ON DELETE NO ACTION ON UPDATE CASCADE,
@@ -133,13 +133,13 @@ CREATE TABLE Contract_Products (
 
 -- Training sessions
 CREATE TABLE Training (
-  IPN_Visitor INTEGER NOT NULL,
-  IPN_Staff INTEGER,
+  Visitor_ID INTEGER NOT NULL,
+  Staff_ID INTEGER,
   Date_Of_Begin DATE NOT NULL,
   Date_Of_End DATE NOT NULL,
-  PRIMARY KEY (IPN_Visitor, IPN_Staff, Date_Of_Begin, Date_Of_End),
-  FOREIGN KEY (IPN_Visitor) REFERENCES Visitor(IPN)
+  PRIMARY KEY (Visitor_ID, Staff_ID, Date_Of_Begin, Date_Of_End),
+  FOREIGN KEY (Visitor_ID) REFERENCES Visitor(ID)
     ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (IPN_Staff) REFERENCES Staff(IPN)
+  FOREIGN KEY (Staff_ID) REFERENCES Staff(ID)
     ON DELETE SET NULL ON UPDATE CASCADE
 );
