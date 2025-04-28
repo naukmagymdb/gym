@@ -1,29 +1,43 @@
-import { Controller, Get, UseGuards, UseInterceptors, ClassSerializerInterceptor, Request } from "@nestjs/common";
-import { AccountsHandler } from "src/accounts/accountsHandler.service";
-import { Roles } from "src/auth/decorators/roles.decorator";
-import { RolesGuard } from "src/auth/guards/roles.guard";
-import { Role } from "src/auth/utils/role.enum";
-import { IndexService } from "src/index/index.service";
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Request,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { AccountsHandler } from 'src/accounts/services/accountsHandler.service';
+import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
+import { UpdateStaffDto } from 'src/repositories/staff/dtos/update-staff.dto';
+import { UpdateVisitorDto } from 'src/repositories/visitors/dtos/update-visitor.dto';
 
-
-@Controller()
+@Controller('dashboard')
 export class IndexController {
-    constructor(
-        private readonly indexService: IndexService,
-        private readonly accountsHandler: AccountsHandler
-    ) { }
+  constructor(private readonly accountsHandler: AccountsHandler) {}
 
-    @Get()
-    async getDashboard(@Request() req) {
-        const { role, phone_num } = req.logged;
-        return this.accountsHandler.getDashboard(role, phone_num)
-    }
+  @Get('')
+  @UseGuards(AuthenticatedGuard)
+  async getDashboard(@Request() req) {
+    const { role, id } = req.user;
+    const dashboard = await this.accountsHandler.getDashboard(role, id);
+    return this.accountsHandler.serialize(role, dashboard);
+  }
 
-    @Roles(Role.Admin)
-    @UseGuards(RolesGuard)
-    @UseInterceptors(ClassSerializerInterceptor)
-    @Get('test')
-    async testFunc() { 
-        return await this.indexService.testFunc();
-    }
+  @Patch('')
+  @UseGuards(AuthenticatedGuard)
+  @UsePipes(ValidationPipe)
+  async updateAccountInfo(
+    @Request() req,
+    @Body() updateDto: UpdateStaffDto | UpdateVisitorDto,
+  ) {
+    const { role, id } = req.user;
+    const patched = await this.accountsHandler.updateAccountInfo(
+      role,
+      id,
+      updateDto,
+    );
+    return this.accountsHandler.serialize(role, patched);
+  }
 }

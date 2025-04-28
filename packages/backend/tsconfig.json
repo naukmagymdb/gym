@@ -11,6 +11,10 @@
     "outDir": "./dist",
     "rootDir": "./",
     "baseUrl": "./",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./common/types"
+    ],
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,

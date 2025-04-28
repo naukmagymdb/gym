@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AccountsModule } from './accounts/accounts.module';
-import { AdminsModule } from './accounts/admins/admins.module';
-import { UsersModule } from './accounts/users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { IndexModule } from './index/index.module';
+import { RepositoryModule } from './repositories/repository.module';
 
 @Module({
   imports: [
@@ -20,8 +19,7 @@ import { IndexModule } from './index/index.module';
     IndexModule,
     AuthModule,
     AccountsModule,
-    UsersModule,
-    AdminsModule,
+    RepositoryModule,
   ],
   controllers: [],
   providers: [],
