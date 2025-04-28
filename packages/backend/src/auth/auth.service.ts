@@ -9,8 +9,8 @@ export class AuthService {
         private readonly accountsHandler: AccountsHandler
     ) { }
 
-    async validate(username: string, password: string, role: Role) {
-        const loggedDB = await this.accountsHandler.getByPhone(role, username)
+    async validate(id: number, password: string, role: Role) {
+        const loggedDB = await this.accountsHandler.getById(role, id)
 
         if (loggedDB) {
             console.log(loggedDB)

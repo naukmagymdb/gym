@@ -44,11 +44,11 @@ export class AccountsHandler {
     return this.strategies[role].getByPhone(phone);
   }
 
-  getById(role: Role, phone: string) {
-    return this.strategies[role].getByPhone(phone);
+  getById(role: Role, id: number) {
+    return this.strategies[role].getById(id);
   }
 
-  serialize(role: Role, data: any) {
+  deserialize(role: Role, data: any) {
     const dto = this.dtoStrategies[role];
     return plainToInstance(dto, data);
   }

@@ -12,7 +12,7 @@ export class SessionSerializer extends PassportSerializer {
 
   serializeUser(logged, done: (err, user) => void) {
     console.log('Serializing...');
-    done(null, { phone: logged.phone_num, role: logged.role });
+    done(null, { id: logged.id, role: logged.role });
   }
 
   async deserializeUser(
@@ -21,9 +21,9 @@ export class SessionSerializer extends PassportSerializer {
   ) {
     console.log('Deserializing...');
 
-    const loggedDB = await this.accountsHandler.getByPhone(
+    const loggedDB = await this.accountsHandler.getById(
       payload.role,
-      payload.phone,
+      payload.id,
     );
     const deserialized = { ...loggedDB, role: payload.role };
 
