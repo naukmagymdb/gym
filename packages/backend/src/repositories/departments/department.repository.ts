@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import pgPromise from 'pg-promise';
+import { IDatabase } from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
 import { DepartmentDto } from './dtos/department.dto';
 
 @Injectable()
 export class DepartmentRepository {
-  private db: pgPromise.IDatabase<any>;
-  
+  private db: IDatabase<any>;
+
   constructor(private readonly databaseService: DatabaseService) {
     this.db = databaseService.getDb();
   }
@@ -18,7 +18,7 @@ export class DepartmentRepository {
     sortBy?: 'id' | 'address';
     order?: 'asc' | 'desc';
   }) {
-    
+
     const query = `
       SELECT * FROM department
       ORDER BY ${sortBy} ${order.toUpperCase()}
