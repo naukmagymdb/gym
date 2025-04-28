@@ -10,7 +10,7 @@ import { RepositoryModule } from './repositories/repository.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../../.env',
+      envFilePath: '.env',
     }),
     DatabaseModule.forRoot({
       retryAttempts: 5,
