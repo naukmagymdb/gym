@@ -22,7 +22,7 @@ export class StaffController {
   @Get()
   async findAll(
     @Query('depId') depId: number,
-    @Query('sortBy') sortBy: string = 'last_name',
+    @Query('sortBy') sortBy: string = 'surname',
     @Query('order') order: 'asc' | 'desc' = 'asc'
   ) {
     return this.staffRepository.findAll({

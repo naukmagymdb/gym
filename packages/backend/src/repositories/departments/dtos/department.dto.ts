@@ -5,6 +5,7 @@ export class DepartmentDto {
     Object.assign(this, partial);
   }
 
+
   @IsString()
   @IsNotEmpty()
   @MaxLength(50)

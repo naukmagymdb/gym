@@ -8,7 +8,7 @@ export class CreateStaffDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(50)
-    Contract_num: string;
+    contract_num: string;
 
     @IsString()
     @IsNotEmpty()
@@ -37,7 +37,7 @@ export class CreateStaffDto {
     @IsString()
     @IsOptional()
     @MaxLength(50)
-    Qualification_cert_number_of_coach?: string = null;
+    qualification_cert_number_of_coach?: string = null;
 
     @IsEmail()
     @IsOptional()
@@ -45,7 +45,7 @@ export class CreateStaffDto {
 
     @IsInt()
     @IsNotEmpty()
-    Department_id: number;
+    department_id: number;
 
     @IsString()
     @IsNotEmpty()

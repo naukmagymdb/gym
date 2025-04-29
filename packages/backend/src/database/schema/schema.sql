@@ -21,7 +21,7 @@ FROM Visitor v;
 
 -- Department and its contacts
 CREATE TABLE Department (
-  Department_id INTEGER PRIMARY KEY,
+  Department_id SERIAL PRIMARY KEY,
   Address VARCHAR(50) NOT NULL
 );
 
@@ -95,7 +95,7 @@ CREATE TABLE Abonementtype (
 );
 
 CREATE TABLE Abonement (
-  Abonement_id INTEGER PRIMARY KEY,
+  Abonement_id SERIAL PRIMARY KEY,
   Start_date DATE NOT NULL,
   End_date DATE NOT NULL,
   Is_active BOOLEAN NOT NULL,

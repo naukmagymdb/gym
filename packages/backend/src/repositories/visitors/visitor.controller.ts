@@ -26,7 +26,7 @@ export class VisitorController {
 
   @Get()
   async findAll(
-    @Query('sortBy') sortBy: string = 'last_name',
+    @Query('sortBy') sortBy: string = 'surname',
     @Query('order') order: 'asc' | 'desc' = 'asc',
   ) {
     return await this.visitorRepository.findAll({

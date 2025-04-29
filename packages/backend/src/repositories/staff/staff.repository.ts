@@ -44,9 +44,9 @@ export class StaffRepository {
 
     const sql = `
       INSERT INTO staff 
-        (contract_num, staff_name, surname, patronymic, salary, phone_num, certificate_couch_number, email, dep_id, login_password) 
+        (contract_num, staff_name, surname, patronymic, salary, phone_num, qualification_cert_number_of_coach, email, department_id, login_password) 
       VALUES 
-        ($(contract_num), $(staff_name), $(surname), $(patronymic), $(salary), $(phone_num), $(certificate_couch_number), $(email), $(dep_id), $(login_password)) 
+        ($(contract_num), $(staff_name), $(surname), $(patronymic), $(salary), $(phone_num), $(qualification_cert_number_of_coach), $(email), $(department_id), $(login_password)) 
       RETURNING *
     `;
 
@@ -66,9 +66,9 @@ export class StaffRepository {
         patronymic = COALESCE($(patronymic), patronymic),
         salary = COALESCE($(salary), salary),
         phone_num = COALESCE($(phone_num), phone_num),
-        certificate_couch_number = COALESCE($(certificate_couch_number), certificate_couch_number),
+        qualification_cert_number_of_coach = COALESCE($(qualification_cert_number_of_coach), qualification_cert_number_of_coach),
         email = COALESCE($(email), email),
-        dep_id = COALESCE($(dep_id), dep_id),
+        department_id = COALESCE($(department_id), department_id),
         login_password = COALESCE($(login_password), login_password)
       WHERE id = $(id)
       RETURNING *

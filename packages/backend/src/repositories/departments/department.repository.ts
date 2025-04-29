@@ -12,23 +12,23 @@ export class DepartmentRepository {
   }
 
   async findAll({
-    sortBy = 'id',
+    sortBy = 'department_id',
     order = 'asc'
   }: {
-    sortBy?: 'id' | 'address';
+    sortBy?: 'department_id' | 'address';
     order?: 'asc' | 'desc';
   }) {
 
     const query = `
       SELECT * FROM department
-      ORDER BY ${sortBy} ${order.toUpperCase()}
+      ORDER BY ${sortBy} ${order.toUpperCase()} 
     `;
 
     return await this.db.any(query);
   }
 
   async findById(id: number) {
-    const query = 'SELECT * FROM department WHERE id = $1';
+    const query = 'SELECT * FROM department WHERE department_id = $1';
     const result = await this.db.oneOrNone(query, [id]);
     return result || null;
   }
@@ -47,7 +47,7 @@ export class DepartmentRepository {
     const query = `
       UPDATE department
       SET address = $(address)
-      WHERE id = $(id)
+      WHERE department_id = $(id)
       RETURNING *
     `;
     const result = await this.db.one(query, { ...dto, id });
@@ -57,7 +57,7 @@ export class DepartmentRepository {
   async delete(id: number) {
     const query = `
       DELETE FROM department
-      WHERE id = $(id)
+      WHERE department_id = $(id)
       RETURNING *
     `;
     const result = await this.db.one(query, { id });

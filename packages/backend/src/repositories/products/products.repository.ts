@@ -13,7 +13,7 @@ export class ProductsService {
   }
 
   async create(createProductDto: CreateProductDto) {
-    const productExists = await this.isPresentInDatabase(createProductDto.good_name);
+    const productExists = await this.isPresentInDatabase(createProductDto.goods_name);
 
     if (productExists) {
       throw new ConflictException("Cannot create item as it already exists");
@@ -25,7 +25,7 @@ export class ProductsService {
         RETURNING *;
       `;
 
-    const result = await this.db.one(query, [createProductDto.good_name]);
+    const result = await this.db.one(query, [createProductDto.goods_name]);
     return result;
   }
 
@@ -50,7 +50,7 @@ export class ProductsService {
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
-    const productExists = await this.isPresentInDatabase(updateProductDto.good_name);
+    const productExists = await this.isPresentInDatabase(updateProductDto.goods_name);
     if (productExists) {
       throw new ConflictException("Cannot update item as it already exists");
     }
@@ -67,7 +67,7 @@ export class ProductsService {
         RETURNING *;
       `;
 
-    const result = await this.db.one(query, [updateProductDto.good_name, id]);
+    const result = await this.db.one(query, [updateProductDto.goods_name, id]);
     return result;
   }
 

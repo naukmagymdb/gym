@@ -21,7 +21,7 @@ export class DepartmentController {
 
   @Get()
   getAll(
-    @Query('sortBy') sortBy: 'id' | 'address' = 'id',
+    @Query('sortBy') sortBy: 'department_id' | 'address' = 'department_id',
     @Query('order') order: 'asc' | 'desc' = 'asc',
   ) {
     return this.depRepository.findAll({ sortBy, order });

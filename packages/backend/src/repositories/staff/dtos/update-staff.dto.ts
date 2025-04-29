@@ -4,7 +4,7 @@ export class UpdateStaffDto {
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        Contract_num?: string = null;
+        contract_num?: string = null;
 
         @IsString()
         @IsOptional()
@@ -33,7 +33,7 @@ export class UpdateStaffDto {
         @IsString()
         @IsOptional()
         @MaxLength(50)
-        Qualification_cert_number_of_coach?: string = null;
+        qualification_cert_number_of_coach?: string = null;
 
         @IsEmail()
         @IsOptional()
@@ -41,7 +41,7 @@ export class UpdateStaffDto {
 
         @IsInt()
         @IsOptional()
-        Department_id?: number = null;
+        department_id?: number = null;
 
         @IsString()
         @IsOptional()
