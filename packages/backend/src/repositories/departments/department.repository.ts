@@ -13,12 +13,11 @@ export class DepartmentRepository {
 
   async findAll({
     sortBy = 'department_id',
-    order = 'asc'
+    order = 'asc',
   }: {
     sortBy?: 'department_id' | 'address';
     order?: 'asc' | 'desc';
   }) {
-
     const query = `
       SELECT * FROM department
       ORDER BY ${sortBy} ${order.toUpperCase()} 

@@ -4,8 +4,9 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -13,16 +14,19 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/utils/role.enum';
+import { TrainingRepository } from '../trainings/training.repository';
 import { CreateVisitorDto } from './dtos/create-visitor.dto';
 import { UpdateVisitorDto } from './dtos/update-visitor.dto';
 import { VisitorRepository } from './visitor.repository';
 
-
 @Roles(Role.Admin)
 @UseGuards(AuthenticatedGuard, RolesGuard)
-@Controller('visitor')
+@Controller('visitors')
 export class VisitorController {
-  constructor(private readonly visitorRepository: VisitorRepository) { }
+  constructor(
+    private readonly visitorRepository: VisitorRepository,
+    private readonly trainingRepository: TrainingRepository,
+  ) {}
 
   @Get()
   async findAll(
@@ -31,12 +35,12 @@ export class VisitorController {
   ) {
     return await this.visitorRepository.findAll({
       sortBy: sortBy,
-      order: order
+      order: order,
     });
   }
 
   @Get(':id')
-  async findById(@Param('id') id: number) {
+  async findById(@Param('id', ParseIntPipe) id: number) {
     return await this.visitorRepository.findById(id);
   }
 
@@ -45,16 +49,21 @@ export class VisitorController {
     return await this.visitorRepository.create(createVisitorDto);
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateVisitorDto: UpdateVisitorDto,
   ) {
     return await this.visitorRepository.update(id, updateVisitorDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     return await this.visitorRepository.delete(id);
+  }
+
+  @Get(':id/sessions')
+  getTrainingHistory(@Param('id', ParseIntPipe) id: number) {
+    return this.trainingRepository.findByVisitorId(id);
   }
 }
