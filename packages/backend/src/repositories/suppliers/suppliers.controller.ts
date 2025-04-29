@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
@@ -43,7 +43,7 @@ export class SuppliersController {
     return this.suppiersService.getProductsBySupplier(+edrpou, sortBy, order);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id') edrpou: string,
     @Body() updateSuppierDto: UpdateSupplierDto,
