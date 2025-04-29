@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import pgPromise from 'pg-promise';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { IDatabase } from 'pg-promise';
 import { encodePassword } from 'src/common/utils/bcrypt';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateStaffDto } from './dtos/create-staff.dto';
@@ -7,7 +7,7 @@ import { UpdateStaffDto } from './dtos/update-staff.dto';
 
 @Injectable()
 export class StaffRepository {
-  private db: pgPromise.IDatabase<any>;
+  private db: IDatabase<any>;
 
   constructor(private readonly databaseService: DatabaseService) {
     this.db = databaseService.getDb();
@@ -24,7 +24,9 @@ export class StaffRepository {
   }) {
     let conditions: string[] = [];
     if (depId) conditions.push('dep_id = $(depId)');
-    const whereClause = conditions.length ? 'WHERE ' + conditions.join(' AND ') : '';
+    const whereClause = conditions.length
+      ? 'WHERE ' + conditions.join(' AND ')
+      : '';
 
     const sql = `
       SELECT * FROM staff
@@ -40,13 +42,15 @@ export class StaffRepository {
   }
 
   async create(createStaffDto: CreateStaffDto) {
-    createStaffDto.login_password = encodePassword(createStaffDto.login_password);
+    createStaffDto.login_password = encodePassword(
+      createStaffDto.login_password,
+    );
 
     const sql = `
       INSERT INTO staff 
-        (contract_num, first_name, last_name, patronymic, salary, phone_num, certificate_couch_number, email, dep_id, login_password) 
+        (contract_num, staff_name, surname, patronymic, salary, phone_num, qualification_cert_number_of_coach, email, department_id, login_password) 
       VALUES 
-        ($(contract_num), $(first_name), $(last_name), $(patronymic), $(salary), $(phone_num), $(certificate_couch_number), $(email), $(dep_id), $(login_password)) 
+        ($(contract_num), $(staff_name), $(surname), $(patronymic), $(salary), $(phone_num), $(qualification_cert_number_of_coach), $(email), $(department_id), $(login_password)) 
       RETURNING *
     `;
 
@@ -55,25 +59,30 @@ export class StaffRepository {
 
   async update(id: number, updateStaffDto: UpdateStaffDto) {
     if (updateStaffDto.login_password) {
-      updateStaffDto.login_password = encodePassword(updateStaffDto.login_password);
+      updateStaffDto.login_password = encodePassword(
+        updateStaffDto.login_password,
+      );
     }
 
+    const setClause = [];
+    const values = { id };
+    for (const [key, value] of Object.entries(updateStaffDto)) {
+      if (value !== undefined && value !== null) {
+        setClause.push(`${key} = $(${key})`);
+        values[key] = value;
+      }
+    }
+
+    if (setClause.length === 0)
+      throw new BadRequestException('No fields to update');
+
     const sql = `
-      UPDATE staff SET 
-        contract_num = COALESCE($(contract_num), contract_num),
-        first_name = COALESCE($(first_name), first_name),
-        last_name = COALESCE($(last_name), last_name),
-        patronymic = COALESCE($(patronymic), patronymic),
-        salary = COALESCE($(salary), salary),
-        phone_num = COALESCE($(phone_num), phone_num),
-        certificate_couch_number = COALESCE($(certificate_couch_number), certificate_couch_number),
-        email = COALESCE($(email), email),
-        dep_id = COALESCE($(dep_id), dep_id),
-        login_password = COALESCE($(login_password), login_password)
-      WHERE id = $(id)
-      RETURNING *
-    `;
-    return await this.db.one(sql, { ...updateStaffDto, id });
+		UPDATE staff
+		SET ${setClause.join(', ')}
+		WHERE id = $(id)
+		RETURNING *;
+	`;
+    return await this.db.oneOrNone(sql, values);
   }
 
   async delete(id: number) {

@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import pgPromise from 'pg-promise';
+import { encodePassword } from 'src/common/utils/bcrypt';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateVisitorDto } from './dtos/create-visitor.dto';
 import { UpdateVisitorDto } from './dtos/update-visitor.dto';
-import { encodePassword } from 'src/common/utils/bcrypt';
 
 @Injectable()
 export class VisitorRepository {
@@ -12,7 +12,7 @@ export class VisitorRepository {
   constructor(private readonly databaseService: DatabaseService) {
     this.db = databaseService.getDb();
   }
-  
+
   async findAll({
     sortBy,
     order,
@@ -33,13 +33,15 @@ export class VisitorRepository {
   }
 
   async create(createVisitorDto: CreateVisitorDto) {
-    createVisitorDto.login_password = encodePassword(createVisitorDto.login_password);
+    createVisitorDto.login_password = encodePassword(
+      createVisitorDto.login_password,
+    );
 
     const sql = `
       INSERT INTO visitor 
-        (first_name, last_name, patronymic, phone_num, email, birth_date, login_password) 
+        (visitor_name, surname, patronymic, phone_num, email, birth_date, login_password) 
       VALUES 
-        ($(first_name), $(last_name), $(patronymic), $(phone_num), $(email), $(birth_date), $(login_password)) 
+        ($(visitor_name), $(surname), $(patronymic), $(phone_num), $(email), $(birth_date), $(login_password)) 
       RETURNING *
     `;
     return await this.db.one(sql, createVisitorDto);
@@ -47,26 +49,34 @@ export class VisitorRepository {
 
   async update(id: number, updateVisitorDto: UpdateVisitorDto) {
     if (updateVisitorDto.login_password) {
-      updateVisitorDto.login_password = encodePassword(updateVisitorDto.login_password);
+      updateVisitorDto.login_password = encodePassword(
+        updateVisitorDto.login_password,
+      );
     }
 
+    const setClause = [];
+    const values = { id };
+    for (const [key, value] of Object.entries(updateVisitorDto)) {
+      if (value !== undefined && value !== null) {
+        setClause.push(`${key} = $(${key})`);
+        values[key] = value;
+      }
+    }
+
+    if (setClause.length === 0)
+      throw new BadRequestException('No fields to update');
+
     const sql = `
-      UPDATE visitor SET 
-        first_name = COALESCE($(first_name), first_name),
-        last_name = COALESCE($(last_name), last_name),
-        patronymic = COALESCE($(patronymic), patronymic),
-        phone_num = COALESCE($(phone_num), phone_num),
-        email = COALESCE($(email), email),
-        birth_date = COALESCE($(birth_date), birth_date),
-        login_password = COALESCE($(login_password), login_password)
+      UPDATE visitor
+      SET ${setClause.join(', ')}
       WHERE id = $(id)
       RETURNING *
     `;
-    return await this.db.one(sql, { ...updateVisitorDto, id });
+    return await this.db.oneOrNone(sql, values);
   }
 
   async delete(id: number) {
     const sql = 'DELETE FROM visitor WHERE id = $(id) RETURNING *';
-    return await this.db.one(sql, { id });
+    return await this.db.oneOrNone(sql, { id });
   }
 }

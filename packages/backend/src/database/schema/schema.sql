@@ -8,7 +8,8 @@ CREATE TABLE Visitor (
   Surname VARCHAR(50) NOT NULL,
   Patronymic VARCHAR(50) NOT NULL,
   Phone_num VARCHAR(50) NOT NULL,
-  Email VARCHAR(50)
+  Email VARCHAR(50),
+  Login_password VARCHAR(100) NOT NULL
 );
 
 -- View to calculate Age dynamically
@@ -20,7 +21,7 @@ FROM Visitor v;
 
 -- Department and its contacts
 CREATE TABLE Department (
-  Department_id INTEGER PRIMARY KEY,
+  Department_id SERIAL PRIMARY KEY,
   Address VARCHAR(50) NOT NULL
 );
 
@@ -51,7 +52,8 @@ CREATE TABLE Staff (
   Email VARCHAR(50),
   Department_id INTEGER NOT NULL,
   FOREIGN KEY (Department_id) REFERENCES Department(Department_id)
-    ON DELETE NO ACTION ON UPDATE CASCADE
+    ON DELETE NO ACTION ON UPDATE CASCADE,
+  Login_password VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Staff_Manager_Subordinate (
@@ -93,7 +95,7 @@ CREATE TABLE Abonementtype (
 );
 
 CREATE TABLE Abonement (
-  Abonement_id INTEGER PRIMARY KEY,
+  Abonement_id SERIAL PRIMARY KEY,
   Start_date DATE NOT NULL,
   End_date DATE NOT NULL,
   Is_active BOOLEAN NOT NULL,

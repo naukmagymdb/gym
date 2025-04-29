@@ -1,34 +1,49 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { ProductsService } from './products.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/utils/role.enum';
+import { ProductDto } from './dto/product.dto';
+import { ProductsService } from './products.repository';
 
+@Roles(Role.Admin)
+@UseGuards(AuthenticatedGuard, RolesGuard)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  create(@Body() createProductDto: ProductDto) {
     return this.productsService.create(createProductDto);
   }
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  findAll(@Query('order') order: 'asc' | 'desc' = 'asc') {
+    return this.productsService.findAll({ order: order });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+    return this.productsService.findById(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
     return this.productsService.update(+id, updateProductDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+    return this.productsService.delete(+id);
   }
 }

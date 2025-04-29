@@ -9,7 +9,7 @@ export class UsersService implements AccountStrategy {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly utilsService: UtilsService,
-  ) {}
+  ) { }
 
   async getDashboard(id: number) {
     const user = await this.getById(id);
@@ -42,7 +42,7 @@ export class UsersService implements AccountStrategy {
     const db = this.databaseService.getDb();
 
     const res = await db.oneOrNone(
-      'SELECT * FROM visitor WHERE id = $1', 
+      'SELECT * FROM visitor WHERE id = $1',
       [id]
     );
     return res || null;
