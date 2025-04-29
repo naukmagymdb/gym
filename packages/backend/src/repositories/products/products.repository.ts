@@ -1,8 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { IDatabase } from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductDto } from './dto/product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -12,87 +11,56 @@ export class ProductsService {
     this.db = databaseService.getDb();
   }
 
-  async create(createProductDto: CreateProductDto) {
-    const productExists = await this.isPresentInDatabase(createProductDto.goods_name);
-
-    if (productExists) {
-      throw new ConflictException("Cannot create item as it already exists");
-    }
-
+  async create(createProductDto: ProductDto) {
     const query = `
-        INSERT INTO products (good_name)
+        INSERT INTO products (goods_name)
         VALUES ($1)
         RETURNING *;
       `;
 
-    const result = await this.db.one(query, [createProductDto.goods_name]);
-    return result;
+    return await this.db.one(query, [createProductDto.goods_name]);
   }
 
-  async findAll() {
-    return this.db.query("SELECT * FROM products");
+  async findAll({ order }: { order?: 'asc' | 'desc' }) {
+    const sql = `
+        SELECT * FROM products
+        ORDER BY goods_name ${order}
+    `;
+
+    return this.db.any(sql);
   }
 
-  async findOne(id: number) {
-    const productIdExists = await this.isValidProductId(id);
-    if (!productIdExists) {
-      throw new NotFoundException("Invalid ID provided. Please provide a valid ID.");
-    }
-
+  async findById(id: number) {
     const query = `
-        SELECT *
-        FROM products
-        WHERE good_id = $1
+        SELECT * FROM products
+        WHERE goods_id = $1
       `;
 
-    const result = await this.db.one(query, [id]);
-    return result;
+    return await this.db.oneOrNone(query, [id]);
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
-    const productExists = await this.isPresentInDatabase(updateProductDto.goods_name);
-    if (productExists) {
-      throw new ConflictException("Cannot update item as it already exists");
-    }
-
-    const productIdExists = await this.isValidProductId(id);
-    if (!productIdExists) {
-      throw new NotFoundException("Invalid ID provided. Please provide a valid ID.");
-    }
-
+  async update(id: number, updateProductDto: ProductDto) {
     const query = `
         UPDATE products
-        SET good_name = $1
-        WHERE good_id = $2
+        SET goods_name = $1
+        WHERE goods_id = $2
         RETURNING *;
-      `;
+    `;
 
-    const result = await this.db.one(query, [updateProductDto.goods_name, id]);
+    const result = await this.db.oneOrNone(query, [
+      updateProductDto.goods_name,
+      id,
+    ]);
     return result;
   }
 
-  async remove(id: number) {
-    const productIdExists = await this.isValidProductId(id);
-    if (!productIdExists) {
-      throw new NotFoundException("Invalid ID provided. Please provide a valid ID.");
-    }
-
+  async delete(id: number) {
     const query = `
         DELETE FROM products
-        WHERE good_id = $1
+        WHERE goods_id = $1
         RETURNING *;
       `;
 
-    return this.db.one(query, [id]);
-  }
-
-  private async isValidProductId(id: number): Promise<boolean> {
-    const products = await this.findAll();
-    return products.some(product => product.good_id == id);
-  }
-
-  private async isPresentInDatabase(name: string): Promise<boolean> {
-    const products = await this.findAll();
-    return products.some(product => product.good_name === name);
+    return this.db.oneOrNone(query, [id]);
   }
 }

@@ -7,17 +7,16 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Query
+  Query,
 } from '@nestjs/common';
 import { DepartmentRepository } from './department.repository';
 import { DepartmentDto } from './dtos/department.dto';
-
 
 // @Roles(Role.Admin)
 // @UseGuards(AuthenticatedGuard, RolesGuard)
 @Controller('department')
 export class DepartmentController {
-  constructor(private readonly depRepository: DepartmentRepository) { }
+  constructor(private readonly depRepository: DepartmentRepository) {}
 
   @Get()
   getAll(

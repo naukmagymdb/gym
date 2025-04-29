@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import pgPromise from 'pg-promise';
 import { encodePassword } from 'src/common/utils/bcrypt';
 import { DatabaseService } from 'src/database/database.service';
@@ -33,7 +33,9 @@ export class VisitorRepository {
   }
 
   async create(createVisitorDto: CreateVisitorDto) {
-    createVisitorDto.login_password = encodePassword(createVisitorDto.login_password);
+    createVisitorDto.login_password = encodePassword(
+      createVisitorDto.login_password,
+    );
 
     const sql = `
       INSERT INTO visitor 
@@ -47,26 +49,34 @@ export class VisitorRepository {
 
   async update(id: number, updateVisitorDto: UpdateVisitorDto) {
     if (updateVisitorDto.login_password) {
-      updateVisitorDto.login_password = encodePassword(updateVisitorDto.login_password);
+      updateVisitorDto.login_password = encodePassword(
+        updateVisitorDto.login_password,
+      );
     }
 
+    const setClause = [];
+    const values = { id };
+    for (const [key, value] of Object.entries(updateVisitorDto)) {
+      if (value !== undefined && value !== null) {
+        setClause.push(`${key} = $(${key})`);
+        values[key] = value;
+      }
+    }
+
+    if (setClause.length === 0)
+      throw new BadRequestException('No fields to update');
+
     const sql = `
-      UPDATE visitor SET 
-        visitor_name = COALESCE($(visitor_name), visitor_name),
-        surname = COALESCE($(surname), surname),
-        patronymic = COALESCE($(patronymic), patronymic),
-        phone_num = COALESCE($(phone_num), phone_num),
-        email = COALESCE($(email), email),
-        birth_date = COALESCE($(birth_date), birth_date),
-        login_password = COALESCE($(login_password), login_password)
+      UPDATE visitor
+      SET ${setClause.join(', ')}
       WHERE id = $(id)
       RETURNING *
     `;
-    return await this.db.one(sql, { ...updateVisitorDto, id });
+    return await this.db.oneOrNone(sql, values);
   }
 
   async delete(id: number) {
     const sql = 'DELETE FROM visitor WHERE id = $(id) RETURNING *';
-    return await this.db.one(sql, { id });
+    return await this.db.oneOrNone(sql, { id });
   }
 }
