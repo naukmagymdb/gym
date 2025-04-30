@@ -14,11 +14,11 @@ import { SuppliersService } from './suppliers.repository';
 
 @Controller('suppliers')
 export class SuppliersController {
-  constructor(private readonly suppiersService: SuppliersService) {}
+  constructor(private readonly suppliersService: SuppliersService) {}
 
   @Post()
-  create(@Body() suppierDto: CreateSupplierDto) {
-    return this.suppiersService.create(suppierDto);
+  create(@Body() supplierDto: CreateSupplierDto) {
+    return this.suppliersService.create(supplierDto);
   }
 
   @Get()
@@ -26,12 +26,12 @@ export class SuppliersController {
     @Query('sortBy') sortBy: string = 'edrpou',
     @Query('order') order: 'asc' | 'desc' = 'asc',
   ) {
-    return this.suppiersService.findAll(sortBy, order);
+    return this.suppliersService.findAll(sortBy, order);
   }
 
   @Get(':id')
   findOne(@Param('id') edrpou: string) {
-    return this.suppiersService.findOne(+edrpou);
+    return this.suppliersService.findOne(+edrpou);
   }
 
   @Get(':id/products')
@@ -40,19 +40,19 @@ export class SuppliersController {
     @Query('sortBy') sortBy: string = 'goods_id',
     @Query('order') order: 'asc' | 'desc' = 'asc',
   ) {
-    return this.suppiersService.getProductsBySupplier(+edrpou, sortBy, order);
+    return this.suppliersService.getProductsBySupplier(+edrpou, sortBy, order);
   }
 
   @Put(':id')
   update(
     @Param('id') edrpou: string,
-    @Body() updateSuppierDto: UpdateSupplierDto,
+    @Body() updateSupplierDto: UpdateSupplierDto,
   ) {
-    return this.suppiersService.update(+edrpou, updateSuppierDto);
+    return this.suppliersService.update(+edrpou, updateSupplierDto);
   }
 
   @Delete(':id')
   remove(@Param('id') edrpou: string) {
-    return this.suppiersService.remove(+edrpou);
+    return this.suppliersService.remove(+edrpou);
   }
 }

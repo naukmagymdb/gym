@@ -12,14 +12,14 @@ export class SuppliersService {
     this.db = databaseService.getDb();
   }
 
-  async create(suppierDto: CreateSupplierDto) {
+  async create(supplierDto: CreateSupplierDto) {
     try {
       const query = `
       INSERT INTO supplier (edrpou, email, phone_num)
       VALUES ($(edrpou), $(email), $(phone_num)) 
       RETURNING *
     `;
-      const res = await this.db.oneOrNone(query, suppierDto);
+      const res = await this.db.oneOrNone(query, supplierDto);
       return res;
     } catch (e) {
       return 'Supplier with this EDRPOU already exists';
