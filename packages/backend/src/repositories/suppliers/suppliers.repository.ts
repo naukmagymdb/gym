@@ -26,7 +26,7 @@ export class SuppliersService {
     }
   }
 
-  findAll(sortBy: string, order: 'asc' | 'desc') {
+  async findAll(sortBy: string, order: 'asc' | 'desc') {
     const allowedSortFields = ['edrpou', 'email', 'phone_num']; // whitelist fields
     const allowedOrders = ['asc', 'desc'];
 
@@ -37,15 +37,14 @@ export class SuppliersService {
       SELECT * FROM supplier
       ORDER BY ${safeSortBy} ${safeOrder}
     `;
-    return this.db.any(query);
+    return await this.db.any(query);
   }
 
-  findOne(edrpou: number) {
+  async findOne(edrpou: number) {
     const query = `
         SELECT * FROM supplier WHERE edrpou = $1
       `;
-    const res = this.db.oneOrNone(query, [edrpou]);
-    return res;
+    return await this.db.oneOrNone(query, [edrpou]);
   }
 
   async update(edrpou: number, updateSupplierDto: UpdateSupplierDto) {
@@ -76,16 +75,20 @@ export class SuppliersService {
     return await this.db.oneOrNone(query, values);
   }
 
-  delete(edrpou: number) {
+  async delete(edrpou: number) {
     const query = `
       DELETE FROM supplier 
       WHERE edrpou = $1
       RETURNING *
     `;
-    return this.db.oneOrNone(query, [edrpou]);
+    return await this.db.oneOrNone(query, [edrpou]);
   }
 
-  getProductsBySupplier(edrpou: number, sortBy: string, order: 'asc' | 'desc') {
+  async getProductsBySupplier(
+    edrpou: number,
+    sortBy: string,
+    order: 'asc' | 'desc',
+  ) {
     const allowedSortFields = ['goods_id', 'goods_name']; // whitelist fields
     const allowedOrders = ['asc', 'desc'];
 
@@ -103,6 +106,6 @@ export class SuppliersService {
       ORDER BY ${safeSortBy} ${safeOrder}
     `;
 
-    return this.db.any(query, [edrpou]);
+    return await this.db.any(query, [edrpou]);
   }
 }
