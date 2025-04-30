@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe, // Import ParseIntPipe
   Post,
   Put,
   Query,
@@ -30,29 +31,29 @@ export class SuppliersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') edrpou: string) {
-    return this.suppliersService.findOne(+edrpou);
+  findOne(@Param('id', ParseIntPipe) edrpou: number) {
+    return this.suppliersService.findOne(edrpou);
   }
 
   @Get(':id/products')
   getProductsBySupplier(
-    @Param('id') edrpou: string,
+    @Param('id', ParseIntPipe) edrpou: number,
     @Query('sortBy') sortBy: string = 'goods_id',
     @Query('order') order: 'asc' | 'desc' = 'asc',
   ) {
-    return this.suppliersService.getProductsBySupplier(+edrpou, sortBy, order);
+    return this.suppliersService.getProductsBySupplier(edrpou, sortBy, order);
   }
 
   @Put(':id')
   update(
-    @Param('id') edrpou: string,
+    @Param('id', ParseIntPipe) edrpou: number,
     @Body() updateSupplierDto: UpdateSupplierDto,
   ) {
-    return this.suppliersService.update(+edrpou, updateSupplierDto);
+    return this.suppliersService.update(edrpou, updateSupplierDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') edrpou: string) {
-    return this.suppliersService.remove(+edrpou);
+  remove(@Param('id', ParseIntPipe) edrpou: number) {
+    return this.suppliersService.remove(edrpou);
   }
 }
