@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { AppModule } from './app.module';
@@ -37,8 +38,20 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT || 3001, () => {
-    console.log(`The server is running on port ${process.env.PORT}`);
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Gym Management System')
+    .setDescription('The Gym Management System API description')
+    .setVersion('1.0')
+    .build();
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('documentation', app, swaggerDocument);
+
+  const host = process.env.HOST || 'localhost';
+  const port = process.env.PORT || 3001;
+
+  await app.listen(port, () => {
+    console.log(`The server is running on ${host}:${port}`);
+    console.log(`Documentation is running on ${host}:${port}/documentation`);
   });
 }
 bootstrap();
