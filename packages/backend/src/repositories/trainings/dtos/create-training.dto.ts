@@ -1,23 +1,23 @@
 import { IsDateString, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 
-export class CreateReadTrainingDto {
-  constructor(partial: Partial<CreateReadTrainingDto>) {
+export class CreateTrainingDto {
+  constructor(partial: Partial<CreateTrainingDto>) {
     Object.assign(this, partial);
   }
 
   @IsInt()
   @IsNotEmpty()
-  visitorId: number;
+  visitor_id: number;
 
   @IsInt()
   @IsOptional()
-  staffId?: number;
+  staff_id?: number;
 
   @IsDateString()
   @IsNotEmpty()
-  dateFrom: string;
+  date_of_begin: string;
 
   @IsDateString()
   @IsNotEmpty()
-  dateTo: string;
+  date_of_end: string;
 }

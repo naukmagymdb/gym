@@ -12,7 +12,12 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/utils/role.enum';
-import { CreateReadTrainingDto } from './dtos/create-read-training.dto';
+import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
+import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
+import { ParseDateStringPipe } from 'src/common/pipes/parse-date-string.pipe';
+import { CreateTrainingDto } from './dtos/create-training.dto';
+import { TrainingLookupDto } from './dtos/training-lookup.dto';
+import { TrainingResponseDto } from './dtos/training-response.dto';
 import { UpdateTrainingDto } from './dtos/update-training.dto';
 import { TrainingRepository } from './training.repository';
 
@@ -24,42 +29,51 @@ export class TrainingController {
 
   @Get()
   findAll(
-    @Query('visitorId') visitorId: number | null,
-    @Query('staffId') staffId: number | null,
-    @Query('dateFrom') dateFrom: string | null,
-    @Query('dateTo') dateTo: string | null,
-    @Query('sortBy') sortBy: string = 'Date_Of_Begin',
-    @Query('order') order: 'asc' | 'desc' = 'asc',
-  ) {
+    @Query('visitor_id', new OptionalParseIntPipe()) visitor_id?: number,
+    @Query('staff_id', new OptionalParseIntPipe()) staff_id?: number,
+    @Query('date_of_begin', new ParseDateStringPipe()) date_of_begin?: string,
+    @Query('date_of_end', new ParseDateStringPipe()) date_of_end?: string,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(TrainingRepository.getColumns(), 'visitor_id'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc'))
+    order?: string,
+  ): Promise<TrainingResponseDto[]> {
     return this.trainingRepository.findAll({
-      visitorId: visitorId,
-      staffId: staffId,
-      dateFrom: dateFrom,
-      dateTo: dateTo,
-      sortBy: sortBy,
-      order: order,
+      queries: {
+        visitor_id: visitor_id,
+        staff_id: staff_id,
+        date_of_begin: date_of_begin,
+        date_of_end: date_of_end,
+      },
+      sortOptions: {
+        sortBy: sortBy,
+        order: order,
+      },
     });
   }
 
   @Get('by-id')
-  findOne(@Body() body: CreateReadTrainingDto) {
+  findOne(@Body() body: TrainingLookupDto): Promise<TrainingResponseDto> {
     return this.trainingRepository.findOne(body);
   }
 
   @Post()
-  create(@Body() dto: CreateReadTrainingDto) {
+  create(@Body() dto: CreateTrainingDto): Promise<TrainingResponseDto> {
     return this.trainingRepository.create(dto);
   }
 
   @Patch()
   update(
-    @Body() body: { lookup: CreateReadTrainingDto; update: UpdateTrainingDto },
-  ) {
+    @Body() body: { lookup: TrainingLookupDto; update: UpdateTrainingDto },
+  ): Promise<TrainingResponseDto> {
     return this.trainingRepository.update(body.lookup, body.update);
   }
 
   @Delete()
-  delete(@Body() body: CreateReadTrainingDto) {
+  delete(@Body() body: TrainingLookupDto): Promise<TrainingResponseDto> {
     return this.trainingRepository.delete(body);
   }
 }

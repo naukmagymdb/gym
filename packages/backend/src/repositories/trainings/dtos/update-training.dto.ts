@@ -7,13 +7,13 @@ export class UpdateTrainingDto {
 
   @IsOptional()
   @IsInt()
-  staffId?: number;
+  staff_id?: number;
 
   @IsDateString()
   @IsNotEmpty()
-  dateFrom?: string;
+  date_of_begin?: string;
 
   @IsDateString()
   @IsNotEmpty()
-  dateTo?: string;
+  date_of_end?: string;
 }

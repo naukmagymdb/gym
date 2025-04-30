@@ -2,12 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { IDatabase } from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
 import { RepositoryService } from '../repository.service';
-import { CreateReadTrainingDto } from './dtos/create-read-training.dto';
+import { CreateTrainingDto } from './dtos/create-training.dto';
+import { TrainingLookupDto } from './dtos/training-lookup.dto';
 import { UpdateTrainingDto } from './dtos/update-training.dto';
 
 @Injectable()
 export class TrainingRepository {
   private db: IDatabase<any>;
+  private static columns = [
+    'visitor_id',
+    'staff_id',
+    'date_of_begin',
+    'date_of_end',
+  ];
 
   constructor(
     private readonly databaseService: DatabaseService,
@@ -17,108 +24,83 @@ export class TrainingRepository {
   }
 
   async findAll({
-    visitorId,
-    staffId,
-    dateFrom,
-    dateTo,
-    sortBy,
-    order,
+    queries,
+    sortOptions,
   }: {
-    visitorId?: number;
-    staffId?: number;
-    dateFrom?: string;
-    dateTo?: string;
-    sortBy?: string;
-    order?: 'asc' | 'desc';
+    queries: Record<string, any>;
+    sortOptions: { sortBy: string; order: string };
   }) {
-    const conditions: string[] = [];
-    const values: any = {};
-
-    if (visitorId) {
-      conditions.push('Visitor_ID = $(visitorId)');
-      values.visitorId = visitorId;
-    }
-    if (staffId) {
-      conditions.push('Staff_ID = $(staffId)');
-      values.staffId = staffId;
-    }
-    if (dateFrom) {
-      conditions.push('Date_Of_Begin >= $(dateFrom)');
-      values.dateFrom = dateFrom;
-    }
-    if (dateTo) {
-      conditions.push('Date_Of_End <= $(dateTo)');
-      values.dateTo = dateTo;
-    }
-
-    const whereClause = conditions.length
-      ? `WHERE ${conditions.join(' AND ')}`
-      : '';
+    const { whereClause, values } = this.repositoryService.getWhereClause(
+      queries,
+      TrainingRepository.columns,
+    );
 
     const sql = `
       SELECT * FROM training
       ${whereClause}
-      ORDER BY ${sortBy} ${order}
+      ORDER BY ${sortOptions.sortBy} ${sortOptions.order}
     `;
+    console.log(sql);
 
     return await this.db.any(sql, values);
   }
 
-  async findOne(lookup: CreateReadTrainingDto) {
+  async findOne(lookup: TrainingLookupDto) {
     const sql = `
       SELECT * FROM training
-      WHERE Visitor_ID = $(visitorId)
-        AND Staff_ID = $(staffId)
-        AND Date_Of_Begin = $(dateFrom)
-        AND Date_Of_End = $(dateTo)
+      WHERE visitor_id = $(visitor_id)
+        AND date_of_begin = $(date_of_begin)
+        AND date_of_end = $(date_of_end)
     `;
 
     return await this.db.oneOrNone(sql, lookup);
   }
 
-  async create(createTrainingDto: CreateReadTrainingDto) {
-    const sql = `
+  async create(createTrainingDto: CreateTrainingDto) {
+    try {
+      const sql = `
         INSERT INTO training 
-          (Visitor_ID, Staff_ID, Date_Of_Begin, Date_Of_End) 
+          (visitor_id, staff_id, date_of_begin, date_of_end) 
         VALUES 
-          ($(visitorId), $(staffId), $(dateFrom), $(dateTo)) 
+          ($(visitor_id), $(staff_id), $(date_of_begin), $(date_of_end)) 
         RETURNING *
       `;
-
-    return await this.db.one(sql, createTrainingDto);
+      return await this.db.one(sql, createTrainingDto);
+    } catch (err) {
+      return null;
+    }
   }
 
-  async update(lookup: CreateReadTrainingDto, updateDto: UpdateTrainingDto) {
-    const { setClause, values } = this.repositoryService.prepareUpdateData({
-      Staff_ID: updateDto.staffId,
-      Date_Of_Begin: updateDto.dateFrom,
-      Date_Of_End: updateDto.dateTo,
-    });
+  async update(lookup: TrainingLookupDto, updateDto: UpdateTrainingDto) {
+    const { setClause, values } =
+      this.repositoryService.prepareUpdateData(updateDto);
 
     if (setClause.length === 0) {
       throw new Error('No fields to update');
     }
 
-    const sql = `
-      UPDATE training
-      SET ${setClause.join(', ')}
-      WHERE Visitor_ID = $(visitorId)
-        AND Staff_ID = $(staffId)
-        AND Date_Of_Begin = $(dateFrom)
-        AND Date_Of_End = $(dateTo)
-      RETURNING *;
+    try {
+      const sql = `
+        UPDATE training
+        SET ${setClause.join(', ')}
+        WHERE visitor_id = $(visitor_id)
+          AND date_of_begin = $(date_of_begin)
+          AND date_of_end = $(date_of_end)
+        RETURNING *;
     `;
 
-    return await this.db.oneOrNone(sql, { ...values, ...lookup });
+      return await this.db.oneOrNone(sql, { ...values, ...lookup });
+    } catch (err) {
+      return null;
+    }
   }
 
-  async delete(lookup: CreateReadTrainingDto) {
+  async delete(lookup: TrainingLookupDto) {
     const sql = `
       DELETE FROM training
-      WHERE Visitor_ID = $(visitorId)
-        AND Staff_ID = $(staffId)
-        AND Date_Of_Begin = $(dateFrom)
-        AND Date_Of_End = $(dateTo)
+      WHERE visitor_id = $(visitor_id)
+        AND date_of_begin = $(date_of_begin)
+        AND date_of_end = $(date_of_end)
       RETURNING *;
     `;
 
@@ -128,9 +110,13 @@ export class TrainingRepository {
   async findByVisitorId(visitorId: number) {
     const sql = `
       SELECT * FROM training
-      WHERE Visitor_ID = $1
-      ORDER BY Date_Of_Begin asc
+      WHERE visitor_id = $1
+      ORDER BY date_of_begin asc
     `;
     return this.db.any(sql, [visitorId]);
+  }
+
+  static getColumns() {
+    return this.columns;
   }
 }
