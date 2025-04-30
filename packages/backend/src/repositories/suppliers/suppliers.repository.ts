@@ -35,9 +35,9 @@ export class SuppliersService {
 
     const query = `
       SELECT * FROM supplier
-      ORDER BY ${safeSortBy} ${safeOrder}
+      ORDER BY $1 $2
     `;
-    return this.db.any(query);
+    return this.db.any(query, [safeSortBy, safeOrder]);
   }
 
   findOne(edrpou: number) {
@@ -100,9 +100,9 @@ export class SuppliersService {
         FROM supplier_products
         WHERE edrpou = $1
       )
-      ORDER BY ${safeSortBy} ${safeOrder}
+      ORDER BY $2 $3
     `;
 
-    return this.db.any(query, [edrpou]);
+    return this.db.any(query, [edrpou, safeSortBy, safeOrder]);
   }
 }
