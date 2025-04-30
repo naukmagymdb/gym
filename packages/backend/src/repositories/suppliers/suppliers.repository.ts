@@ -35,9 +35,9 @@ export class SuppliersService {
 
     const query = `
       SELECT * FROM supplier
-      ORDER BY $1 $2
+      ORDER BY ${safeSortBy} ${safeOrder}
     `;
-    return this.db.any(query, [safeSortBy, safeOrder]);
+    return this.db.any(query);
   }
 
   findOne(edrpou: number) {
@@ -53,12 +53,12 @@ export class SuppliersService {
     const values: any = { edrpou };
 
     if (updateSupplierDto.email !== undefined) {
-      fields.push('email = ${email}');
+      fields.push('email = $(email)');
       values.email = updateSupplierDto.email;
     }
 
     if (updateSupplierDto.phone_num !== undefined) {
-      fields.push('phone_num = ${phone_num}');
+      fields.push('phone_num = $(phone_num)');
       values.phone_num = updateSupplierDto.phone_num;
     }
 
@@ -100,9 +100,9 @@ export class SuppliersService {
         FROM supplier_products
         WHERE edrpou = $1
       )
-      ORDER BY $2 $3
+      ORDER BY ${safeSortBy} ${safeOrder}
     `;
 
-    return this.db.any(query, [edrpou, safeSortBy, safeOrder]);
+    return this.db.any(query, [edrpou]);
   }
 }
