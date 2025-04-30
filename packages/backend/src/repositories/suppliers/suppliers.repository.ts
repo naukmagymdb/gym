@@ -19,7 +19,7 @@ export class SuppliersService {
       VALUES ($(edrpou), $(email), $(phone_num)) 
       RETURNING *
     `;
-      const res = await this.db.oneOrNone(query, supplierDto);
+      const res = await this.db.one(query, supplierDto);
       return res;
     } catch (e) {
       return 'Supplier with this EDRPOU already exists';
