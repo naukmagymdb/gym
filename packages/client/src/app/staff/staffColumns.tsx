@@ -1,3 +1,4 @@
+import ActionCell from '@/components/data-table/cells/actionsCell';
 import { ColumnDef } from '@tanstack/react-table';
 
 export type Staff = {
@@ -37,5 +38,23 @@ export const staffColumns: ColumnDef<Staff>[] = [
   {
     header: 'Email',
     accessorKey: 'email',
+  },
+  {
+    header: 'Actions',
+    size: 50,
+    cell: ({ row }) => {
+      return (
+        <ActionCell
+          row={row}
+          isLoading={false}
+          onEdit={() => {
+            console.log('edit');
+          }}
+          onDelete={() => {
+            console.log('delete');
+          }}
+        />
+      );
+    },
   },
 ];
