@@ -76,7 +76,7 @@ export class SuppliersService {
     return await this.db.oneOrNone(query, values);
   }
 
-  remove(edrpou: number) {
+  delete(edrpou: number) {
     const query = `
       DELETE FROM supplier 
       WHERE edrpou = $1

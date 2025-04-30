@@ -54,6 +54,6 @@ export class SuppliersController {
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) edrpou: number) {
-    return this.suppliersService.remove(edrpou);
+    return this.suppliersService.delete(edrpou);
   }
 }
