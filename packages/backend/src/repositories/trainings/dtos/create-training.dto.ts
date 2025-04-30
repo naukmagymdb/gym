@@ -1,4 +1,5 @@
 import { IsDateString, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsLaterDate } from 'src/common/validators/is-later-date.validator';
 
 export class CreateTrainingDto {
   constructor(partial: Partial<CreateTrainingDto>) {
@@ -19,5 +20,6 @@ export class CreateTrainingDto {
 
   @IsDateString()
   @IsNotEmpty()
+  @IsLaterDate('date_of_begin')
   date_of_end: string;
 }
