@@ -36,10 +36,9 @@ export default function LoginPage({ role }: { role: Role }) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       await login(data.phone, data.password, role);
+      router.push('/');
     } catch (error) {
       console.error(error);
-    } finally {
-      router.push('/');
     }
   };
 

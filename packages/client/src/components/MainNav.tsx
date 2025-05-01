@@ -1,12 +1,18 @@
+'use client';
+
+import { AuthContext } from '@/app/AuthContext';
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuList
+  NavigationMenuList,
 } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
+import { useContext } from 'react';
 import { Button } from './ui/button';
 
 export function MainNav() {
+  const { userId } = useContext(AuthContext);
+
   return (
     <div className="border-b w-full sticky top-0 z-50 bg-background">
       <div className="flex h-16 items-center px-4 mx-auto">
@@ -24,11 +30,19 @@ export function MainNav() {
             </NavigationMenuItem>
           </NavigationMenuList>
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link href="/login" passHref>
-                <Button size="default">Login</Button>
-              </Link>
-            </NavigationMenuItem>
+            {userId ? (
+              <NavigationMenuItem>
+                <Button size="default" variant="destructive">
+                  Logout
+                </Button>
+              </NavigationMenuItem>
+            ) : (
+              <NavigationMenuItem>
+                <Link href="/login" passHref>
+                  <Button size="default">Login</Button>
+                </Link>
+              </NavigationMenuItem>
+            )}
           </NavigationMenuList>
         </NavigationMenu>
       </div>

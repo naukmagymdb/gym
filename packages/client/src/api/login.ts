@@ -9,7 +9,7 @@ export const login = async (phone: string, password: string, role: Role) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ phone, password }),
+    body: JSON.stringify({ phone, password, role }),
   });
 
   return response;

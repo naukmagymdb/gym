@@ -1,15 +1,15 @@
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const apiFetch = async (url: string, options: RequestInit = {}) => {
-    const response = await fetch(`${apiUrl}${url}`, {
-        ...options,
-        credentials: 'include',
-    });
+  const response = await fetch(`${apiUrl}${url}`, {
+    ...options,
+    credentials: 'include',
+  });
 
-    if (!response.ok) {
-        console.error(`API error: ${response.status} ${response.statusText}`);
-        throw new Error(`${response.status} ${response.statusText}`);
-    }
+  if (!response.ok) {
+    console.error(`API error: ${response.status} ${response.statusText}`);
+    throw new Error(`${response.status} ${response.statusText}`);
+  }
 
-    return response.json();
+  return response.json();
 };
