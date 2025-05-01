@@ -16,6 +16,7 @@ import { Role } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -38,6 +39,7 @@ export default function LoginPage({ role }: { role: Role }) {
       await login(data.phone, data.password, role);
       router.push('/');
     } catch (error) {
+      toast.error('Failed to login: invalid phone or password');
       console.error(error);
     }
   };

@@ -7,7 +7,6 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
   });
 
   if (!response.ok) {
-    console.error(`API error: ${response.status} ${response.statusText}`);
     throw new Error(`${response.status} ${response.statusText}`);
   }
 

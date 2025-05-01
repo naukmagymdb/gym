@@ -1,6 +1,7 @@
 import { MainNav } from '@/components/MainNav';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { Toaster } from 'sonner';
 import AuthProvider from './AuthProvider';
 import './globals.css';
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         <AuthProvider>
           <MainNav />
           <main className="flex-1 w-full">{children}</main>
+          <Toaster />
         </AuthProvider>
       </body>
     </html>
