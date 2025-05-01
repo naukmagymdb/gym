@@ -1,7 +1,7 @@
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuList,
+  NavigationMenuList
 } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -25,7 +25,7 @@ export function MainNav() {
           </NavigationMenuList>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link href="/" passHref className="font-bold text-lg">
+              <Link href="/login" passHref>
                 <Button size="default">Login</Button>
               </Link>
             </NavigationMenuItem>
