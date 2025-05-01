@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col items-center dark`}
       >
         <MainNav />
-        <main className="flex-1 w-full mx-auto py-6 px-4">{children}</main>
+        <main className="flex-1 w-full">{children}</main>
       </body>
     </html>
   );

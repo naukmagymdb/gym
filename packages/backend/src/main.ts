@@ -7,7 +7,7 @@ import { AppModule } from './app.module';
 import { DatabaseService } from './database/database.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   app.setGlobalPrefix('api');
 

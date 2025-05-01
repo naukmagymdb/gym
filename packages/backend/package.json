@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
-    "reset-db": "ts-node src/database/schema/init-db.ts"
+    "reset-db": "ts-node src/database/schema/initDb.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
