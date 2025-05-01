@@ -11,13 +11,18 @@ const initUsers = async (client) => {
   const salt = bcrypt.genSaltSync();
   const passwordHash = bcrypt.hashSync('password', salt);
 
-  // Insert user with John Doe instead of John Smith
-  const insertUserQuery = `
+  const insertStaffQuery = `
     INSERT INTO Staff (Contract_num, Staff_Name, Surname, Patronymic, Salary, Phone_num, Qualification_cert_number_of_coach, Email, Department_id, Login_password)
     VALUES ('C231', 'John', 'Doe', 'Doeich', 5000.00, '+380123456789', 'CERT-231', 'john.smith@gymdb.com', 1, $1)
   `;
 
-  await client.query(insertUserQuery, [passwordHash]);
+  const insertVisitorQuery = `
+    INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, Email, Login_password)
+    VALUES ('1990-01-01', 'Jane', 'Smith', 'Smithovna', '+380987654321', 'jane.smith@gymdb.com', $1)
+  `;
+
+  await client.query(insertStaffQuery, [passwordHash]);
+  await client.query(insertVisitorQuery, [passwordHash]);
   console.log('✅ Initial user created!');
 };
 
