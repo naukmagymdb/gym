@@ -17,6 +17,7 @@ import { Role } from 'src/auth/utils/role.enum';
 import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { CreateDepartmentDto } from './dtos/create-department.dto';
 import { DepartmentResponseDto } from './dtos/department-response.dto';
+import { UpdateDepartmentDto } from './dtos/update-department.dto';
 import { DepartmentRepository } from './repositories/department.repository';
 
 @Roles(Role.Admin)
@@ -51,8 +52,8 @@ export class DepartmentController {
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: CreateDepartmentDto,
-  ) {
+    @Body() dto: UpdateDepartmentDto,
+  ): Promise<DepartmentResponseDto> {
     return this.depRepository.update(id, dto);
   }
 

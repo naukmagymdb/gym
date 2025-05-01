@@ -36,4 +36,19 @@ export class DepartmentHandler {
 
     return result;
   }
+
+  async handleUpdate(
+    fieldName: 'emails' | 'phone_numbers',
+    departmentId: number,
+    data: string[],
+  ): Promise<any[]> {
+    const repo = this.repoStrategies[fieldName];
+    await repo.deleteByDepartmentId(departmentId);
+
+    const createdItems = await Promise.all(
+      (data || []).map((item) => repo.create(departmentId, item)),
+    );
+
+    return createdItems;
+  }
 }

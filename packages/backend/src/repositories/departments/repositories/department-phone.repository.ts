@@ -22,4 +22,11 @@ export class DepartmentPhoneRepository {
       return null;
     }
   }
+
+  async deleteByDepartmentId(departmentId: number): Promise<void> {
+    await this.db.none(
+      `DELETE FROM department_phone_number WHERE department_id = $1`,
+      [departmentId],
+    );
+  }
 }

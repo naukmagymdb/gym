@@ -4,6 +4,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { RepositoryService } from 'src/repositories/repository.service';
 import { CreateDepartmentDto } from '../dtos/create-department.dto';
 import { DepartmentResponseDto } from '../dtos/department-response.dto';
+import { UpdateDepartmentDto } from '../dtos/update-department.dto';
 import { DepartmentHandler } from './department.handler';
 
 @Injectable()
@@ -91,15 +92,23 @@ export class DepartmentRepository {
     }
   }
 
-  async update(id: number, dto: CreateDepartmentDto) {
-    const query = `
-      UPDATE department
-      SET address = $(address)
-      WHERE department_id = $(id)
-      RETURNING *
-    `;
-    const result = await this.db.one(query, { ...dto, id });
-    return result;
+  async update(id: number, {address, emails, phone_numbers}: UpdateDepartmentDto) {
+    if (address) {
+      await this.db.none(
+        `UPDATE department SET address = $1 WHERE department_id = $2`,
+        [address, id],
+      );
+    }
+  
+    if (emails) {
+      await this.departmentHandler.handleUpdate('emails', id, emails);
+    }
+  
+    if (phone_numbers) {
+      await this.departmentHandler.handleUpdate('phone_numbers', id, phone_numbers);
+    }
+  
+    return this.findOne({ department_id: id });
   }
 
   async delete(id: number) {

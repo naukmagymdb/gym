@@ -22,4 +22,11 @@ export class DepartmentEmailRepository {
       return null;
     }
   }
+
+  async deleteByDepartmentId(departmentId: number): Promise<void> {
+    await this.db.none(
+      `DELETE FROM department_email WHERE department_id = $1`,
+      [departmentId],
+    );
+  }
 }
