@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import pgPromise from 'pg-promise';
 import { encodePassword } from 'src/common/utils/bcrypt';
 import { DatabaseService } from 'src/database/database.service';
+import { RepositoryService } from '../repository.service';
 import { CreateVisitorDto } from './dtos/create-visitor.dto';
 import { UpdateVisitorDto } from './dtos/update-visitor.dto';
 
@@ -9,7 +10,10 @@ import { UpdateVisitorDto } from './dtos/update-visitor.dto';
 export class VisitorRepository {
   private db: pgPromise.IDatabase<any>;
 
-  constructor(private readonly databaseService: DatabaseService) {
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly repositoryService: RepositoryService,
+  ) {
     this.db = databaseService.getDb();
   }
 
@@ -54,14 +58,8 @@ export class VisitorRepository {
       );
     }
 
-    const setClause = [];
-    const values = { id };
-    for (const [key, value] of Object.entries(updateVisitorDto)) {
-      if (value !== undefined && value !== null) {
-        setClause.push(`${key} = $(${key})`);
-        values[key] = value;
-      }
-    }
+    const { setClause, values } =
+      this.repositoryService.prepareUpdateData(updateVisitorDto);
 
     if (setClause.length === 0)
       throw new BadRequestException('No fields to update');
@@ -69,7 +67,7 @@ export class VisitorRepository {
     const sql = `
       UPDATE visitor
       SET ${setClause.join(', ')}
-      WHERE id = $(id)
+      WHERE id = ${id}
       RETURNING *
     `;
     return await this.db.oneOrNone(sql, values);

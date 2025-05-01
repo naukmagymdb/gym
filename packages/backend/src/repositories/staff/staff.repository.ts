@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { IDatabase } from 'pg-promise';
 import { encodePassword } from 'src/common/utils/bcrypt';
 import { DatabaseService } from 'src/database/database.service';
+import { RepositoryService } from '../repository.service';
 import { CreateStaffDto } from './dtos/create-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
 
@@ -9,7 +10,10 @@ import { UpdateStaffDto } from './dtos/update-staff.dto';
 export class StaffRepository {
   private db: IDatabase<any>;
 
-  constructor(private readonly databaseService: DatabaseService) {
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly repositoryService: RepositoryService,
+  ) {
     this.db = databaseService.getDb();
   }
 
@@ -23,7 +27,7 @@ export class StaffRepository {
     order?: 'asc' | 'desc';
   }) {
     let conditions: string[] = [];
-    if (depId) conditions.push('dep_id = $(depId)');
+    if (depId) conditions.push('department_id = $(depId)');
     const whereClause = conditions.length
       ? 'WHERE ' + conditions.join(' AND ')
       : '';
@@ -64,14 +68,8 @@ export class StaffRepository {
       );
     }
 
-    const setClause = [];
-    const values = { id };
-    for (const [key, value] of Object.entries(updateStaffDto)) {
-      if (value !== undefined && value !== null) {
-        setClause.push(`${key} = $(${key})`);
-        values[key] = value;
-      }
-    }
+    const { setClause, values } =
+      this.repositoryService.prepareUpdateData(updateStaffDto);
 
     if (setClause.length === 0)
       throw new BadRequestException('No fields to update');
@@ -79,7 +77,7 @@ export class StaffRepository {
     const sql = `
 		UPDATE staff
 		SET ${setClause.join(', ')}
-		WHERE id = $(id)
+		WHERE id = ${id}
 		RETURNING *;
 	`;
     return await this.db.oneOrNone(sql, values);

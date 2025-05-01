@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -28,22 +29,31 @@ export class ProductsController {
   }
 
   @Get()
-  findAll(@Query('order') order: 'asc' | 'desc' = 'asc') {
-    return this.productsService.findAll({ order: order });
+  findAll(
+    @Query('sortBy') sortBy: 'goods_id' | 'goods_name' = 'goods_id',
+    @Query('order') order: 'asc' | 'desc' = 'asc',
+  ) {
+    return this.productsService.findAll({
+      sortBy: sortBy,
+      order: order,
+    });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findById(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.findById(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProductDto: ProductDto,
+  ) {
+    return this.productsService.update(id, updateProductDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.delete(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.delete(id);
   }
 }
