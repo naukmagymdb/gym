@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const formSchema = z.object({
-  phone: z.string().min(10).max(15),
+  phone: z.string().min(13).max(13),
   password: z.string().min(8),
 });
 
