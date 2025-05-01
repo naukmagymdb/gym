@@ -31,6 +31,10 @@ async function resetDatabase() {
     const sql = await readFile(join(__dirname, 'schema.sql'), 'utf-8');
     await client.query(sql);
 
+    // 3) Load and execute mock_data.sql
+    const mockData = await readFile(join(__dirname, 'initData.sql'), 'utf-8');
+    await client.query(mockData);
+
     console.log('✅ Database reset and initialized!');
   } catch (err) {
     console.error('❌ Initialization failed:', err);
