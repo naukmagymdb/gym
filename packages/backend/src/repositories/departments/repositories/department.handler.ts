@@ -21,15 +21,15 @@ export class DepartmentHandler {
     departmentId: number,
     data: string[],
   ): Promise<any[]> {
-    const result: any[] = [];
-    console.log(`data: ${data}`);
+    const result = [];
+
     if (data) {
       for (const item of data) {
         const createdItem = await this.repoStrategies[fieldName].create(
           departmentId,
           item,
         );
-        console.log(`createdItem: ${createdItem}`);
+
         if (createdItem) result.push(createdItem);
       }
     }

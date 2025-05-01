@@ -5,16 +5,16 @@ INSERT INTO Department (Department_id, Address) VALUES
 (3, '789 Wellness Road, Westside');
 
 -- Department Phone Numbers
--- INSERT INTO Department_Phone_number (Phone_number, Department_id) VALUES
--- ('555-123-4567', 1),
--- ('555-234-5678', 2),
--- ('555-345-6789', 3);
+INSERT INTO Department_Phone_number (Phone_number, Department_id) VALUES
+('555-123-4567', 1),
+('555-234-5678', 2),
+('555-345-6789', 3);
 
--- -- Department Emails
--- INSERT INTO Department_Email (Email, Department_id) VALUES
--- ('downtown@gymdb.com', 1),
--- ('uptown@gymdb.com', 2),
--- ('westside@gymdb.com', 3);
+-- Department Emails
+INSERT INTO Department_Email (Email, Department_id) VALUES
+('downtown@gymdb.com', 1),
+('uptown@gymdb.com', 2),
+('westside@gymdb.com', 3);
 
 -- Mock data for Staff
 INSERT INTO Staff (Contract_num, Staff_Name, Surname, Patronymic, Salary, Phone_num, Qualification_cert_number_of_coach, Email, Department_id, Login_password) VALUES

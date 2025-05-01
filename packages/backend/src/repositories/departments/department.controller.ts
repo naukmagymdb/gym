@@ -26,7 +26,7 @@ export class DepartmentController {
   constructor(private readonly depRepository: DepartmentRepository) {}
 
   @Get()
-  async getAll(
+  findAll(
     @Query(
       'sortBy',
       new DefaultEnumPipe(['department_id', 'address'], 'department_id'),
@@ -35,12 +35,12 @@ export class DepartmentController {
     @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc'))
     order?: string,
   ) {
-    const department = await this.depRepository.findAll({ sortBy, order });
+    return this.depRepository.findAll({ sortBy, order });
   }
 
   @Get(':id')
-  getById(@Param('id', ParseIntPipe) id: number) {
-    return this.depRepository.findById(id);
+  findOne(@Param('id', ParseIntPipe) department_id: number) {
+    return this.depRepository.findOne({ department_id });
   }
 
   @Post()

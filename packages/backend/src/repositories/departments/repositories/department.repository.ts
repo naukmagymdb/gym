@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IDatabase } from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
+import { RepositoryService } from 'src/repositories/repository.service';
 import { CreateDepartmentDto } from '../dtos/create-department.dto';
 import { DepartmentResponseDto } from '../dtos/department-response.dto';
 import { DepartmentHandler } from './department.handler';
@@ -8,29 +9,51 @@ import { DepartmentHandler } from './department.handler';
 @Injectable()
 export class DepartmentRepository {
   private db: IDatabase<any>;
+  private nestedGetQueryPart: string = `
+    SELECT
+      d.department_id,
+      d.address,
+      COALESCE(
+        (SELECT array_agg(pn.phone_number)
+        FROM department_phone_number pn
+        WHERE pn.department_id = d.department_id), '{}') AS phone_numbers,
+      COALESCE(
+        (SELECT array_agg(de.email)
+        FROM department_email de
+        WHERE de.department_id = d.department_id), '{}') AS emails
+      FROM department d
+  `;
 
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly departmentHandler: DepartmentHandler,
-    // private readonly departmentEmailRepository: DepartmentEmailRepository,
-    // private readonly departmentPhoneRepository: DepartmentPhoneRepository,
+    private readonly repositoryService: RepositoryService,
   ) {
     this.db = databaseService.getDb();
   }
 
   async findAll({ sortBy, order }) {
     const query = `
-      SELECT * FROM department
-      ORDER BY ${sortBy} ${order} 
+      ${this.nestedGetQueryPart}
+      ORDER BY ${sortBy} ${order}
     `;
 
     return await this.db.any(query);
   }
 
-  async findById(id: number) {
-    const query = 'SELECT * FROM department WHERE department_id = $1';
-    const result = await this.db.oneOrNone(query, [id]);
-    return result || null;
+  async findOne(condition: Record<string, any>) {
+    const { whereClause, values } = this.repositoryService.getWhereClause(
+      condition,
+      ['department_id', 'address'],
+    );
+
+    const query = `
+      ${this.nestedGetQueryPart}
+      ${whereClause}
+      LIMIT 1
+    `;
+
+    return await this.db.oneOrNone(query, values);
   }
 
   async create(dto: CreateDepartmentDto) {
@@ -61,7 +84,6 @@ export class DepartmentRepository {
         dto.phone_numbers,
       );
       response.phone_numbers = phoneResults.map((item) => item.phone_number);
-      console.log(response);
 
       return response;
     } catch (err) {
