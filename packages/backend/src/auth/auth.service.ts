@@ -1,30 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AccountsHandler } from 'src/accounts/services/accountsHandler.service';
 import { Role } from 'src/auth/utils/role.enum';
 import { comparePasswords } from 'src/common/utils/bcrypt';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private readonly accountsHandler: AccountsHandler
-    ) { }
+  private readonly logger = new Logger(AuthService.name);
 
-    async validate(phone: string, password: string, role: Role) {
-        const loggedDB = await this.accountsHandler.getByPhone(role, phone)
+  constructor(private readonly accountsHandler: AccountsHandler) {}
 
-        if (loggedDB) {
-            console.log(loggedDB)
-            const matched = comparePasswords(password, loggedDB.login_password);
-            if (matched) {
-                console.log('Auth Success');
-                return loggedDB;
-            } else {
-                console.log('Wrong Password');
-                return null;
-            }
-        }
+  async validate(phone: string, password: string, role: Role) {
+    const loggedDB = await this.accountsHandler.getByPhone(role, phone);
 
-        console.log('Auth failed')
+    if (loggedDB) {
+      this.logger.log(loggedDB);
+      const matched = comparePasswords(password, loggedDB.login_password);
+      if (matched) {
+        this.logger.log('Auth Success');
+        return loggedDB;
+      } else {
+        this.logger.error('Wrong Password');
         return null;
+      }
     }
+
+    this.logger.error('Auth failed');
+    return null;
+  }
 }
