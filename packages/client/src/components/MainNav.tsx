@@ -11,7 +11,7 @@ import { useContext } from 'react';
 import { Button } from './ui/button';
 
 export function MainNav() {
-  const { userId } = useContext(AuthContext);
+  const { userId, role } = useContext(AuthContext);
 
   return (
     <div className="border-b w-full sticky top-0 z-50 bg-background">
@@ -23,11 +23,13 @@ export function MainNav() {
                 GymDB
               </Link>
             </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/staff" passHref className="">
-                Staff
-              </Link>
-            </NavigationMenuItem>
+            {role === 'admin' && (
+              <NavigationMenuItem>
+                <Link href="/staff" passHref className="">
+                  Staff
+                </Link>
+              </NavigationMenuItem>
+            )}
           </NavigationMenuList>
           <NavigationMenuList>
             {userId ? (
