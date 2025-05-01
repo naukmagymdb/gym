@@ -7,7 +7,14 @@ import { AppModule } from './app.module';
 import { DatabaseService } from './database/database.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
+
+  app.enableCors({
+    origin: process.env.CLIENT_URL || 'http://localhost:1234',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  });
 
   app.setGlobalPrefix('api');
 
