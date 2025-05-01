@@ -40,20 +40,20 @@ export class TrainingRepository {
       ${whereClause}
       ORDER BY ${sortOptions.sortBy} ${sortOptions.order}
     `;
-    console.log(sql);
 
     return await this.db.any(sql, values);
   }
 
-  async findOne(lookup: TrainingLookupDto) {
-    const sql = `
-      SELECT * FROM training
-      WHERE visitor_id = $(visitor_id)
-        AND date_of_begin = $(date_of_begin)
-        AND date_of_end = $(date_of_end)
-    `;
+  async findOne(condition: Record<string, any>) {
+    const keys = Object.keys(condition);
+    const values = Object.values(condition);
 
-    return await this.db.oneOrNone(sql, lookup);
+    const whereClause = keys
+      .map((key, i) => `${key} = $${i + 1}`)
+      .join(' AND ');
+    const sql = `SELECT * FROM training WHERE ${whereClause} LIMIT 1`;
+
+    return this.db.oneOrNone(sql, values);
   }
 
   async create(createTrainingDto: CreateTrainingDto) {
@@ -67,7 +67,7 @@ export class TrainingRepository {
       `;
       return await this.db.one(sql, createTrainingDto);
     } catch (err) {
-      return null;
+      throw err;
     }
   }
 

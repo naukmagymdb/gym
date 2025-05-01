@@ -88,60 +88,6 @@ CREATE TABLE Supplier_Products (
     ON DELETE NO ACTION ON UPDATE CASCADE
 );
 
--- Insert into Supplier table
-INSERT INTO Supplier (EDRPOU, Phone_num, Email) VALUES
-(31000432, '+380501112233', 'fitgear@suppliers.ua'),
-(32450981, '+380631234111', 'activepro@equipments.com'),
-(33789412, '+380671998877', 'powerup@sportsup.ua'),
-(34982017, '+380932226655', 'gymbasics@fitmail.net'),
-(36212045, '+380681234567', 'protrainer@suphub.org'),
-(37550987, '+380991111222', 'sportx@suppliers.ua');
-
--- Expanded Products
-INSERT INTO Products (goods_name) VALUES
-('Football Ball'),
-('Basketball Ball'),
-('Tennis Racket'),
-('Boxing Gloves'),
-('Running Shoes'),
-('Swimming Goggles'),
-('Dumbbells 5kg'),
-('Dumbbells 10kg'),
-('Treadmill Pro 5000'),
-('Exercise Bike X100'),
-('Resistance Bands Set'),
-('Yoga Block Cork'),
-('Yoga Mat Deluxe'),
-('Pull-up Bar'),
-('Kettlebell 12kg'),
-('Speed Rope'),
-('Bench Press Machine'),
-('Elliptical Trainer');
-
--- Link Suppliers to Products
-INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
--- fitgear
-(31000432, 1), (31000432, 5), (31000432, 7), (31000432, 11),
--- activepro
-(32450981, 2), (32450981, 6), (32450981, 8), (32450981, 10), (32450981, 17),
--- powerup
-(33789412, 3), (33789412, 4), (33789412, 9), (33789412, 12), (33789412, 16),
--- gymbasics
-(34982017, 13), (34982017, 14), (34982017, 15), (34982017, 18),
--- protrainer
-(36212045, 2), (36212045, 5), (36212045, 7), (36212045, 13), (36212045, 17),
--- sportx
-(37550987, 1), (37550987, 6), (37550987, 10), (37550987, 15), (37550987, 18),
-
--- Shared supplies
-(31000432, 13),
-(32450981, 1),
-(33789412, 5),
-(34982017, 7),
-(36212045, 10),
-(37550987, 11);
-
-
 -- Abonements
 CREATE TABLE Abonementtype (
   Abonement_type VARCHAR(50) PRIMARY KEY,
@@ -190,7 +136,7 @@ CREATE TABLE Contract_Products (
 -- Training sessions
 CREATE TABLE Training (
   Visitor_ID INTEGER NOT NULL,
-  Staff_ID INTEGER,
+  Staff_ID INTEGER NOT NULL,
   Date_Of_Begin DATE NOT NULL,
   Date_Of_End DATE NOT NULL,
   PRIMARY KEY (Visitor_ID, Staff_ID, Date_Of_Begin, Date_Of_End),

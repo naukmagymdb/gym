@@ -31,9 +31,16 @@ export class VisitorRepository {
     return await this.db.any(sql, { sortBy, order });
   }
 
-  async findById(id: number) {
-    const sql = 'SELECT * FROM visitor WHERE id = $1';
-    return await this.db.oneOrNone(sql, [id]);
+  async findOne(condition: Record<string, any>) {
+    const keys = Object.keys(condition);
+    const values = Object.values(condition);
+
+    const whereClause = keys
+      .map((key, i) => `${key} = $${i + 1}`)
+      .join(' AND ');
+    const sql = `SELECT * FROM visitor WHERE ${whereClause} LIMIT 1`;
+
+    return this.db.oneOrNone(sql, values);
   }
 
   async create(createVisitorDto: CreateVisitorDto) {

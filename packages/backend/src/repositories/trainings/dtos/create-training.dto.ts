@@ -12,7 +12,7 @@ export class CreateTrainingDto {
 
   @IsInt()
   @IsOptional()
-  staff_id?: number;
+  staff_id: number;
 
   @IsDateString()
   @IsNotEmpty()

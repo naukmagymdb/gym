@@ -19,7 +19,7 @@ export function IsLaterDate(
         validate(value: any, args: ValidationArguments) {
           const [relatedPropertyName] = args.constraints;
           const relatedValue = (args.object as any)[relatedPropertyName];
-          return new Date(value) > new Date(relatedValue);
+          return new Date(value) >= new Date(relatedValue);
         },
         defaultMessage(args: ValidationArguments) {
           return `${args.property} must be later than ${args.constraints[0]}`;
