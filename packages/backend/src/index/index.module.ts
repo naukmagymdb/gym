@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { IndexController } from "./index.controller";
-import { AccountsModule } from 'src/accounts/accounts.module';
+import { RepositoryModule } from 'src/repositories/repository.module';
+import { IndexController } from './index.controller';
+import { IndexHandler } from './index.handler';
 
 @Module({
-  imports: [AccountsModule],
+  imports: [RepositoryModule],
   controllers: [IndexController],
-  providers: []
+  providers: [IndexHandler],
 })
 export class IndexModule {}
