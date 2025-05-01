@@ -101,3 +101,21 @@ INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
 (34982017, 7),
 (36212045, 10),
 (37550987, 11);
+
+
+-- Abonement types
+INSERT INTO Abonement_type (Abonement_type, Price) VALUES
+('Monthly', 50.00),
+('Quarterly', 130.00),
+('Half-Yearly', 240.00),
+('Yearly', 450.00),
+('One-Time', 10.00);
+
+
+-- Abonements
+INSERT INTO Abonement (Start_date, End_date, Is_active, Visitor_ID, Abonement_type, Department_id) VALUES
+('2025-01-01', '2025-01-31', TRUE, 1, 'Monthly', 1),
+('2025-02-01', '2025-04-30', TRUE, 2, 'Quarterly', 2),
+('2024-11-01', '2025-04-30', FALSE, 3, 'Half-Yearly', 1),
+('2025-01-15', '2026-01-14', TRUE, 4, 'Yearly', 3),
+('2025-04-10', '2025-04-10', FALSE, 5, 'One-Time', 1);
