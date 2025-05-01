@@ -40,7 +40,7 @@ export class StaffController {
 
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
-    return this.staffRepository.findById(id);
+    return this.staffRepository.findOne({ id });
   }
 
   @Post()

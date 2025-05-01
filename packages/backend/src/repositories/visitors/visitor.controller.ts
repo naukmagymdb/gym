@@ -41,7 +41,7 @@ export class VisitorController {
 
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
-    return await this.visitorRepository.findById(id);
+    return await this.visitorRepository.findOne({ id });
   }
 
   @Post()
