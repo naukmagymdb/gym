@@ -9,9 +9,5 @@ export const login = async (phone: string, password: string) => {
         body: JSON.stringify({ phone, password, role: 'admin' }),
     });
 
-    if (!response.ok) {
-        throw new Error('Failed to login', { cause: response.statusText });
-    }
-
-    return response.json();
+    return response;
 };
