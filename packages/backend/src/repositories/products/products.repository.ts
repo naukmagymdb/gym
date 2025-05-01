@@ -21,10 +21,16 @@ export class ProductsService {
     return await this.db.one(query, [createProductDto.goods_name]);
   }
 
-  async findAll({ order }: { order?: 'asc' | 'desc' }) {
+  async findAll({
+    sortBy,
+    order,
+  }: {
+    sortBy: 'goods_id' | 'goods_name';
+    order?: 'asc' | 'desc';
+  }) {
     const sql = `
         SELECT * FROM products
-        ORDER BY goods_name ${order}
+        ORDER BY ${sortBy} ${order}
     `;
 
     return this.db.any(sql);
