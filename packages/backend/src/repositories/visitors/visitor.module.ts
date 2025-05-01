@@ -8,5 +8,6 @@ import { VisitorRepository } from './visitor.repository';
   imports: [TrainingModule],
   controllers: [VisitorController],
   providers: [VisitorRepository, RepositoryService],
+  exports: [VisitorRepository],
 })
 export class VisitorModule {}

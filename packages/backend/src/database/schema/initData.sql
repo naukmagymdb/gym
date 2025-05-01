@@ -27,7 +27,17 @@ INSERT INTO Staff (Contract_num, Staff_Name, Surname, Patronymic, Salary, Phone_
 ('C007', 'Robert', 'Miller', 'George', 6000.00, '555-777-8888', 'CERT-005', 'robert.miller@gymdb.com', 1, '$2a$10$5hCZYwS5MrZ5K/nOZdbtf.RbmQrN3L9K3gqgNc8.gVQlwS8xbKAKi'),
 ('C008', 'Jennifer', 'Wilson', NULL, 4200.00, '555-888-9999', NULL, 'jennifer.wilson@gymdb.com', 2, '$2a$10$z.rJeM3nE/5nbU4hD7WEWOveMF2BE2gF1QpbzI2vJ5kbv1KUVqZPa'),
 ('C009', 'Thomas', 'Moore', 'Daniel', 5500.00, '555-999-0000', 'CERT-006', 'thomas.moore@gymdb.com', 3, '$2a$10$HRvQJvt1u19wP3Pf1R8Wz.qMv5c0GN1cgOqZVZuO0aPVWQiAJh/t2'),
-('C010', 'Lisa', 'Taylor', 'Anne', 4100.00, '555-000-1111', NULL, 'lisa.taylor@gymdb.com', 1, '$2a$10$nkRhJG0xrB9Y9mXDTZiVj.7AYKqF7CRczHwQC4q/VmYnhsWnOjrS.');
+('C010', 'Lisa', 'Taylor', 'Anne', 4100.00, '555-000-1111', NULL, 'lisa.taylor@gymdb.com', 1, '$2a$10$nkRhJG0xrB9Y9mXDTZiVj.7AYKqF7CRczHwQC4q/VmYnhsWnOjrS.'),
+('C011', 'Vanya', 'Hushchin', 'Oleksiyovych', 94100.00, '1', NULL, 'someMail@gmail.com', 1, '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
+
+INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, Email, Login_password) VALUES
+('1990-01-15', 'Alex', 'Ivanov', 'Petrovich', '555-111-0001', 'alex.ivanov@gmail.com', '$2b$10$e3JiRO4m5ReUZbiGvM14mu2GMgDPEK7YkF4sfRQZGe.6UVX6LZC9K'),
+('1985-05-20', 'Maria', 'Koval', 'Ivanivna', '555-222-0002', 'maria.koval@gmail.com', '$2b$10$7KrP7Y7FjCb8D1IQtxrh7ezGeNeaFzMjP0eBbN8EjvD.D28Drm4p2'),
+('1993-09-10', 'Oleh', 'Shevchenko', 'Mykolayovych', '555-333-0003', 'oleh.shevchenko@gmail.com', '$2b$10$T7pBW3vWjWDL5iGr8TFeve1uzqsRU6NmZMIb2VhW1KMaHiTfQaV1y'),
+('2000-12-25', 'Anna', 'Bondarenko', 'Serhiivna', '555-444-0004', 'anna.bondarenko@gmail.com', '$2b$10$CDMp2gXkG4nZjmsY7l7T6eK4kSIRZrzp1eXrF4lWpiAZc2Ft1Gq9W'),
+('1997-03-08', 'Taras', 'Tkachenko', 'Volodymyrovych', '555-555-0005', 'taras.tkachenko@gmail.com', '$2b$10$AGeNs4fAgfKg6gPKOcbDAeXtZtIMv5mRjzp8ZEMKcmuM4nAtvJzU2'),
+('05-05-2006', 'Vanya', 'Hushchin', 'Oleksiyovych', '1', 'someMail@gmail.com', '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
+
 
 -- Manager-Subordinate relationships
 INSERT INTO Staff_Manager_Subordinate (Manager_ID, Subordinate_ID) VALUES
@@ -38,3 +48,56 @@ INSERT INTO Staff_Manager_Subordinate (Manager_ID, Subordinate_ID) VALUES
 (3, 8),
 (5, 6),
 (5, 9); 
+
+-- Insert into Supplier table
+INSERT INTO Supplier (EDRPOU, Phone_num, Email) VALUES
+(31000432, '+380501112233', 'fitgear@suppliers.ua'),
+(32450981, '+380631234111', 'activepro@equipments.com'),
+(33789412, '+380671998877', 'powerup@sportsup.ua'),
+(34982017, '+380932226655', 'gymbasics@fitmail.net'),
+(36212045, '+380681234567', 'protrainer@suphub.org'),
+(37550987, '+380991111222', 'sportx@suppliers.ua');
+
+-- Expanded Products
+INSERT INTO Products (goods_name) VALUES
+('Football Ball'),
+('Basketball Ball'),
+('Tennis Racket'),
+('Boxing Gloves'),
+('Running Shoes'),
+('Swimming Goggles'),
+('Dumbbells 5kg'),
+('Dumbbells 10kg'),
+('Treadmill Pro 5000'),
+('Exercise Bike X100'),
+('Resistance Bands Set'),
+('Yoga Block Cork'),
+('Yoga Mat Deluxe'),
+('Pull-up Bar'),
+('Kettlebell 12kg'),
+('Speed Rope'),
+('Bench Press Machine'),
+('Elliptical Trainer');
+
+-- Link Suppliers to Products
+INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
+-- fitgear
+(31000432, 1), (31000432, 5), (31000432, 7), (31000432, 11),
+-- activepro
+(32450981, 2), (32450981, 6), (32450981, 8), (32450981, 10), (32450981, 17),
+-- powerup
+(33789412, 3), (33789412, 4), (33789412, 9), (33789412, 12), (33789412, 16),
+-- gymbasics
+(34982017, 13), (34982017, 14), (34982017, 15), (34982017, 18),
+-- protrainer
+(36212045, 2), (36212045, 5), (36212045, 7), (36212045, 13), (36212045, 17),
+-- sportx
+(37550987, 1), (37550987, 6), (37550987, 10), (37550987, 15), (37550987, 18),
+
+-- Shared supplies
+(31000432, 13),
+(32450981, 1),
+(33789412, 5),
+(34982017, 7),
+(36212045, 10),
+(37550987, 11);

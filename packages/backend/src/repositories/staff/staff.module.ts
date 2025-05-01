@@ -8,5 +8,6 @@ import { StaffRepository } from './staff.repository';
   imports: [TrainingModule],
   controllers: [StaffController],
   providers: [StaffRepository, RepositoryService],
+  exports: [StaffRepository],
 })
 export class StaffModule {}

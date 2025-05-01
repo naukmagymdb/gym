@@ -36,13 +36,16 @@ export class ProductsService {
     return this.db.any(sql);
   }
 
-  async findById(id: number) {
-    const query = `
-        SELECT * FROM products
-        WHERE goods_id = $1
-      `;
+  async findOne(condition: Record<string, any>) {
+    const keys = Object.keys(condition);
+    const values = Object.values(condition);
 
-    return await this.db.oneOrNone(query, [id]);
+    const whereClause = keys
+      .map((key, i) => `${key} = $${i + 1}`)
+      .join(' AND ');
+    const sql = `SELECT * FROM products WHERE ${whereClause} LIMIT 1`;
+
+    return this.db.oneOrNone(sql, values);
   }
 
   async update(id: number, updateProductDto: ProductDto) {

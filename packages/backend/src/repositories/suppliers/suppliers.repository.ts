@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import pgPromise from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
@@ -40,11 +40,16 @@ export class SuppliersService {
     return await this.db.any(query);
   }
 
-  async findOne(edrpou: number) {
-    const query = `
-        SELECT * FROM supplier WHERE edrpou = $1
-      `;
-    return await this.db.oneOrNone(query, [edrpou]);
+  async findOne(condition: Record<string, any>) {
+    const keys = Object.keys(condition);
+    const values = Object.values(condition);
+
+    const whereClause = keys
+      .map((key, i) => `${key} = $${i + 1}`)
+      .join(' AND ');
+    const sql = `SELECT * FROM supplier WHERE ${whereClause} LIMIT 1`;
+
+    return this.db.oneOrNone(sql, values);
   }
 
   async update(edrpou: number, updateSupplierDto: UpdateSupplierDto) {
@@ -62,7 +67,7 @@ export class SuppliersService {
     }
 
     if (fields.length === 0) {
-      return this.findOne(edrpou); // No fields to update, return the existing supplier
+      throw new BadRequestException('No fields to update');
     }
 
     const query = `

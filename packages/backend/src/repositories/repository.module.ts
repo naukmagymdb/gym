@@ -15,5 +15,6 @@ import { VisitorModule } from './visitors/visitor.module';
     SuppliersModule,
     TrainingModule,
   ],
+  exports: [StaffModule, VisitorModule],
 })
 export class RepositoryModule {}

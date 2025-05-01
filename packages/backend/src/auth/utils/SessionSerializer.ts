@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { AccountsHandler } from 'src/accounts/services/accountsHandler.service';
+import { IndexHandler } from 'src/index/index.handler';
 import { CreateStaffDto } from 'src/repositories/staff/dtos/create-staff.dto';
 import { CreateVisitorDto } from 'src/repositories/visitors/dtos/create-visitor.dto';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
-  constructor(private readonly accountsHandler: AccountsHandler) {
+  constructor(private readonly indexHandler: IndexHandler) {
     super();
   }
 
@@ -21,10 +21,7 @@ export class SessionSerializer extends PassportSerializer {
   ) {
     console.log('Deserializing...');
 
-    const loggedDB = await this.accountsHandler.getById(
-      payload.role,
-      payload.id,
-    );
+    const loggedDB = await this.indexHandler.getById(payload.role, payload.id);
     const deserialized = { ...loggedDB, role: payload.role };
 
     return loggedDB ? done(null, deserialized) : done(null, null);
