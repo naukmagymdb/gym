@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AbonementTypeModule } from './abon-type/abon-type.module';
 import { DepartmentModule } from './departments/department.module';
 import { ProductsModule } from './products/products.module';
 import { StaffModule } from './staff/staff.module';
@@ -14,6 +15,7 @@ import { VisitorModule } from './visitors/visitor.module';
     ProductsModule,
     SuppliersModule,
     TrainingModule,
+    AbonementTypeModule,
   ],
   exports: [StaffModule, VisitorModule],
 })
