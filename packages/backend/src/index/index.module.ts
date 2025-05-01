@@ -7,5 +7,6 @@ import { IndexHandler } from './index.handler';
   imports: [RepositoryModule],
   controllers: [IndexController],
   providers: [IndexHandler],
+  exports: [IndexHandler],
 })
 export class IndexModule {}

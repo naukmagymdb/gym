@@ -35,6 +35,14 @@ export class IndexHandler {
     return this.repoStrategies[role].update(id, updateDto);
   }
 
+  getByPhone(role: Role, phone_num: string) {
+    return this.repoStrategies[role].findOne({ phone_num });
+  }
+
+  getById(role: Role, id: string) {
+    return this.repoStrategies[role].findOne({ id });
+  }
+
   deserialize(role: Role, data: any) {
     const dto = this.responseDtoStrategies[role];
     return plainToInstance(dto, data);
