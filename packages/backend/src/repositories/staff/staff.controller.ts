@@ -6,29 +6,33 @@ import {
   Param,
   Patch,
   Post,
-  Query
+  Query,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/utils/role.enum';
 import { CreateStaffDto } from './dtos/create-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
 import { StaffRepository } from './staff.repository';
 
-
-// @Roles(Role.Admin)
-// @UseGuards(AuthenticatedGuard, RolesGuard)
+@Roles(Role.Admin)
+@UseGuards(AuthenticatedGuard, RolesGuard)
 @Controller('staff')
 export class StaffController {
-  constructor(private readonly staffRepository: StaffRepository) { }
+  constructor(private readonly staffRepository: StaffRepository) {}
 
   @Get()
   async findAll(
     @Query('depId') depId: number,
     @Query('sortBy') sortBy: string = 'surname',
-    @Query('order') order: 'asc' | 'desc' = 'asc'
+    @Query('order') order: 'asc' | 'desc' = 'asc',
   ) {
     return this.staffRepository.findAll({
       depId: depId,
       sortBy: sortBy,
-      order: order
+      order: order,
     });
   }
 
