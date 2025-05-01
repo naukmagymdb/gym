@@ -3,7 +3,6 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 export const apiFetch = async (url: string, options: RequestInit = {}) => {
     const response = await fetch(`${apiUrl}${url}`, {
         ...options,
-        credentials: 'include',
     });
 
     if (!response.ok) {
