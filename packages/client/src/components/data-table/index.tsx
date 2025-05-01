@@ -19,12 +19,12 @@ import { Skeleton } from '../ui/skeleton';
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
   data: TData[];
-  updateData: () => void;
+  // updateData: () => void;
   isLoading: boolean;
 }
 
 export interface DataTableMeta {
-  updateData: () => void;
+  // updateData: () => void;
   isLoading: boolean;
   filterOptions: string[];
   setFilter: (filter: string) => void;
@@ -33,7 +33,7 @@ export interface DataTableMeta {
 export default function DataTable<TData>({
   columns,
   data,
-  updateData,
+  // updateData,
   isLoading,
 }: DataTableProps<TData>) {
   const table = useReactTable({
@@ -41,7 +41,7 @@ export default function DataTable<TData>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: {
-      updateData,
+      // updateData,
       isLoading,
     },
   });

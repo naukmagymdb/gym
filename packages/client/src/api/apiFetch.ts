@@ -12,3 +12,12 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
 
   return response.json();
 };
+
+export const apiGetFetcher = async (url: string) => {
+  const response = await fetch(`${apiUrl}${url}`, {
+    credentials: 'include',
+    method: 'GET',
+  });
+
+  return response.json();
+};
