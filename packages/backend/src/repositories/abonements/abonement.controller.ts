@@ -18,6 +18,7 @@ import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { OptionalParseBoolPipe } from 'src/common/pipes/optional-parse-bool.pipe';
 import { ParseDateStringPipe } from 'src/common/pipes/parse-date-string.pipe';
 import { AbonementRepository } from './abonement.repository';
+import { AbonementResponseDto } from './dtos/abonement-response.dto';
 import { CreateAbonementDto } from './dtos/create-abonement.dto';
 import { UpdateAbonementDto } from './dtos/update-abonement.dto';
 
@@ -48,7 +49,7 @@ export class AbonementController {
     sortBy?: string,
     @Query('order', new DefaultEnumPipe<string>(['asc', 'desc'], 'asc'))
     order?: string,
-  ) {
+  ): Promise<AbonementResponseDto[]> {
     return this.repo.findAll({
       queries: {
         is_active,
@@ -64,12 +65,14 @@ export class AbonementController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) abonement_id: number) {
+  findOne(
+    @Param('id', ParseIntPipe) abonement_id: number,
+  ): Promise<AbonementResponseDto> {
     return this.repo.findOne({ abonement_id });
   }
 
   @Post()
-  create(@Body() dto: CreateAbonementDto) {
+  create(@Body() dto: CreateAbonementDto): Promise<AbonementResponseDto> {
     return this.repo.create(dto);
   }
 
@@ -77,12 +80,12 @@ export class AbonementController {
   update(
     @Param('id', ParseIntPipe) abonement_id: number,
     @Body() dto: UpdateAbonementDto,
-  ) {
+  ): Promise<AbonementResponseDto> {
     return this.repo.update(abonement_id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<AbonementResponseDto> {
     return this.repo.delete(id);
   }
 }
