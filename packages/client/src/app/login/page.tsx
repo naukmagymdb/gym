@@ -61,7 +61,11 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Phone</FormLabel>
                     <FormControl>
-                      <Input type="tel" {...field} />
+                      <Input
+                        type="tel"
+                        placeholder="+380XXXXXXXXX"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
