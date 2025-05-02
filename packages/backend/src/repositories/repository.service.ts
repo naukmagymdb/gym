@@ -7,7 +7,7 @@ export class RepositoryService {
     const values: Record<string, any> = {};
 
     for (const [key, value] of Object.entries(updateDto)) {
-      if (value) {
+      if (value !== null && value !== undefined) {
         setClause.push(`${key} = $(${key})`);
         values[key] = value;
       }
@@ -24,7 +24,11 @@ export class RepositoryService {
     const values: any = {};
 
     Object.entries(queryParams).forEach(([key, value]) => {
-      if (value && allowedColumns.includes(key)) {
+      if (
+        value !== null &&
+        value !== undefined &&
+        allowedColumns.includes(key)
+      ) {
         conditions.push(`${key} = $(${key})`);
         values[key] = value;
       }

@@ -11,7 +11,7 @@ export class CreateTrainingDto {
   visitor_id: number;
 
   @IsInt()
-  @IsOptional()
+  @IsNotEmpty()
   staff_id: number;
 
   @IsDateString()

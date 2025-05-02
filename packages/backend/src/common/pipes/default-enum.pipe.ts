@@ -6,15 +6,15 @@ import {
 } from '@nestjs/common';
 
 @Injectable()
-export class DefaultEnumPipe implements PipeTransform {
+export class DefaultEnumPipe<T> implements PipeTransform {
   constructor(
-    private readonly enumValues: string[],
-    private readonly defaultValue: string,
+    private readonly enumValues: T[],
+    private readonly defaultValue: T,
   ) {}
 
-  transform(value: any, metadata: ArgumentMetadata) {
+  transform(value: T, metadata: ArgumentMetadata) {
     if (value === undefined || value === null) {
-      value = this.defaultValue;
+      return this.defaultValue;
     }
 
     if (!this.enumValues.includes(value)) {

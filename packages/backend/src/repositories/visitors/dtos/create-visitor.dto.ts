@@ -1,8 +1,10 @@
+import { Exclude } from 'class-transformer';
 import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
   IsOptional,
+  IsPhoneNumber,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -31,7 +33,7 @@ export class CreateVisitorDto {
   @MaxLength(50)
   patronymic: string;
 
-  // @IsPhoneNumber()
+  @IsPhoneNumber()
   @IsNotEmpty()
   @MaxLength(50)
   phone_num: string;
@@ -41,6 +43,6 @@ export class CreateVisitorDto {
   email?: string = null;
 
   @IsString()
-  // @Exclude()
+  @Exclude()
   login_password: string;
 }

@@ -16,3 +16,7 @@ export class VisitorResponseDto {
   @Exclude()
   login_password: string;
 }
+
+export class VisitorFullResponseDto extends VisitorResponseDto {
+  age: number;
+}
