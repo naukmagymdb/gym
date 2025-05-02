@@ -124,8 +124,8 @@ export class StaffRepository {
       t.date_of_begin,
       t.date_of_end
     FROM Training t
-    JOIN Visitor v ON v.id = t.visitor_id
-    JOIN Staff s ON s.id = t.staff_id
+      JOIN Visitor v ON v.id = t.visitor_id
+      JOIN Staff s ON s.id = t.staff_id
     WHERE t.staff_id = $1 
     ${visitor_id ? 'AND t.visitor_id = $2' : ''}
     GROUP BY 
@@ -144,29 +144,26 @@ export class StaffRepository {
 
   async getSelfDepartmentManagers() {
     const query = `
-  SELECT 
-  m.id,
-  m.phone_num,
-  m.Department_id,
-  d.Address AS department_address
-FROM 
-  Staff m
-JOIN 
-  Department d ON m.Department_id = d.Department_id
-WHERE 
-  -- Must be a manager
-  EXISTS (
-    SELECT 1
-    FROM Staff_Manager_Subordinate sms
-    WHERE sms.Manager_ID = m.ID
-  )
-  AND NOT EXISTS (
-    SELECT 1
-    FROM Staff_Manager_Subordinate sms
-    JOIN Staff s ON sms.Subordinate_ID = s.ID
-    WHERE sms.Manager_ID = m.ID
-      AND NOT (s.Department_id = m.Department_id)
-  );
+      SELECT 
+        m.id,
+        m.phone_num,
+        m.Department_id,
+        d.Address AS department_address
+      FROM Staff m
+        JOIN Department d ON m.Department_id = d.Department_id
+      WHERE 
+        EXISTS (
+          SELECT 1
+          FROM Staff_Manager_Subordinate sms
+          WHERE sms.Manager_ID = m.ID
+        )
+        AND NOT EXISTS (
+          SELECT 1
+          FROM Staff_Manager_Subordinate sms
+          JOIN Staff s ON sms.Subordinate_ID = s.ID
+          WHERE sms.Manager_ID = m.ID
+            AND NOT (s.Department_id = m.Department_id)
+        );
     `;
 
     return await this.db.any(query);
