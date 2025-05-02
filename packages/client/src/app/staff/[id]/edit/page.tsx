@@ -45,7 +45,6 @@ export default function StaffEditPage() {
       }}
       onSubmit={async (data: EditStaffDto) => {
         setIsLoading(true);
-        data.department_id = data.department_id || null;
         try {
           await editEntity(`/staff/${id}`, data);
           router.push('/staff');
