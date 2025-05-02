@@ -121,6 +121,16 @@ CREATE TABLE Contract (
     ON DELETE NO ACTION ON UPDATE CASCADE
 );
 
+CREATE TABLE Staff_Contract (
+    Staff_id INT,
+    Contract_num INTEGER,
+    FOREIGN KEY (staff_id) REFERENCES Staff(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (contract_num) REFERENCES Contract(contract_num)
+        ON DELETE NO ACTION ON UPDATE CASCADE,
+    PRIMARY KEY (staff_id, contract_num) -- Composite primary key for uniqueness
+);
+
 CREATE TABLE Contract_Products (
   Contract_num INTEGER NOT NULL,
   Goods_id INTEGER NOT NULL,

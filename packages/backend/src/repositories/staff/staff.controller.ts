@@ -9,7 +9,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { ParseDateStringPipe } from 'src/common/pipes/parse-date-string.pipe';
+import { ContractsService } from '../contracts/contracts.repository';
 import { TrainingResponseDto } from '../trainings/dtos/training-response.dto';
 import { TrainingRepository } from '../trainings/training.repository';
 import { CreateStaffDto } from './dtos/create-staff.dto';
@@ -41,6 +43,19 @@ export class StaffController {
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
     return this.staffRepository.findById(id);
+  }
+
+  @Get(':id/contracts')
+  async findSignedContracts(
+    @Param('id', ParseIntPipe) id: number,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(ContractsService.getColumns(), 'contract_date'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
+  ) {
+    return this.staffRepository.findSignedContracts(id, sortBy, order);
   }
 
   @Post()

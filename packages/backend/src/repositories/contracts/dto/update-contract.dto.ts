@@ -1,4 +1,15 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateContractDto } from './create-contract.dto';
+import { IsDateString, IsNumber, IsOptional } from 'class-validator';
+import { ProductInContractDTO } from './product-in-contract.dto';
 
-export class UpdateContractDto extends PartialType(CreateContractDto) {}
+export class UpdateContractDto {
+  @IsOptional()
+  @IsNumber()
+  edrpou?: number;
+
+  @IsOptional()
+  products?: ProductInContractDTO[];
+
+  @IsOptional()
+  @IsDateString()
+  contract_date?: string;
+}

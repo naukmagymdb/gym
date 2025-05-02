@@ -89,7 +89,7 @@ export class ContractsService {
 
     const queryUpdateContract = `
       UPDATE contract
-      SET ${setClause.join(', ')}
+      SET ${setClause.join(', ')}, total_sum = 0
       WHERE contract_num = $(contract_num)
     `;
     await this.db.oneOrNone(queryUpdateContract, values);

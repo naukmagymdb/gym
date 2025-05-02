@@ -144,6 +144,15 @@ INSERT INTO Contract_Products (Contract_num, Goods_id, Goods_price, Goods_amount
 (6, 10, 3200.00, 10), -- Exercise Bikes for warmups
 (6, 18, 420.00, 40);  -- Eliptical trainers
 
+-- Link John Smith (Staff ID based on the order in the Staff INSERT, assuming it auto-increments or you know the ID) to the first contract (EDRPOU 31000432)
+INSERT INTO staff_contract (staff_id, contract_num) VALUES
+(1, 1),
+(2, 2),
+(6, 3),
+(7, 4),
+(9, 5),
+(10,6);
+
 
 --test data for getSuppliersOnlySuppySpecifiedProduct
 INSERT INTO Supplier (EDRPOU, Phone_num, Email)
@@ -156,3 +165,4 @@ VALUES ('Example Product');
 -- Insert into the Supplier_Products table to link the supplier and product
 INSERT INTO Supplier_Products (EDRPOU, Goods_id)
 VALUES (987654321, (SELECT Goods_id FROM Products WHERE Goods_name = 'Example Product'));
+
