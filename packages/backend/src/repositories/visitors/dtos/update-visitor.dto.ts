@@ -1,36 +1,42 @@
-import { IsDate, IsEmail, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
+import {
+  IsDate,
+  IsEmail,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class UpdateVisitorDto {
-        @IsDate()
-        @IsOptional()
-        birth_date?: string = null;
+  @IsDate()
+  @IsOptional()
+  birth_date?: string = null;
 
-        @IsString()
-        @IsOptional()
-        @MaxLength(50)
-        visitor_name?: string = null;
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  visitor_name?: string = null;
 
-        @IsString()
-        @IsOptional()
-        @MaxLength(50)
-        surname?: string = null;
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  surname?: string = null;
 
-        @IsString()
-        @IsOptional()
-        @MaxLength(50)
-        patronymic?: string = null;
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  patronymic?: string = null;
 
-        @IsPhoneNumber()
-        @IsOptional()
-        @MaxLength(50)
-        phone_num?: string = null;
+  // @IsPhoneNumber()
+  @IsOptional()
+  @MaxLength(50)
+  phone_num?: string = null;
 
-        @IsEmail()
-        @IsOptional()
-        email?: string = null;
+  @IsEmail()
+  @IsOptional()
+  email?: string = null;
 
-        @IsString()
-        // @Exclude()
-        @IsOptional()
-        login_password?: string = null;
+  @IsString()
+  // @Exclude()
+  @IsOptional()
+  login_password?: string = null;
 }
