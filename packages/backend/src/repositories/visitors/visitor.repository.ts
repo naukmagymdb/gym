@@ -17,6 +17,7 @@ export class VisitorRepository {
     'patronymic',
     'phone_num',
     'email',
+    'age',
   ];
 
   constructor(
@@ -37,16 +38,17 @@ export class VisitorRepository {
     if (queries.abonement_type) {
       whereClause += `WHERE a.abonement_type = $(abonement_type)`;
     }
-    whereClause += queries.abonement_type
-      ? ` AND a.is_active = $(is_active)`
-      : `WHERE a.is_active = $(is_active)`;
+    if (queries.is_active != null) {
+      whereClause += queries.abonement_type
+        ? ` AND a.is_active = $(is_active)`
+        : `WHERE a.is_active = $(is_active)`;
+    }
 
     const query = `
         ${this.getQueryPart(whereClause)}
         ORDER BY v.${sortOptions.sortBy} ${sortOptions.order}
       `;
 
-    console.log(query);
     return await this.db.any(query, { whereClause, ...queries });
   }
 
@@ -60,7 +62,6 @@ export class VisitorRepository {
       ${this.getQueryPart(whereClause)}
       LIMIT 1
     `;
-    console.log(query);
 
     return await this.db.oneOrNone(query, values);
   }
@@ -123,22 +124,26 @@ export class VisitorRepository {
         v.patronymic,
         v.phone_num,
         v.email,
-        json_agg(
-          json_build_object(
-            'abonement_id', a.abonement_id,
-            'start_date', a.start_date,
-            'end_date', a.end_date,
-            'is_active', a.is_active,
-            'abonement_type', a.abonement_type,
-            'department_id', a.department_id,
-            'department_address', d.address
-          )
+        v.age,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'abonement_id', a.abonement_id,
+              'start_date', a.start_date,
+              'end_date', a.end_date,
+              'is_active', a.is_active,
+              'abonement_type', a.abonement_type,
+              'department_id', a.department_id,
+              'department_address', d.address
+            ) 
+          ) FILTER (WHERE a.abonement_id IS NOT NULL),
+          '[]'::json 
         ) AS abonements
-      FROM visitor v
+      FROM visitor_with_age v
       LEFT JOIN abonement a ON v.id = a.visitor_id
       LEFT JOIN department d ON a.department_id = d.department_id
       ${whereClause}
-      GROUP BY v.id
+      GROUP BY v.id, v.visitor_name, v.surname, v.patronymic, v.phone_num, v.email, v.age
     `;
   }
 }
