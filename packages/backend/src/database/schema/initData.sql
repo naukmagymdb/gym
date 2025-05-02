@@ -152,3 +152,17 @@ INSERT INTO staff_contract (staff_id, contract_num) VALUES
 (7, 4),
 (9, 5),
 (10,6);
+
+
+--test data for getSuppliersOnlySuppySpecifiedProduct
+INSERT INTO Supplier (EDRPOU, Phone_num, Email)
+VALUES (987654321, '555-123-4567', 'supplier228@example.com');
+
+-- Insert into the Products table
+INSERT INTO Products (Goods_name)
+VALUES ('Example Product');
+
+-- Insert into the Supplier_Products table to link the supplier and product
+INSERT INTO Supplier_Products (EDRPOU, Goods_id)
+VALUES (987654321, (SELECT Goods_id FROM Products WHERE Goods_name = 'Example Product'));
+

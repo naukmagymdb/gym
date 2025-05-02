@@ -120,6 +120,26 @@ export class ContractsService {
     }
   }
 
+  async findHighValueGoodsByThreshold(
+    threshold: number,
+    sortBy: string,
+    order: string,
+  ) {
+    console.log('Finding high value goods by threshold:', threshold);
+    const query = `
+      SELECT c.contract_num, c.contract_date, c.total_sum
+      FROM contract c 
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM contract_products cp  JOIN Products p  ON cp.goods_id = p.goods_id
+            WHERE cp.contract_num = c.contract_num
+            AND NOT (cp.goods_price > $1)
+            )       
+        ORDER BY c.${sortBy} ${order}
+        `;
+    return await this.db.any<ProductInContractDto>(query, [threshold]);
+  }
+
   async create(createContractDto: CreateContractDto): Promise<GetContractDto> {
     console.log('Creating contract:', createContractDto);
 
