@@ -60,6 +60,26 @@ export class ContractsController {
     return this.contractsService.findContractItems(id, sortBy, order);
   }
 
+  @Get('high-value-goods/:threshold')
+  findHighValueGoodsByThreshold(
+    @Param('threshold', ParseIntPipe) threshold: number,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(
+        ContractsService.getColumnsInContractProductsTable(),
+        'goods_price',
+      ),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
+  ) {
+    return this.contractsService.findHighValueGoodsByThreshold(
+      threshold,
+      sortBy,
+      order,
+    );
+  }
+
   @Post()
   create(@Body() createContractDto: CreateContractDto) {
     return this.contractsService.create(createContractDto);
