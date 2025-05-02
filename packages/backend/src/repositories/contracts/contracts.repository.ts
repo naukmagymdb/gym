@@ -133,7 +133,7 @@ export class ContractsService {
             SELECT 1
             FROM contract_products cp  JOIN Products p  ON cp.goods_id = p.goods_id
             WHERE cp.contract_num = c.contract_num
-            AND NOT (cp.goods_price > 100)
+            AND NOT (cp.goods_price > $1)
     )`;
     return this.db.any<ProductInContractDto>(query, [threshold]);
   }
