@@ -44,10 +44,12 @@ export class SuppliersController {
     return this.suppliersService.getProductsBySupplier(edrpou, sortBy, order);
   }
 
-  @Post('supplyOnly')
-  getSuppliersOnlySuppySpecifiedProduct(@Body() body: { goods_name: string }) {
+  @Get('supplyOnly/:goods_name')
+  getSuppliersOnlySuppySpecifiedProduct(
+    @Param('goods_name') goods_name: string,
+  ) {
     return this.suppliersService.getSuppliersOnlySupplySpecifiedProduct(
-      body.goods_name,
+      goods_name,
     );
   }
 
