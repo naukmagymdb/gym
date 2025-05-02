@@ -9,6 +9,15 @@ import { UpdateVisitorDto } from './dtos/update-visitor.dto';
 @Injectable()
 export class VisitorRepository {
   private db: pgPromise.IDatabase<any>;
+  private static columns = [
+    'id',
+    'birth_date',
+    'visitor_name',
+    'surname',
+    'patronymic',
+    'phone_num',
+    'email',
+  ];
 
   constructor(
     private readonly databaseService: DatabaseService,
@@ -17,15 +26,9 @@ export class VisitorRepository {
     this.db = databaseService.getDb();
   }
 
-  async findAll({
-    sortBy,
-    order,
-  }: {
-    sortBy?: string;
-    order?: 'asc' | 'desc';
-  }) {
+  async findAll({ sortBy, order }: { sortBy?: string; order?: string }) {
     const sql = `
-      SELECT * FROM visitor
+      SELECT * FROM visitor_with_age
       ORDER BY ${sortBy} ${order}
     `;
     return await this.db.any(sql, { sortBy, order });
@@ -38,7 +41,7 @@ export class VisitorRepository {
     const whereClause = keys
       .map((key, i) => `${key} = $${i + 1}`)
       .join(' AND ');
-    const sql = `SELECT * FROM visitor WHERE ${whereClause} LIMIT 1`;
+    const sql = `SELECT * FROM visitor_with_age WHERE ${whereClause} LIMIT 1`;
 
     return this.db.oneOrNone(sql, values);
   }
@@ -83,5 +86,9 @@ export class VisitorRepository {
   async delete(id: number) {
     const sql = 'DELETE FROM visitor WHERE id = $(id) RETURNING *';
     return await this.db.oneOrNone(sql, { id });
+  }
+
+  static getColumns() {
+    return this.columns;
   }
 }

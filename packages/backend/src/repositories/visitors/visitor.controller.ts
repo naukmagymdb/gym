@@ -14,6 +14,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/utils/role.enum';
+import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { AbonementRepository } from '../abonements/abonement.repository';
 import { CreateAbonementDto } from '../abonements/dtos/create-abonement.dto';
 import { UpdateAbonementDto } from '../abonements/dtos/update-abonement.dto';
@@ -34,12 +35,13 @@ export class VisitorController {
 
   @Get()
   async findAll(
-    @Query('sortBy') sortBy: string = 'surname',
-    @Query('order') order: 'asc' | 'desc' = 'asc',
+    @Query('sortBy',
+      new DefaultEnumPipe<string>([...VisitorRepository.getColumns(), 'age'], 'id')) sortBy?: string,
+    @Query('order', new DefaultEnumPipe<string>(['asc', 'desc'], 'asc')) order?: string,
   ) {
     return await this.visitorRepository.findAll({
-      sortBy: sortBy,
-      order: order,
+      sortBy,
+      order,
     });
   }
 
