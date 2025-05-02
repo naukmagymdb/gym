@@ -14,6 +14,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useMemo } from 'react';
 import { Skeleton } from '../ui/skeleton';
 
 interface DataTableProps<TData> {
@@ -36,9 +37,23 @@ export default function DataTable<TData>({
   // updateData,
   isLoading,
 }: DataTableProps<TData>) {
+  const tableColumns = useMemo(
+    () =>
+      isLoading
+        ? columns.map((column) => ({
+            ...column,
+            cell: () => <Skeleton className="h-4 w-full" />,
+          }))
+        : columns,
+    [isLoading, columns],
+  );
+  const tableData = useMemo(() => {
+    return isLoading ? Array(10).fill({}) : data;
+  }, [isLoading, data]);
+
   const table = useReactTable({
-    data,
-    columns,
+    data: tableData,
+    columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
     meta: {
       // updateData,
@@ -69,7 +84,7 @@ export default function DataTable<TData>({
             );
           })}
         </TableHeader>
-        <TableBody data-loading={isLoading ? 'true' : 'false'}>
+        <TableBody>
           {table.getRowModel().rows?.length === 0 ? (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
@@ -78,17 +93,10 @@ export default function DataTable<TData>({
             </TableRow>
           ) : (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-              >
+              <TableRow key={row.id} className="h-14">
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} width={cell.column.getSize()}>
-                    {isLoading ? (
-                      <Skeleton className="h-4 w-full" />
-                    ) : (
-                      flexRender(cell.column.columnDef.cell, cell.getContext())
-                    )}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
               </TableRow>
