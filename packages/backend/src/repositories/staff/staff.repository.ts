@@ -127,7 +127,6 @@ export class StaffRepository {
     JOIN Visitor v ON v.id = t.visitor_id
     JOIN Staff s ON s.id = t.staff_id
     WHERE t.staff_id = $1 
-      AND s.qualification_cert_number_of_coach IS NOT NULL
     ${visitor_id ? 'AND t.visitor_id = $2' : ''}
     GROUP BY 
       t.visitor_id, v.phone_num, 
