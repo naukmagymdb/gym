@@ -3,7 +3,6 @@
 import { apiGetFetcher } from '@/api/apiFetch';
 import DataTable from '@/components/data-table';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -14,7 +13,6 @@ import {
 } from '@/components/ui/select';
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { ColumnDef } from '@tanstack/react-table';
-import { useDebounce } from '@uidotdev/usehooks';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import useSWR from 'swr';
@@ -42,9 +40,11 @@ export default function EntityListPage<Data>({
       .filter(Boolean) as string[];
   }, [columns]);
 
-  const { sort, setSort, order, setOrder, search, setSearch, queryParams } =
-    useQueryParams(sortFields, defaultSort);
-  const handleSearch = useDebounce(setSearch, 300);
+  const { sort, setSort, order, setOrder, queryParams } = useQueryParams(
+    sortFields,
+    defaultSort,
+  );
+  //   const handleSearch = useDebounce(setSearch, 300);
 
   const { data, isLoading } = useSWR<Data[]>(
     `${route}?${queryParams.toString()}`,
@@ -114,11 +114,11 @@ export default function EntityListPage<Data>({
             </Select>
           </div> */}
 
-          <Input
+          {/* <Input
             placeholder="Search..."
             defaultValue={search}
             onChange={(e) => handleSearch(e.target.value)}
-          />
+          /> */}
           <Link href={`${route}/create`}>
             <Button>Create</Button>
           </Link>

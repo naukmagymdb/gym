@@ -18,25 +18,25 @@ INSERT INTO Department_Email (Email, Department_id) VALUES
 
 -- Mock data for Staff
 INSERT INTO Staff (Contract_num, Staff_Name, Surname, Patronymic, Salary, Phone_num, Qualification_cert_number_of_coach, Email, Department_id, Login_password) VALUES
-('C001', 'John', 'Smith', 'Edward', 5000.00, '555-111-2222', 'CERT-001', 'john.smith@gymdb.com', 1, '$2a$10$XK0f3XfnMfr8zGQ1KJkmEOIzrGzCjWl.gYS7Ru5OQ/MgGxGzQ5xaC'),
-('C002', 'Emily', 'Johnson', 'Marie', 4500.00, '555-222-3333', 'CERT-002', 'emily.johnson@gymdb.com', 1, '$2a$10$DuPm1.HCwIzFQwjShc8ygu9KMTVFtkZqzKs89n1WMtBYnDvgWL4DK'),
-('C003', 'Michael', 'Williams', 'James', 5200.00, '555-333-4444', 'CERT-003', 'michael.williams@gymdb.com', 2, '$2a$10$qQPfIlGvLEn6lZ8gG0SZD.YN33BFzbJGmkm3QGMfvHSn9mS9HVtVu'),
-('C004', 'Sarah', 'Brown', NULL, 4000.00, '555-444-5555', NULL, 'sarah.brown@gymdb.com', 2, '$2a$10$ZLCIw2UYWXDFitDq0JUqnuNxzKRgwz6Y6.hQTg2gykVV.c/d0Y1dW'),
-('C005', 'David', 'Jones', 'Robert', 4800.00, '555-555-6666', 'CERT-004', 'david.jones@gymdb.com', 3, '$2a$10$kl8Cfs7HSl8QxhXp2wd1MO3cBaZ4QF1UZn6NOyVl8QH/GxJwqQsxu'),
-('C006', 'Jessica', 'Davis', 'Lynn', 3800.00, '555-666-7777', NULL, 'jessica.davis@gymdb.com', 3, '$2a$10$lmVcNbVZ8OWvk0Oq3InWou/H5JcIbAZfanYPMYKGilUE7m7Xa8nC.'),
-('C007', 'Robert', 'Miller', 'George', 6000.00, '555-777-8888', 'CERT-005', 'robert.miller@gymdb.com', 1, '$2a$10$5hCZYwS5MrZ5K/nOZdbtf.RbmQrN3L9K3gqgNc8.gVQlwS8xbKAKi'),
-('C008', 'Jennifer', 'Wilson', NULL, 4200.00, '555-888-9999', NULL, 'jennifer.wilson@gymdb.com', 2, '$2a$10$z.rJeM3nE/5nbU4hD7WEWOveMF2BE2gF1QpbzI2vJ5kbv1KUVqZPa'),
-('C009', 'Thomas', 'Moore', 'Daniel', 5500.00, '555-999-0000', 'CERT-006', 'thomas.moore@gymdb.com', 3, '$2a$10$HRvQJvt1u19wP3Pf1R8Wz.qMv5c0GN1cgOqZVZuO0aPVWQiAJh/t2'),
-('C010', 'Lisa', 'Taylor', 'Anne', 4100.00, '555-000-1111', NULL, 'lisa.taylor@gymdb.com', 1, '$2a$10$nkRhJG0xrB9Y9mXDTZiVj.7AYKqF7CRczHwQC4q/VmYnhsWnOjrS.'),
-('C011', 'Vanya', 'Hushchin', 'Oleksiyovych', 94100.00, '1', NULL, 'someMail@gmail.com', 1, '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
+('C001', 'John', 'Smith', 'Edward', 5000.00, '+380501112233', 'CERT-001', 'john.smith@gymdb.com', 1, '$2a$10$XK0f3XfnMfr8zGQ1KJkmEOIzrGzCjWl.gYS7Ru5OQ/MgGxGzQ5xaC'),
+('C002', 'Emily', 'Johnson', 'Marie', 4500.00, '+380502223344', 'CERT-002', 'emily.johnson@gymdb.com', 1, '$2a$10$DuPm1.HCwIzFQwjShc8ygu9KMTVFtkZqzKs89n1WMtBYnDvgWL4DK'),
+('C003', 'Michael', 'Williams', 'James', 5200.00, '+380503334455', 'CERT-003', 'michael.williams@gymdb.com', 2, '$2a$10$qQPfIlGvLEn6lZ8gG0SZD.YN33BFzbJGmkm3QGMfvHSn9mS9HVtVu'),
+('C004', 'Sarah', 'Brown', NULL, 4000.00, '+380504445566', NULL, 'sarah.brown@gymdb.com', 2, '$2a$10$ZLCIw2UYWXDFitDq0JUqnuNxzKRgwz6Y6.hQTg2gykVV.c/d0Y1dW'),
+('C005', 'David', 'Jones', 'Robert', 4800.00, '+380505556677', 'CERT-004', 'david.jones@gymdb.com', 3, '$2a$10$kl8Cfs7HSl8QxhXp2wd1MO3cBaZ4QF1UZn6NOyVl8QH/GxJwqQsxu'),
+('C006', 'Jessica', 'Davis', 'Lynn', 3800.00, '+380506667788', NULL, 'jessica.davis@gymdb.com', 3, '$2a$10$lmVcNbVZ8OWvk0Oq3InWou/H5JcIbAZfanYPMYKGilUE7m7Xa8nC.'),
+('C007', 'Robert', 'Miller', 'George', 6000.00, '+380507778899', 'CERT-005', 'robert.miller@gymdb.com', 1, '$2a$10$5hCZYwS5MrZ5K/nOZdbtf.RbmQrN3L9K3gqgNc8.gVQlwS8xbKAKi'),
+('C008', 'Jennifer', 'Wilson', NULL, 4200.00, '+380508889900', NULL, 'jennifer.wilson@gymdb.com', 2, '$2a$10$z.rJeM3nE/5nbU4hD7WEWOveMF2BE2gF1QpbzI2vJ5kbv1KUVqZPa'),
+('C009', 'Thomas', 'Moore', 'Daniel', 5500.00, '+380509990011', 'CERT-006', 'thomas.moore@gymdb.com', 3, '$2a$10$HRvQJvt1u19wP3Pf1R8Wz.qMv5c0GN1cgOqZVZuO0aPVWQiAJh/t2'),
+('C010', 'Lisa', 'Taylor', 'Anne', 4100.00, '+380500001122', NULL, 'lisa.taylor@gymdb.com', 1, '$2a$10$nkRhJG0xrB9Y9mXDTZiVj.7AYKqF7CRczHwQC4q/VmYnhsWnOjrS.'),
+('C011', 'Vanya', 'Hushchin', 'Oleksiyovych', 94100.00, '+380992353975', NULL, 'someMail@gmail.com', 1, '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
 
 INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, Email, Login_password) VALUES
-('1990-01-15', 'Alex', 'Ivanov', 'Petrovich', '555-111-0001', 'alex.ivanov@gmail.com', '$2b$10$e3JiRO4m5ReUZbiGvM14mu2GMgDPEK7YkF4sfRQZGe.6UVX6LZC9K'),
-('1985-05-20', 'Maria', 'Koval', 'Ivanivna', '555-222-0002', 'maria.koval@gmail.com', '$2b$10$7KrP7Y7FjCb8D1IQtxrh7ezGeNeaFzMjP0eBbN8EjvD.D28Drm4p2'),
-('1993-09-10', 'Oleh', 'Shevchenko', 'Mykolayovych', '555-333-0003', 'oleh.shevchenko@gmail.com', '$2b$10$T7pBW3vWjWDL5iGr8TFeve1uzqsRU6NmZMIb2VhW1KMaHiTfQaV1y'),
-('2000-12-25', 'Anna', 'Bondarenko', 'Serhiivna', '555-444-0004', 'anna.bondarenko@gmail.com', '$2b$10$CDMp2gXkG4nZjmsY7l7T6eK4kSIRZrzp1eXrF4lWpiAZc2Ft1Gq9W'),
-('1997-03-08', 'Taras', 'Tkachenko', 'Volodymyrovych', '555-555-0005', 'taras.tkachenko@gmail.com', '$2b$10$AGeNs4fAgfKg6gPKOcbDAeXtZtIMv5mRjzp8ZEMKcmuM4nAtvJzU2'),
-('05-05-2006', 'Vanya', 'Hushchin', 'Oleksiyovych', '1', 'someMail@gmail.com', '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
+('1990-01-15', 'Alex', 'Ivanov', 'Petrovich', '+380501122233', 'alex.ivanov@gmail.com', '$2b$10$e3JiRO4m5ReUZbiGvM14mu2GMgDPEK7YkF4sfRQZGe.6UVX6LZC9K'),
+('1985-05-20', 'Maria', 'Koval', 'Ivanivna', '+380502233344', 'maria.koval@gmail.com', '$2b$10$7KrP7Y7FjCb8D1IQtxrh7ezGeNeaFzMjP0eBbN8EjvD.D28Drm4p2'),
+('1993-09-10', 'Oleh', 'Shevchenko', 'Mykolayovych', '+380504334455', 'oleh.shevchenko@gmail.com', '$2b$10$T7pBW3vWjWDL5iGr8TFeve1uzqsRU6NmZMIb2VhW1KMaHiTfQaV1y'),
+('2000-12-25', 'Anna', 'Bondarenko', 'Serhiivna', '+380504446566', 'anna.bondarenko@gmail.com', '$2b$10$CDMp2gXkG4nZjmsY7l7T6eK4kSIRZrzp1eXrF4lWpiAZc2Ft1Gq9W'),
+('1997-03-08', 'Taras', 'Tkachenko', 'Volodymyrovych', '+380506556677', 'taras.tkachenko@gmail.com', '$2b$10$AGeNs4fAgfKg6gPKOcbDAeXtZtIMv5mRjzp8ZEMKcmuM4nAtvJzU2'),
+('05-05-2006', 'Vanya', 'Hushchin', 'Oleksiyovych', '+380992353976', 'someMail@gmail.com', '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
 
 -- Manager-Subordinate relationships
 INSERT INTO Staff_Manager_Subordinate (Manager_ID, Subordinate_ID) VALUES 
@@ -50,11 +50,11 @@ INSERT INTO Staff_Manager_Subordinate (Manager_ID, Subordinate_ID) VALUES
 
 INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, Email, Login_password)
 VALUES
-('1990-04-12', 'Alex', 'Petrov', 'Ivanovich', '0991112233', 'alex.petrov@example.com', '$2a$10$abcd1234abcd1234abcd1uDPhlMd8vHpj1sdtC92DC/2A4RfL6ReS'),
-('1985-07-22', 'Maria', 'Kovalenko', 'Sergeevna', '0932223344', 'maria.kovalenko@example.com', '$2a$10$efgh5678efgh5678efgh5YdOvdDJJk4Fpi9Lgcn3yt2HYAnOeTWj6'),
-('1993-01-05', 'Ivan', 'Shevchenko', 'Chuvak', '0973334455', 'ivan.shevchenko@example.com', '$2a$10$ijkl9012ijkl9012ijkl9XgPAV4KMTG0R8aM4GpL5Wkj0qOHEQtSi'),
-('2000-09-10', 'Olga', 'Tkachenko', 'Olegovna', '0664445566', 'olga.tkachenko@example.com', '$2a$10$mnop3456mnop3456mnop3NsWDkRbkdrFhE93xXBZntzcc3kPNgJ2'),
-('1988-12-02', 'Dmytro', 'Lysenko', 'Vitaliyovych', '0985556677', 'dmytro.lysenko@example.com', '$2a$10$qrst7890qrst7890qrst7Hg5LUOrAXxqkLt3ETrgjkUR5gUzAzGO.'),
+('1990-04-12', 'Alex', 'Petrov', 'Ivanovich', '+380991112233', 'alex.petrov@example.com', '$2a$10$abcd1234abcd1234abcd1uDPhlMd8vHpj1sdtC92DC/2A4RfL6ReS'),
+('1985-07-22', 'Maria', 'Kovalenko', 'Sergeevna', '+380932223344', 'maria.kovalenko@example.com', '$2a$10$efgh5678efgh5678efgh5YdOvdDJJk4Fpi9Lgcn3yt2HYAnOeTWj6'),
+('1993-01-05', 'Ivan', 'Shevchenko', 'Chuvak', '+380973334455', 'ivan.shevchenko@example.com', '$2a$10$ijkl9012ijkl9012ijkl9XgPAV4KMTG0R8aM4GpL5Wkj0qOHEQtSi'),
+('2000-09-10', 'Olga', 'Tkachenko', 'Olegovna', '+380664445566', 'olga.tkachenko@example.com', '$2a$10$mnop3456mnop3456mnop3NsWDkRbkdrFhE93xXBZntzcc3kPNgJ2'),
+('1988-12-02', 'Dmytro', 'Lysenko', 'Vitaliyovych', '+380985556677', 'dmytro.lysenko@example.com', '$2a$10$qrst7890qrst7890qrst7Hg5LUOrAXxqkLt3ETrgjkUR5gUzAzGO.'),
 ('2006-05-05', 'Vanya', 'Hushchin', 'TaPoh', '+380992353975', 'oopsgu2006@gmail.com', '$2b$10$yu57S3KCQFFmc3KV1tssuuEcBrtY/kFjN0kJQgauykpAAfQQzNSPS');
 
 INSERT INTO Training (Visitor_ID, Staff_ID, Date_Of_Begin, Date_Of_End)
