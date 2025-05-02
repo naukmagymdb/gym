@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import pgPromise from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
 import { RepositoryService } from '../repository.service';
+import { SuppliersService } from '../suppliers/suppliers.repository';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { GetContractDto } from './dto/get-contract.dto';
 import { ProductInContractDTO as ProductInContractDto } from './dto/product-in-contract.dto';
@@ -10,6 +11,7 @@ import { UpdateContractDto } from './dto/update-contract.dto';
 @Injectable()
 export class ContractsService {
   private db: pgPromise.IDatabase<any>;
+  private suppliers: SuppliersService;
 
   private static columns = [
     'contract_num',
@@ -23,6 +25,7 @@ export class ContractsService {
     private readonly repositoryService: RepositoryService,
   ) {
     this.db = databaseService.getDb();
+    this.suppliers = new SuppliersService(databaseService);
   }
 
   async findAll(sortBy: string, order: string): Promise<GetContractDto[]> {
@@ -91,30 +94,11 @@ export class ContractsService {
     `;
     await this.db.oneOrNone(queryUpdateContract, values);
 
-    if (updateContractDto.products && updateContractDto.products.length > 0) {
-      console.log('Updating products for contract:', id);
-
-      const queryDeleteProducts = `
+    const queryDeleteProducts = `
         DELETE FROM contract_products
         WHERE contract_num = $(id)
       `;
-      await this.db.none(queryDeleteProducts, { id });
-
-      const queryInsertProducts = `
-        INSERT INTO contract_products (contract_num, goods_id, goods_price, goods_amount)
-        VALUES ($(contract_num), $(goods_id), $(goods_price), $(goods_amount))
-      `;
-
-      for (const product of updateContractDto.products) {
-        const { goods_id, goods_price, goods_amount } = product;
-        await this.db.none(queryInsertProducts, {
-          contract_num: id,
-          goods_id,
-          goods_price,
-          goods_amount,
-        });
-      }
-    }
+    await this.db.none(queryDeleteProducts, { id });
 
     return this.findOne(id, 'goods_id', 'asc');
   }
@@ -153,17 +137,9 @@ export class ContractsService {
   async setProductsToContract(id: number, products: ProductInContractDto[]) {
     console.log('Adding products to contract:', id);
 
-    try {
-      const queryFindContract = `
-      SELECT *
-      FROM contract
-      WHERE contract_num = $1
-    `;
-      await this.db.one<GetContractDto>(queryFindContract, [id]);
-    } catch (error) {
-      console.error('Error finding contract:', id);
-      throw new NotFoundException(`Contract with id ${id} not found`);
-    }
+    const contract = await this.findOne(id, 'goods_id', 'asc');
+
+    await this.checkForProductsExistenceinSuppliers(products, contract.edrpou);
 
     const queryDeleteProducts = `
       DELETE FROM contract_products
@@ -171,27 +147,11 @@ export class ContractsService {
     `;
     await this.db.none(queryDeleteProducts, { id });
 
-    let total_sum = 0;
-
-    const insertProductsIntoContractProductsTable = `
-      INSERT INTO contract_products (contract_num, goods_id, goods_price, goods_amount)
-      VALUES ($(contract_num), $(goods_id), $(goods_price), $(goods_amount) )
-      RETURNING *
-    `;
-
-    try {
-      for (const product of products) {
-        await this.db.one(insertProductsIntoContractProductsTable, {
-          ...product,
-          contract_num: id,
-        });
-
-        total_sum += product.goods_price * product.goods_amount;
-      }
-    } catch (error) {
-      console.error('One of the products does not exist:', id);
-      throw new NotFoundException(`One of the products does not exist`);
-    }
+    const total_sum =
+      await this.insertProductsIntoContractProductsTableAndReturnTotalSum(
+        products,
+        id,
+      );
 
     const queryUpdateContractTotalSum = `
       UPDATE contract
@@ -235,5 +195,65 @@ export class ContractsService {
       'total_goods_price',
       'goods_name',
     ];
+  }
+
+  async checkForProductsExistenceinSuppliers(
+    products: ProductInContractDto[],
+    edrpou: number,
+  ): Promise<any> {
+    const getProductsFromSupplier = `
+      SELECT goods_id
+      FROM supplier_products
+      WHERE edrpou = $(edrpou)
+      `;
+    const productsFromSupplier = await this.db.any<{
+      goods_id: number | string;
+    }>(getProductsFromSupplier, {
+      edrpou: edrpou,
+    });
+
+    for (const product of products) {
+      const productExists = productsFromSupplier.some(
+        (p) => p.goods_id === product.goods_id,
+      );
+      if (!productExists) {
+        console.error(
+          'Product with id:',
+          product.goods_id,
+          'does not exist in supplier',
+        );
+        throw new NotFoundException(
+          `Product with id ${product.goods_id} does not exist in supplier`,
+        );
+      }
+    }
+  }
+
+  async insertProductsIntoContractProductsTableAndReturnTotalSum(
+    products: ProductInContractDto[],
+    id: number,
+  ): Promise<number> {
+    let total_sum = 0;
+
+    const insertProductsIntoContractProductsTable = `
+      INSERT INTO contract_products (contract_num, goods_id, goods_price, goods_amount)
+      VALUES ($(contract_num), $(goods_id), $(goods_price), $(goods_amount) )
+      RETURNING *
+    `;
+
+    try {
+      for (const product of products) {
+        await this.db.one(insertProductsIntoContractProductsTable, {
+          ...product,
+          contract_num: id,
+        });
+
+        total_sum += product.goods_price * product.goods_amount;
+      }
+    } catch (error) {
+      console.error('One of the products does not exist:', id);
+      throw new NotFoundException(`One of the products does not exist`);
+    }
+    return total_sum;
   }
 }
