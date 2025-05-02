@@ -63,7 +63,7 @@ export class StaffController {
   }
 
   @Patch(':id')
-   update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateStaffDto: UpdateStaffDto,
   ): Promise<StaffResponseDto> {
@@ -71,9 +71,7 @@ export class StaffController {
   }
 
   @Delete(':id')
-   delete(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<StaffResponseDto> {
+  delete(@Param('id', ParseIntPipe) id: number): Promise<StaffResponseDto> {
     return this.staffRepository.delete(id);
   }
 

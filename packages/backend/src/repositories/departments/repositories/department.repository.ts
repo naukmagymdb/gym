@@ -92,22 +92,29 @@ export class DepartmentRepository {
     }
   }
 
-  async update(id: number, {address, emails, phone_numbers}: UpdateDepartmentDto) {
+  async update(
+    id: number,
+    { address, emails, phone_numbers }: UpdateDepartmentDto,
+  ) {
     if (address) {
       await this.db.none(
         `UPDATE department SET address = $1 WHERE department_id = $2`,
         [address, id],
       );
     }
-  
+
     if (emails) {
       await this.departmentHandler.handleUpdate('emails', id, emails);
     }
-  
+
     if (phone_numbers) {
-      await this.departmentHandler.handleUpdate('phone_numbers', id, phone_numbers);
+      await this.departmentHandler.handleUpdate(
+        'phone_numbers',
+        id,
+        phone_numbers,
+      );
     }
-  
+
     return this.findOne({ department_id: id });
   }
 
@@ -119,5 +126,27 @@ export class DepartmentRepository {
     `;
     const result = await this.db.one(query, { id });
     return result;
+  }
+
+  async getManagersInfo(
+    department_id: number,
+    sortOptions: Record<string, string>,
+  ) {
+    const query = `
+      SELECT 
+        s.id AS manager_id,
+        s.phone_num,
+        s.department_id,
+        d.address AS department_address,
+        COUNT(sms.subordinate_id) AS subordinate_count
+      FROM Staff_Manager_Subordinate sms
+      JOIN Staff s ON sms.Manager_ID = s.ID
+      JOIN Department d ON s.Department_id = d.Department_id
+      WHERE s.Department_id = $1
+      GROUP BY s.ID, s.Phone_num, s.Department_id, d.Address
+      ORDER BY ${sortOptions.sortBy} ${sortOptions.order};
+    `;
+
+    return await this.db.any(query, [department_id]);
   }
 }
