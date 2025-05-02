@@ -53,7 +53,7 @@ export class StaffController {
   async findById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<StaffResponseDto> {
-    const staff = this.staffRepository.findOne({ id });
+    const staff = await this.staffRepository.findOne({ id });
     return plainToInstance(StaffResponseDto, staff);
   }
 
@@ -63,7 +63,7 @@ export class StaffController {
   }
 
   @Patch(':id')
-  async update(
+   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateStaffDto: UpdateStaffDto,
   ): Promise<StaffResponseDto> {
@@ -71,14 +71,14 @@ export class StaffController {
   }
 
   @Delete(':id')
-  async delete(
+   delete(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<StaffResponseDto> {
     return this.staffRepository.delete(id);
   }
 
   @Get(':staff_id/trainings')
-  async getStaffSessions(
+  getStaffSessions(
     @Param('staff_id', ParseIntPipe) staff_id: number,
     @Query('visitor_id', OptionalParseIntPipe) visitor_id?: number,
     @Query(
