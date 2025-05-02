@@ -1,5 +1,7 @@
+import { deleteEntity } from '@/api/entity';
 import ActionCell from '@/components/data-table/cells/actionsCell';
 import { ColumnDef } from '@tanstack/react-table';
+import { toast } from 'sonner';
 
 export type Staff = {
   id: number;
@@ -49,7 +51,15 @@ export const staffColumns: ColumnDef<Staff>[] = [
           row={row}
           isLoading={false}
           onEdit={() => {}}
-          onDelete={() => {}}
+          onDelete={async () => {
+            try {
+              await deleteEntity(`/staff/${row.original.id}`);
+              window.location.reload();
+            } catch (error) {
+              toast.error('Could not delete staff');
+              console.error(error);
+            }
+          }}
         />
       );
     },
