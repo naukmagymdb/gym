@@ -35,22 +35,22 @@ export const visitorsColumns: ColumnDef<Visitor>[] = [
     header: 'Email',
     accessorKey: 'email',
   },
-  {
-    header: 'Birth Date',
-    accessorKey: 'birth_date',
-    cell: ({ row }) => {
-      const birthDate = row.original.birth_date;
-      return <span>{new Date(birthDate).toLocaleDateString()}</span>;
-    },
-  },
+  //   {
+  //     header: 'Birth Date',
+  //     accessorKey: 'birth_date',
+  //     cell: ({ row }) => {
+  //       const birthDate = row.original.birth_date;
+  //       return <span>{new Date(birthDate).toLocaleDateString()}</span>;
+  //     },
+  //   },
   {
     header: 'Age',
     accessorKey: 'age',
-    cell: ({ row }) => {
-      const birthDate = row.original.birth_date;
-      const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
-      return <span>{age}</span>;
-    },
+    // cell: ({ row }) => {
+    //   const birthDate = row.original.birth_date;
+    //   const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
+    //   return <span>{age}</span>;
+    // },
   },
   {
     header: 'Actions',
@@ -61,6 +61,7 @@ export const visitorsColumns: ColumnDef<Visitor>[] = [
           row={row}
           id={row.original.id.toString()}
           isLoading={false}
+          openRoute={`/visitors/${row.original.id}`}
           onEdit={() => {}}
           onDelete={async () => {
             try {
