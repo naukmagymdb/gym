@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { AppModule } from './app.module';
+import { setGlobalTimezone } from './common/configs/timezone.config';
 import { DatabaseService } from './database/database.service';
 
 async function bootstrap() {
@@ -17,6 +18,7 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api');
+  setGlobalTimezone();
 
   const dbService = app.get(DatabaseService);
   await dbService.waitForConnection();

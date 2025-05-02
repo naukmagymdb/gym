@@ -9,6 +9,16 @@ import { UpdateVisitorDto } from './dtos/update-visitor.dto';
 @Injectable()
 export class VisitorRepository {
   private db: pgPromise.IDatabase<any>;
+  private static columns = [
+    'id',
+    'birth_date',
+    'visitor_name',
+    'surname',
+    'patronymic',
+    'phone_num',
+    'email',
+    'age',
+  ];
 
   constructor(
     private readonly databaseService: DatabaseService,
@@ -18,29 +28,42 @@ export class VisitorRepository {
   }
 
   async findAll({
-    sortBy,
-    order,
+    queries,
+    sortOptions,
   }: {
-    sortBy?: string;
-    order?: 'asc' | 'desc';
+    queries: Record<string, any>;
+    sortOptions: { sortBy: string; order: string };
   }) {
-    const sql = `
-      SELECT * FROM visitor
-      ORDER BY ${sortBy} ${order}
-    `;
-    return await this.db.any(sql, { sortBy, order });
+    let whereClause = '';
+    if (queries.abonement_type) {
+      whereClause += `WHERE a.abonement_type = $(abonement_type)`;
+    }
+    if (queries.is_active != null) {
+      whereClause += queries.abonement_type
+        ? ` AND a.is_active = $(is_active)`
+        : `WHERE a.is_active = $(is_active)`;
+    }
+
+    const query = `
+        ${this.getQueryPart(whereClause)}
+        ORDER BY v.${sortOptions.sortBy} ${sortOptions.order}
+      `;
+
+    return await this.db.any(query, { whereClause, ...queries });
   }
 
   async findOne(condition: Record<string, any>) {
-    const keys = Object.keys(condition);
-    const values = Object.values(condition);
+    const { whereClause, values } = this.repositoryService.getWhereClause(
+      condition,
+      VisitorRepository.columns,
+    );
 
-    const whereClause = keys
-      .map((key, i) => `${key} = $${i + 1}`)
-      .join(' AND ');
-    const sql = `SELECT * FROM visitor WHERE ${whereClause} LIMIT 1`;
+    const query = `
+      ${this.getQueryPart(whereClause)}
+      LIMIT 1
+    `;
 
-    return this.db.oneOrNone(sql, values);
+    return await this.db.oneOrNone(query, values);
   }
 
   async create(createVisitorDto: CreateVisitorDto) {
@@ -55,7 +78,11 @@ export class VisitorRepository {
         ($(visitor_name), $(surname), $(patronymic), $(phone_num), $(email), $(birth_date), $(login_password)) 
       RETURNING *
     `;
-    return await this.db.one(sql, createVisitorDto);
+    try {
+      return await this.db.one(sql, createVisitorDto);
+    } catch (err) {
+      return null;
+    }
   }
 
   async update(id: number, updateVisitorDto: UpdateVisitorDto) {
@@ -83,5 +110,40 @@ export class VisitorRepository {
   async delete(id: number) {
     const sql = 'DELETE FROM visitor WHERE id = $(id) RETURNING *';
     return await this.db.oneOrNone(sql, { id });
+  }
+
+  static getColumns() {
+    return this.columns;
+  }
+
+  private getQueryPart(whereClause: string): string {
+    return `
+      SELECT v.id,
+        v.visitor_name,
+        v.surname,
+        v.patronymic,
+        v.phone_num,
+        v.email,
+        v.age,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'abonement_id', a.abonement_id,
+              'start_date', a.start_date,
+              'end_date', a.end_date,
+              'is_active', a.is_active,
+              'abonement_type', a.abonement_type,
+              'department_id', a.department_id,
+              'department_address', d.address
+            ) 
+          ) FILTER (WHERE a.abonement_id IS NOT NULL),
+          '[]'::json 
+        ) AS abonements
+      FROM visitor_with_age v
+      LEFT JOIN abonement a ON v.id = a.visitor_id
+      LEFT JOIN department d ON a.department_id = d.department_id
+      ${whereClause}
+      GROUP BY v.id, v.visitor_name, v.surname, v.patronymic, v.phone_num, v.email, v.age
+    `;
   }
 }

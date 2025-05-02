@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   IsDateString,
   IsEmail,
@@ -7,36 +8,40 @@ import {
 } from 'class-validator';
 
 export class UpdateVisitorDto {
+  constructor(partial: Partial<UpdateVisitorDto>) {
+    Object.assign(this, partial);
+  }
+
   @IsDateString()
   @IsOptional()
-  birth_date?: string = null;
+  birth_date?: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(50)
-  visitor_name?: string = null;
+  visitor_name?: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(50)
-  surname?: string = null;
+  surname?: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(50)
-  patronymic?: string = null;
+  patronymic?: string;
 
-  // @IsPhoneNumber()
+  //   @IsPhoneNumber()
   @IsOptional()
   @MaxLength(50)
-  phone_num?: string = null;
+  phone_num?: string;
 
   @IsEmail()
   @IsOptional()
-  email?: string = null;
+  email?: string;
 
   @IsString()
-  // @Exclude()
+  @Exclude()
   @IsOptional()
-  login_password?: string = null;
+  login_password?: string;
 }
