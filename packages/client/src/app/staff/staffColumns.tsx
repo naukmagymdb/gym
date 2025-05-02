@@ -45,14 +45,11 @@ export const staffColumns: ColumnDef<Staff>[] = [
     cell: ({ row }) => {
       return (
         <ActionCell
+          id={row.original.id.toString()}
           row={row}
           isLoading={false}
-          onEdit={() => {
-            console.log('edit');
-          }}
-          onDelete={() => {
-            console.log('delete');
-          }}
+          onEdit={() => {}}
+          onDelete={() => {}}
         />
       );
     },

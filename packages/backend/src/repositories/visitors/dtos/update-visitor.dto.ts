@@ -1,9 +1,8 @@
 import { Exclude } from 'class-transformer';
 import {
-  IsDate,
+  IsDateString,
   IsEmail,
   IsOptional,
-  IsPhoneNumber,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -13,7 +12,7 @@ export class UpdateVisitorDto {
     Object.assign(this, partial);
   }
 
-  @IsDate()
+  @IsDateString()
   @IsOptional()
   birth_date?: string;
 
@@ -32,7 +31,7 @@ export class UpdateVisitorDto {
   @MaxLength(50)
   patronymic?: string;
 
-  @IsPhoneNumber()
+  //   @IsPhoneNumber()
   @IsOptional()
   @MaxLength(50)
   phone_num?: string;
