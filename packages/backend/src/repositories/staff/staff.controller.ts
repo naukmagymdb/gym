@@ -8,7 +8,12 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/utils/role.enum';
 import { ParseDateStringPipe } from 'src/common/pipes/parse-date-string.pipe';
 import { TrainingResponseDto } from '../trainings/dtos/training-response.dto';
 import { TrainingRepository } from '../trainings/training.repository';
@@ -16,8 +21,8 @@ import { CreateStaffDto } from './dtos/create-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
 import { StaffRepository } from './staff.repository';
 
-// @Roles(Role.Admin)
-// @UseGuards(AuthenticatedGuard, RolesGuard)
+@Roles(Role.Admin)
+@UseGuards(AuthenticatedGuard, RolesGuard)
 @Controller('staff')
 export class StaffController {
   constructor(

@@ -18,8 +18,7 @@ export class IndexController {
 
   @Get('')
   async getDashboard(@Request() req) {
-    const { role, ...dashboard } = req.user;
-    return this.indexHandler.deserialize(role, dashboard);
+    return this.indexHandler.deserialize(req.user.role, req.user);
   }
 
   @Patch('')
