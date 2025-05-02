@@ -10,13 +10,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/utils/role.enum';
 import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
-import { ParseDateStringPipe } from 'src/common/pipes/parse-date-string.pipe';
 import { TrainingResponseDto } from '../trainings/dtos/training-response.dto';
 import { TrainingRepository } from '../trainings/training.repository';
 import { CreateStaffDto } from './dtos/create-staff.dto';
@@ -40,24 +40,25 @@ export class StaffController {
     sortBy?: string,
     @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ): Promise<StaffResponseDto[]> {
-    return this.staffRepository.findAll({
+    const staff = await this.staffRepository.findAll({
       depId,
       sortBy,
       order,
     });
+
+    return plainToInstance(StaffResponseDto, staff);
   }
 
   @Get(':id')
   async findById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<StaffResponseDto> {
-    return this.staffRepository.findOne({ id });
+    const staff = this.staffRepository.findOne({ id });
+    return plainToInstance(StaffResponseDto, staff);
   }
 
   @Post()
-  async create(
-    @Body() createStaffDto: CreateStaffDto,
-  ): Promise<StaffResponseDto> {
+  create(@Body() createStaffDto: CreateStaffDto): Promise<StaffResponseDto> {
     return this.staffRepository.create(createStaffDto);
   }
 
@@ -76,22 +77,21 @@ export class StaffController {
     return this.staffRepository.delete(id);
   }
 
-  @Get(':id/trainings')
+  @Get(':staff_id/trainings')
   async getStaffSessions(
-    @Param('id', ParseIntPipe) staff_id: number,
-    @Query('date_of_begin', new ParseDateStringPipe()) date_of_begin?: string,
-    @Query('date_of_end', new ParseDateStringPipe()) date_of_end?: string,
+    @Param('staff_id', ParseIntPipe) staff_id: number,
+    @Query('visitor_id', OptionalParseIntPipe) visitor_id?: number,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(TrainingRepository.getColumns(), 'visitor_id'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ): Promise<TrainingResponseDto[]> {
-    return this.trainingRepository.findAll({
-      queries: {
-        staff_id: staff_id,
-        date_of_begin: date_of_begin,
-        date_of_end: date_of_end,
-      },
-      sortOptions: {
-        sortBy: 'visitor_id',
-        order: 'asc',
-      },
+    return this.staffRepository.findAllSessions(staff_id, {
+      visitor_id,
+      sortBy,
+      order,
     });
   }
 }

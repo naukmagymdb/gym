@@ -107,6 +107,37 @@ export class StaffRepository {
     return await this.db.oneOrNone(sql, [id]);
   }
 
+  async findAllSessions(
+    staff_id: number,
+    {
+      visitor_id,
+      sortBy,
+      order,
+    }: { visitor_id?: number; sortBy: string; order: string },
+  ) {
+    const sql = `
+    SELECT 
+      t.visitor_id,
+      v.phone_num AS visitor_phone,
+      t.staff_id,
+      s.phone_num AS staff_phone,
+      t.date_of_begin,
+      t.date_of_end
+    FROM Training t
+    JOIN Visitor v ON v.id = t.visitor_id
+    JOIN Staff s ON s.id = t.staff_id
+    WHERE t.staff_id = $1
+    ${visitor_id ? 'AND t.visitor_id = $2' : ''}
+    GROUP BY 
+      t.visitor_id, v.phone_num, 
+      t.staff_id, s.phone_num,
+      t.date_of_begin, t.date_of_end
+    ORDER BY ${sortBy} ${order};
+  `;
+
+    return this.db.any(sql, visitor_id ? [staff_id, visitor_id] : [staff_id]);
+  }
+
   static getColumns() {
     return this.columns;
   }
