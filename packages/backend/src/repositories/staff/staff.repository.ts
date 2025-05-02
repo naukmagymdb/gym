@@ -9,6 +9,18 @@ import { UpdateStaffDto } from './dtos/update-staff.dto';
 @Injectable()
 export class StaffRepository {
   private db: IDatabase<any>;
+  private static columns = [
+    'id',
+    'contract_num',
+    'staff_Name',
+    'surname',
+    'patronymic',
+    'salary',
+    'phone_num',
+    'qualification_cert_number_of_coach',
+    'email',
+    'department_id',
+  ];
 
   constructor(
     private readonly databaseService: DatabaseService,
@@ -24,7 +36,7 @@ export class StaffRepository {
   }: {
     depId?: number;
     sortBy?: string;
-    order?: 'asc' | 'desc';
+    order?: string;
   }) {
     let conditions: string[] = [];
     if (depId) conditions.push('department_id = $(depId)');
@@ -93,5 +105,9 @@ export class StaffRepository {
   async delete(id: number) {
     const sql = 'DELETE FROM staff WHERE id = $1 RETURNING *';
     return await this.db.oneOrNone(sql, [id]);
+  }
+
+  static getColumns() {
+    return this.columns;
   }
 }
