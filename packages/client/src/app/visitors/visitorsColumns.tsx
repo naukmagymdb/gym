@@ -1,3 +1,4 @@
+import ActionCell from '@/components/data-table/cells/actionsCell';
 import { ColumnDef } from '@tanstack/react-table';
 
 export type Visitor = {
@@ -8,6 +9,7 @@ export type Visitor = {
   patronymic: string;
   phone_num: string;
   email?: string;
+  login_password?: string;
 };
 
 export const visitorsColumns: ColumnDef<Visitor>[] = [
@@ -46,6 +48,21 @@ export const visitorsColumns: ColumnDef<Visitor>[] = [
       const birthDate = row.original.birth_date;
       const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
       return <span>{age}</span>;
+    },
+  },
+  {
+    header: 'Actions',
+    size: 50,
+    cell: ({ row }) => {
+      return (
+        <ActionCell
+          row={row}
+          id={row.original.id.toString()}
+          isLoading={false}
+          onEdit={() => {}}
+          onDelete={() => {}}
+        />
+      );
     },
   },
 ];

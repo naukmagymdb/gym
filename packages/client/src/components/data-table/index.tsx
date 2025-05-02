@@ -63,7 +63,7 @@ export default function DataTable<TData>({
 
   return (
     <div className="rounded-md border">
-      <Table>
+      <Table className="table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => {
             return (

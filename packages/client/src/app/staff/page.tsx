@@ -7,7 +7,7 @@ export default function StaffPage() {
   return (
     <EntityListPage
       columns={staffColumns}
-      dataRoute="/staff"
+      route="/staff"
       title="Staff"
       defaultSort="surname"
     />

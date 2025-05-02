@@ -15,11 +15,12 @@ import {
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { ColumnDef } from '@tanstack/react-table';
 import { useDebounce } from '@uidotdev/usehooks';
+import Link from 'next/link';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 export interface EntityListPageProps<Data> {
   columns: ColumnDef<Data>[];
-  dataRoute: string;
+  route: string;
   title: string;
   defaultSort?: string;
 }
@@ -27,7 +28,7 @@ export interface EntityListPageProps<Data> {
 export default function EntityListPage<Data>({
   title,
   columns,
-  dataRoute,
+  route,
   defaultSort,
 }: EntityListPageProps<Data>) {
   const sortFields = useMemo(() => {
@@ -46,7 +47,7 @@ export default function EntityListPage<Data>({
   const handleSearch = useDebounce(setSearch, 300);
 
   const { data, isLoading } = useSWR<Data[]>(
-    `${dataRoute}?${queryParams.toString()}`,
+    `${route}?${queryParams.toString()}`,
     apiGetFetcher,
   );
 
@@ -118,7 +119,9 @@ export default function EntityListPage<Data>({
             defaultValue={search}
             onChange={(e) => handleSearch(e.target.value)}
           />
-          <Button>Create</Button>
+          <Link href={`${route}/create`}>
+            <Button>Create</Button>
+          </Link>
         </div>
       </div>
       <DataTable columns={columns} data={data ?? []} isLoading={isLoading} />

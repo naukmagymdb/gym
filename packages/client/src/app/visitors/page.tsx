@@ -7,7 +7,7 @@ export default function VisitorsPage() {
   return (
     <EntityListPage
       columns={visitorsColumns}
-      dataRoute="/visitors"
+      route="/visitors"
       title="Visitors"
       defaultSort="surname"
     />

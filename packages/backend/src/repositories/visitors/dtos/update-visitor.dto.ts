@@ -1,5 +1,5 @@
 import {
-  IsDate,
+  IsDateString,
   IsEmail,
   IsOptional,
   IsString,
@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 
 export class UpdateVisitorDto {
-  @IsDate()
+  @IsDateString()
   @IsOptional()
   birth_date?: string = null;
 
