@@ -89,7 +89,7 @@ CREATE TABLE Supplier_Products (
 );
 
 -- Abonements
-CREATE TABLE Abonementtype (
+CREATE TABLE Abonement_type (
   Abonement_type VARCHAR(50) PRIMARY KEY,
   Price NUMERIC(10,2) NOT NULL
 );
@@ -104,7 +104,7 @@ CREATE TABLE Abonement (
   Department_id INTEGER NOT NULL,
   FOREIGN KEY (Visitor_ID) REFERENCES Visitor(ID)
     ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (Abonement_type) REFERENCES Abonementtype(Abonement_type)
+  FOREIGN KEY (Abonement_type) REFERENCES Abonement_type(Abonement_type)
     ON DELETE NO ACTION ON UPDATE CASCADE,
   FOREIGN KEY (Department_id) REFERENCES Department(Department_id)
     ON DELETE CASCADE ON UPDATE CASCADE

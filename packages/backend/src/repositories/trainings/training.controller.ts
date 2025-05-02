@@ -35,10 +35,13 @@ export class TrainingController {
     @Query('date_of_end', ParseDateStringPipe) date_of_end?: string,
     @Query(
       'sortBy',
-      new DefaultEnumPipe(TrainingRepository.getColumns(), 'visitor_id'),
+      new DefaultEnumPipe<string>(
+        TrainingRepository.getColumns(),
+        'visitor_id',
+      ),
     )
     sortBy?: string,
-    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc'))
+    @Query('order', new DefaultEnumPipe<string>(['asc', 'desc'], 'asc'))
     order?: string,
   ): Promise<TrainingResponseDto[]> {
     return this.trainingRepository.findAll({

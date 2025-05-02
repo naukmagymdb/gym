@@ -30,6 +30,14 @@ INSERT INTO Staff (Contract_num, Staff_Name, Surname, Patronymic, Salary, Phone_
 ('C010', 'Lisa', 'Taylor', 'Anne', 4100.00, '555-000-1111', NULL, 'lisa.taylor@gymdb.com', 1, '$2a$10$nkRhJG0xrB9Y9mXDTZiVj.7AYKqF7CRczHwQC4q/VmYnhsWnOjrS.'),
 ('C011', 'Vanya', 'Hushchin', 'Oleksiyovych', 94100.00, '1', NULL, 'someMail@gmail.com', 1, '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
 
+INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, Email, Login_password) VALUES
+('1990-01-15', 'Alex', 'Ivanov', 'Petrovich', '555-111-0001', 'alex.ivanov@gmail.com', '$2b$10$e3JiRO4m5ReUZbiGvM14mu2GMgDPEK7YkF4sfRQZGe.6UVX6LZC9K'),
+('1985-05-20', 'Maria', 'Koval', 'Ivanivna', '555-222-0002', 'maria.koval@gmail.com', '$2b$10$7KrP7Y7FjCb8D1IQtxrh7ezGeNeaFzMjP0eBbN8EjvD.D28Drm4p2'),
+('1993-09-10', 'Oleh', 'Shevchenko', 'Mykolayovych', '555-333-0003', 'oleh.shevchenko@gmail.com', '$2b$10$T7pBW3vWjWDL5iGr8TFeve1uzqsRU6NmZMIb2VhW1KMaHiTfQaV1y'),
+('2000-12-25', 'Anna', 'Bondarenko', 'Serhiivna', '555-444-0004', 'anna.bondarenko@gmail.com', '$2b$10$CDMp2gXkG4nZjmsY7l7T6eK4kSIRZrzp1eXrF4lWpiAZc2Ft1Gq9W'),
+('1997-03-08', 'Taras', 'Tkachenko', 'Volodymyrovych', '555-555-0005', 'taras.tkachenko@gmail.com', '$2b$10$AGeNs4fAgfKg6gPKOcbDAeXtZtIMv5mRjzp8ZEMKcmuM4nAtvJzU2'),
+('05-05-2006', 'Vanya', 'Hushchin', 'Oleksiyovych', '1', 'someMail@gmail.com', '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
+
 -- Manager-Subordinate relationships
 INSERT INTO Staff_Manager_Subordinate (Manager_ID, Subordinate_ID) VALUES 
 (1, 2),
@@ -112,3 +120,21 @@ INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
 (34982017, 7),
 (36212045, 10),
 (37550987, 11);
+
+
+-- Abonement types
+INSERT INTO Abonement_type (Abonement_type, Price) VALUES
+('Monthly', 50.00),
+('Quarterly', 130.00),
+('Half-Yearly', 240.00),
+('Yearly', 450.00),
+('One-Time', 10.00);
+
+
+-- Abonements
+INSERT INTO Abonement (Start_date, End_date, Is_active, Visitor_ID, Abonement_type, Department_id) VALUES
+('2025-01-01', '2025-01-31', TRUE, 1, 'Monthly', 1),
+('2025-02-01', '2025-04-30', TRUE, 2, 'Quarterly', 2),
+('2024-11-01', '2025-04-30', FALSE, 3, 'Half-Yearly', 1),
+('2025-01-15', '2026-01-14', TRUE, 4, 'Yearly', 3),
+('2025-04-10', '2025-04-10', FALSE, 5, 'One-Time', 1);
