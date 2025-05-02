@@ -29,10 +29,10 @@ export class TrainingController {
 
   @Get()
   findAll(
-    @Query('visitor_id', new OptionalParseIntPipe()) visitor_id?: number,
-    @Query('staff_id', new OptionalParseIntPipe()) staff_id?: number,
-    @Query('date_of_begin', new ParseDateStringPipe()) date_of_begin?: string,
-    @Query('date_of_end', new ParseDateStringPipe()) date_of_end?: string,
+    @Query('visitor_id', OptionalParseIntPipe) visitor_id?: number,
+    @Query('staff_id', OptionalParseIntPipe) staff_id?: number,
+    @Query('date_of_begin', ParseDateStringPipe) date_of_begin?: string,
+    @Query('date_of_end', ParseDateStringPipe) date_of_end?: string,
     @Query(
       'sortBy',
       new DefaultEnumPipe(TrainingRepository.getColumns(), 'visitor_id'),

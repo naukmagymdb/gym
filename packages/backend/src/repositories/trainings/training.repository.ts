@@ -40,7 +40,6 @@ export class TrainingRepository {
       ${whereClause}
       ORDER BY ${sortOptions.sortBy} ${sortOptions.order}
     `;
-    console.log(sql);
 
     return await this.db.any(sql, values);
   }

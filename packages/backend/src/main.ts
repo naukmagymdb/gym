@@ -4,12 +4,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { AppModule } from './app.module';
+import { setGlobalTimezone } from './common/configs/timezone.config';
 import { DatabaseService } from './database/database.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
   app.setGlobalPrefix('api');
+  setGlobalTimezone();
 
   const dbService = app.get(DatabaseService);
   await dbService.waitForConnection();
