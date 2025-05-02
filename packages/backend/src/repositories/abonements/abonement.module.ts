@@ -6,5 +6,6 @@ import { AbonementRepository } from './abonement.repository';
 @Module({
   controllers: [AbonementController],
   providers: [AbonementRepository, RepositoryService],
+  exports: [AbonementRepository],
 })
 export class AbonementModule {}

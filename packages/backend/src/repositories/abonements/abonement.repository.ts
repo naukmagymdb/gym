@@ -13,7 +13,7 @@ export class AbonementRepository {
     'start_date',
     'end_date',
     'is_active',
-    'visitor_ID',
+    'visitor_id ',
     'abonement_type',
     'department_id',
   ];
@@ -56,7 +56,7 @@ export class AbonementRepository {
         SELECT * FROM abonement 
         ${whereClause} LIMIT 1
     `;
-
+    console.log(conditions);
     return this.db.oneOrNone(sql, values);
   }
 
