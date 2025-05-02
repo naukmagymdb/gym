@@ -24,11 +24,18 @@ export function MainNav() {
               </Link>
             </NavigationMenuItem>
             {role === 'admin' && (
-              <NavigationMenuItem>
-                <Link href="/staff" passHref className="">
-                  Staff
-                </Link>
-              </NavigationMenuItem>
+              <>
+                <NavigationMenuItem>
+                  <Link href="/staff" passHref>
+                    Staff
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/visitors" passHref>
+                    Visitors
+                  </Link>
+                </NavigationMenuItem>
+              </>
             )}
           </NavigationMenuList>
           <NavigationMenuList>

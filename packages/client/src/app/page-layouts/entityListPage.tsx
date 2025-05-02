@@ -64,7 +64,14 @@ export default function EntityListPage<Data>({
               <SelectContent>
                 {sortFields.map((field) => (
                   <SelectItem key={field} value={field}>
-                    {field}
+                    {(() => {
+                      const column = columns.find(
+                        (col) =>
+                          'accessorKey' in col && col.accessorKey === field,
+                      );
+                      const header = column?.header;
+                      return typeof header === 'string' ? header : field;
+                    })()}
                   </SelectItem>
                 ))}
               </SelectContent>
