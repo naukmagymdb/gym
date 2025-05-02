@@ -137,8 +137,8 @@ CREATE TABLE Contract_Products (
 CREATE TABLE Training (
   Visitor_ID INTEGER NOT NULL,
   Staff_ID INTEGER NOT NULL,
-  Date_Of_Begin DATE NOT NULL,
-  Date_Of_End DATE NOT NULL,
+  Date_Of_Begin TIMESTAMP NOT NULL,
+  Date_Of_End TIMESTAMP NOT NULL,
   PRIMARY KEY (Visitor_ID, Staff_ID, Date_Of_Begin, Date_Of_End),
   FOREIGN KEY (Visitor_ID) REFERENCES Visitor(ID)
     ON DELETE CASCADE ON UPDATE CASCADE,
