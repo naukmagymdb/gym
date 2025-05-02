@@ -43,12 +43,8 @@ export class VisitorController {
   @Get()
   async findAll(
     @Query('abon_type') abonement_type?: string,
-    @Query(
-      'is_active',
-      OptionalParseBoolPipe,
-      new DefaultEnumPipe<boolean>([true, false], true),
-    )
-    is_active?: string,
+    @Query('is_active', OptionalParseBoolPipe)
+    is_active?: boolean,
     @Query(
       'sortBy',
       new DefaultEnumPipe<string>(
