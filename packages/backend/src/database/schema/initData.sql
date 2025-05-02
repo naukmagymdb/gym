@@ -27,18 +27,47 @@ INSERT INTO Staff (Contract_num, Staff_Name, Surname, Patronymic, Salary, Phone_
 ('C007', 'Robert', 'Miller', 'George', 6000.00, '555-777-8888', 'CERT-005', 'robert.miller@gymdb.com', 1, '$2a$10$5hCZYwS5MrZ5K/nOZdbtf.RbmQrN3L9K3gqgNc8.gVQlwS8xbKAKi'),
 ('C008', 'Jennifer', 'Wilson', NULL, 4200.00, '555-888-9999', NULL, 'jennifer.wilson@gymdb.com', 2, '$2a$10$z.rJeM3nE/5nbU4hD7WEWOveMF2BE2gF1QpbzI2vJ5kbv1KUVqZPa'),
 ('C009', 'Thomas', 'Moore', 'Daniel', 5500.00, '555-999-0000', 'CERT-006', 'thomas.moore@gymdb.com', 3, '$2a$10$HRvQJvt1u19wP3Pf1R8Wz.qMv5c0GN1cgOqZVZuO0aPVWQiAJh/t2'),
-('C010', 'Lisa', 'Taylor', 'Anne', 4100.00, '555-000-1111', NULL, 'lisa.taylor@gymdb.com', 1, '$2a$10$nkRhJG0xrB9Y9mXDTZiVj.7AYKqF7CRczHwQC4q/VmYnhsWnOjrS.');
+('C010', 'Lisa', 'Taylor', 'Anne', 4100.00, '555-000-1111', NULL, 'lisa.taylor@gymdb.com', 1, '$2a$10$nkRhJG0xrB9Y9mXDTZiVj.7AYKqF7CRczHwQC4q/VmYnhsWnOjrS.'),
+('C011', 'Vanya', 'Hushchin', 'Oleksiyovych', 94100.00, '1', NULL, 'someMail@gmail.com', 1, '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
+
+INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, Email, Login_password) VALUES
+('1990-01-15', 'Alex', 'Ivanov', 'Petrovich', '555-111-0001', 'alex.ivanov@gmail.com', '$2b$10$e3JiRO4m5ReUZbiGvM14mu2GMgDPEK7YkF4sfRQZGe.6UVX6LZC9K'),
+('1985-05-20', 'Maria', 'Koval', 'Ivanivna', '555-222-0002', 'maria.koval@gmail.com', '$2b$10$7KrP7Y7FjCb8D1IQtxrh7ezGeNeaFzMjP0eBbN8EjvD.D28Drm4p2'),
+('1993-09-10', 'Oleh', 'Shevchenko', 'Mykolayovych', '555-333-0003', 'oleh.shevchenko@gmail.com', '$2b$10$T7pBW3vWjWDL5iGr8TFeve1uzqsRU6NmZMIb2VhW1KMaHiTfQaV1y'),
+('2000-12-25', 'Anna', 'Bondarenko', 'Serhiivna', '555-444-0004', 'anna.bondarenko@gmail.com', '$2b$10$CDMp2gXkG4nZjmsY7l7T6eK4kSIRZrzp1eXrF4lWpiAZc2Ft1Gq9W'),
+('1997-03-08', 'Taras', 'Tkachenko', 'Volodymyrovych', '555-555-0005', 'taras.tkachenko@gmail.com', '$2b$10$AGeNs4fAgfKg6gPKOcbDAeXtZtIMv5mRjzp8ZEMKcmuM4nAtvJzU2'),
+('05-05-2006', 'Vanya', 'Hushchin', 'Oleksiyovych', '1', 'someMail@gmail.com', '$2b$10$japjmWU6kc59vL7gW/C.Ke8Wo9jU73H9oErl//b46HUJIO/E9CyEm');
 
 -- Manager-Subordinate relationships
-INSERT INTO Staff_Manager_Subordinate (Manager_ID, Subordinate_ID) VALUES
+INSERT INTO Staff_Manager_Subordinate (Manager_ID, Subordinate_ID) VALUES 
 (1, 2),
 (1, 7),
 (1, 10),
 (3, 4),
 (3, 8),
 (5, 6),
-(5, 9); 
 
+(5, 9);
+
+INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, Email, Login_password)
+VALUES
+('1990-04-12', 'Alex', 'Petrov', 'Ivanovich', '0991112233', 'alex.petrov@example.com', '$2a$10$abcd1234abcd1234abcd1uDPhlMd8vHpj1sdtC92DC/2A4RfL6ReS'),
+('1985-07-22', 'Maria', 'Kovalenko', 'Sergeevna', '0932223344', 'maria.kovalenko@example.com', '$2a$10$efgh5678efgh5678efgh5YdOvdDJJk4Fpi9Lgcn3yt2HYAnOeTWj6'),
+('1993-01-05', 'Ivan', 'Shevchenko', 'Chuvak', '0973334455', 'ivan.shevchenko@example.com', '$2a$10$ijkl9012ijkl9012ijkl9XgPAV4KMTG0R8aM4GpL5Wkj0qOHEQtSi'),
+('2000-09-10', 'Olga', 'Tkachenko', 'Olegovna', '0664445566', 'olga.tkachenko@example.com', '$2a$10$mnop3456mnop3456mnop3NsWDkRbkdrFhE93xXBZntzcc3kPNgJ2'),
+('1988-12-02', 'Dmytro', 'Lysenko', 'Vitaliyovych', '0985556677', 'dmytro.lysenko@example.com', '$2a$10$qrst7890qrst7890qrst7Hg5LUOrAXxqkLt3ETrgjkUR5gUzAzGO.'),
+('2006-05-05', 'Vanya', 'Hushchin', 'TaPoh', '+380992353975', 'oopsgu2006@gmail.com', '$2b$10$yu57S3KCQFFmc3KV1tssuuEcBrtY/kFjN0kJQgauykpAAfQQzNSPS');
+
+INSERT INTO Training (Visitor_ID, Staff_ID, Date_Of_Begin, Date_Of_End)
+VALUES
+(1, 1, '2025-05-02T10:00:00', '2025-05-02T11:00:00'),
+(2, 2, '2025-05-02T11:30:00', '2025-05-02T12:30:00'),
+(3, 3, '2025-05-02T13:00:00', '2025-05-02T14:00:00'),
+(4, 4, '2025-05-03T09:00:00', '2025-05-03T10:00:00'),
+(5, 5, '2025-05-03T10:30:00', '2025-05-03T11:30:00'),
+(1, 2, '2025-05-04T08:00:00', '2025-05-04T09:00:00'),
+(2, 3, '2025-05-04T09:15:00', '2025-05-04T10:15:00'),
+(3, 1, '2025-05-04T10:30:00', '2025-05-04T11:30:00');
 
 -- Insert into Supplier table
 INSERT INTO Supplier (EDRPOU, Phone_num, Email) VALUES
@@ -92,6 +121,24 @@ INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
 (34982017, 7),
 (36212045, 10),
 (37550987, 11);
+
+
+-- Abonement types
+INSERT INTO Abonement_type (Abonement_type, Price) VALUES
+('Monthly', 50.00),
+('Quarterly', 130.00),
+('Half-Yearly', 240.00),
+('Yearly', 450.00),
+('One-Time', 10.00);
+
+
+-- Abonements
+INSERT INTO Abonement (Start_date, End_date, Is_active, Visitor_ID, Abonement_type, Department_id) VALUES
+('2025-01-01', '2025-01-31', TRUE, 1, 'Monthly', 1),
+('2025-02-01', '2025-04-30', TRUE, 2, 'Quarterly', 2),
+('2024-11-01', '2025-04-30', FALSE, 3, 'Half-Yearly', 1),
+('2025-01-15', '2026-01-14', TRUE, 4, 'Yearly', 3),
+('2025-04-10', '2025-04-10', FALSE, 5, 'One-Time', 1);
 
 -- Insert contracts - A story of fitness and competition!
 INSERT INTO Contract (EDRPOU, Total_sum, Contract_date) VALUES
@@ -165,4 +212,6 @@ VALUES ('Example Product');
 -- Insert into the Supplier_Products table to link the supplier and product
 INSERT INTO Supplier_Products (EDRPOU, Goods_id)
 VALUES (987654321, (SELECT Goods_id FROM Products WHERE Goods_name = 'Example Product'));
+
+
 

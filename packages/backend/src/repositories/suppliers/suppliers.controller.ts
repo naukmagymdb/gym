@@ -32,7 +32,7 @@ export class SuppliersController {
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) edrpou: number) {
-    return this.suppliersService.findOne(edrpou);
+    return this.suppliersService.findOne({ edrpou });
   }
 
   @Get(':id/products')

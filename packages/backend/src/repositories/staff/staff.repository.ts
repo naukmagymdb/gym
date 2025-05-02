@@ -40,9 +40,16 @@ export class StaffRepository {
     return await this.db.any(sql, { depId });
   }
 
-  async findById(id: number) {
-    const sql = 'SELECT * FROM staff WHERE id = $1';
-    return await this.db.oneOrNone(sql, [id]);
+  async findOne(condition: Record<string, any>) {
+    const keys = Object.keys(condition);
+    const values = Object.values(condition);
+
+    const whereClause = keys
+      .map((key, i) => `${key} = $${i + 1}`)
+      .join(' AND ');
+    const sql = `SELECT * FROM staff WHERE ${whereClause} LIMIT 1`;
+
+    return this.db.oneOrNone(sql, values);
   }
 
   async findSignedContracts(staff_id: number, sortBy: string, order: string) {

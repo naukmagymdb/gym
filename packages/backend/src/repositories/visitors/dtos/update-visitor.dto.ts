@@ -1,36 +1,47 @@
-import { IsDate, IsEmail, IsOptional, IsPhoneNumber, IsString, MaxLength } from "class-validator";
+import { Exclude } from 'class-transformer';
+import {
+  IsDateString,
+  IsEmail,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class UpdateVisitorDto {
-        @IsDate()
-        @IsOptional()
-        birth_date?: string = null;
+  constructor(partial: Partial<UpdateVisitorDto>) {
+    Object.assign(this, partial);
+  }
 
-        @IsString()
-        @IsOptional()
-        @MaxLength(50)
-        visitor_name?: string = null;
+  @IsDateString()
+  @IsOptional()
+  birth_date?: string;
 
-        @IsString()
-        @IsOptional()
-        @MaxLength(50)
-        surname?: string = null;
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  visitor_name?: string;
 
-        @IsString()
-        @IsOptional()
-        @MaxLength(50)
-        patronymic?: string = null;
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  surname?: string;
 
-        @IsPhoneNumber()
-        @IsOptional()
-        @MaxLength(50)
-        phone_num?: string = null;
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  patronymic?: string;
 
-        @IsEmail()
-        @IsOptional()
-        email?: string = null;
+  //   @IsPhoneNumber()
+  @IsOptional()
+  @MaxLength(50)
+  phone_num?: string;
 
-        @IsString()
-        // @Exclude()
-        @IsOptional()
-        login_password?: string = null;
+  @IsEmail()
+  @IsOptional()
+  email?: string;
+
+  @IsString()
+  @Exclude()
+  @IsOptional()
+  login_password?: string;
 }
