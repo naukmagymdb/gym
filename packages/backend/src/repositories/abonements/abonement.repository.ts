@@ -82,18 +82,14 @@ export class AbonementRepository {
       throw new Error('No fields to update');
     }
 
-    try {
-      const query = `
+    const query = `
         UPDATE abonement
         SET ${setClause.join(', ')}
         WHERE abonement_id = $(id)
         RETURNING *
       `;
 
-      return await this.db.oneOrNone(query, { ...values, id });
-    } catch (err) {
-      return null;
-    }
+    return await this.db.oneOrNone(query, { ...values, id });
   }
 
   async delete(id: number) {
