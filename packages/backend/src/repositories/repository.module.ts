@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ContractsModule } from './contracts/contracts.module';
 import { DepartmentModule } from './departments/department.module';
 import { ProductsModule } from './products/products.module';
 import { StaffModule } from './staff/staff.module';
@@ -14,6 +15,7 @@ import { VisitorModule } from './visitors/visitor.module';
     ProductsModule,
     SuppliersModule,
     TrainingModule,
+    ContractsModule,
   ],
 })
 export class RepositoryModule {}

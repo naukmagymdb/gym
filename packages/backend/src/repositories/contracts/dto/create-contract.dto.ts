@@ -1,5 +1,4 @@
 import {
-  IsCurrency,
   IsDateString,
   IsNotEmpty,
   IsNumber,
@@ -10,16 +9,12 @@ import { ProductInContractDTO } from './product-in-contract.dto';
 export class CreateContractDto {
   @IsNotEmpty()
   @IsNumber()
-  SupplierEDRPOU: number;
-
-  @IsNotEmpty()
-  @IsCurrency()
-  Total_sum: string; // Assuming Currency is represented as a string (e.g., "USD")
+  edrpou: number;
 
   @IsOptional()
-  Products?: ProductInContractDTO[];
+  products?: ProductInContractDTO[];
 
   @IsNotEmpty()
   @IsDateString()
-  Sign_date: string;
+  contract_date: string;
 }

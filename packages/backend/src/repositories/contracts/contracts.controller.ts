@@ -5,10 +5,11 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
+import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { ContractsService } from './contracts.repository';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { ProductInContractDTO } from './dto/product-in-contract.dto';
@@ -18,62 +19,61 @@ import { UpdateContractDto } from './dto/update-contract.dto';
 export class ContractsController {
   constructor(private readonly contractsService: ContractsService) {}
 
-  // GET /contracts
-  // Query params: sortBy=supplier|amount
   @Get()
   findAll(
-    @Query('sortBy') sortBy?: 'supplier' | 'amount',
-    @Query('order') order: 'asc' | 'desc' = 'asc',
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(ContractsService.getColumns(), 'contract_num'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ) {
     return this.contractsService.findAll(sortBy, order);
   }
 
-  // GET /contracts/:id
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.contractsService.findOne(id);
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(
+        ContractsService.getColumnsInContractProductsTable(),
+        'goods_id',
+      ),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
+  ) {
+    return this.contractsService.findOne(id, sortBy, order);
   }
 
-  // GET /contracts/:id/items
-  // Query params: sortBy=totalCost
   @Get(':id/items')
   findContractItems(
     @Param('id', ParseIntPipe) id: number,
-    @Query('sortBy') sortBy?: 'totalCost',
-    @Query('order') order: 'asc' | 'desc' = 'asc',
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(ContractsService.getColumns(), 'contract_num'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ) {
     return this.contractsService.findContractItems(id, sortBy, order);
   }
 
-  // POST /contracts
   @Post()
   create(@Body() createContractDto: CreateContractDto) {
     return this.contractsService.create(createContractDto);
   }
 
-  // add new suppliers to contract
-  // POST /contracts/:id/suppliers
-  @Post(':id/suppliers')
-  createContractSupplierDependencies(
-    @Param('id', ParseIntPipe) id: number,
-    @Body('supplierIds') supplierIds: number[],
-  ) {
-    return this.contractsService.createContractSupplierDependencies(
-      id,
-      supplierIds,
-    );
-  }
-
-  @Post(':id/products')
+  @Patch(':id/products')
   addProductsToContract(
     @Param('id', ParseIntPipe) id: number,
     @Body() products: ProductInContractDTO[],
   ) {
-    return this.contractsService.addProductsToContract(id, products);
+    return this.contractsService.setProductsToContract(id, products);
   }
 
-  // PUT /contracts/:id
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateContractDto: UpdateContractDto,
@@ -81,7 +81,6 @@ export class ContractsController {
     return this.contractsService.update(id, updateContractDto);
   }
 
-  // DELETE /contracts/:id
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.contractsService.remove(id);

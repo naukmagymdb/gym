@@ -1,13 +1,13 @@
 import { ProductInContractDTO } from './product-in-contract.dto';
 
 export class GetContractDto {
-  Contract_num: number;
+  contract_num: number;
 
-  Supplier_EDRPOU: number;
+  edrpou: number;
 
-  Total_sum: string; // Assuming Currency is represented as a string (e.g., "USD")
+  total_sum: number; // Assuming Currency is represented as a string (e.g., "USD")
 
-  Products?: ProductInContractDTO[];
+  products?: ProductInContractDTO[];
 
-  Sign_date: string;
+  contract_date: string;
 }
