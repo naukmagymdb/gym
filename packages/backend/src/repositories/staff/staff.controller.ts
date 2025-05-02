@@ -49,6 +49,11 @@ export class StaffController {
     return plainToInstance(StaffResponseDto, staff);
   }
 
+  @Get('self_dep_managers')
+  getSelfDepartmentManagers() {
+    return this.staffRepository.getSelfDepartmentManagers();
+  }
+
   @Get(':id')
   async findById(
     @Param('id', ParseIntPipe) id: number,

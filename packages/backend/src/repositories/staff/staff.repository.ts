@@ -141,4 +141,34 @@ export class StaffRepository {
   static getColumns() {
     return this.columns;
   }
+
+  async getSelfDepartmentManagers() {
+    const query = `
+  SELECT 
+  m.id,
+  m.phone_num,
+  m.Department_id,
+  d.Address AS department_address
+FROM 
+  Staff m
+JOIN 
+  Department d ON m.Department_id = d.Department_id
+WHERE 
+  -- Must be a manager
+  EXISTS (
+    SELECT 1
+    FROM Staff_Manager_Subordinate sms
+    WHERE sms.Manager_ID = m.ID
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM Staff_Manager_Subordinate sms
+    JOIN Staff s ON sms.Subordinate_ID = s.ID
+    WHERE sms.Manager_ID = m.ID
+      AND NOT (s.Department_id = m.Department_id)
+  );
+    `;
+
+    return await this.db.any(query);
+  }
 }
