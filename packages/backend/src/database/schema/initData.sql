@@ -143,3 +143,16 @@ INSERT INTO Contract_Products (Contract_num, Goods_id, Goods_price, Goods_amount
 (6, 6, 60.00, 150),  -- Swimming goggles for the aquathlon
 (6, 10, 3200.00, 10), -- Exercise Bikes for warmups
 (6, 18, 420.00, 40);  -- Eliptical trainers
+
+
+--test data for getSuppliersOnlySuppySpecifiedProduct
+INSERT INTO Supplier (EDRPOU, Phone_num, Email)
+VALUES (987654321, '555-123-4567', 'supplier228@example.com');
+
+-- Insert into the Products table
+INSERT INTO Products (Goods_name)
+VALUES ('Example Product');
+
+-- Insert into the Supplier_Products table to link the supplier and product
+INSERT INTO Supplier_Products (EDRPOU, Goods_id)
+VALUES (987654321, (SELECT Goods_id FROM Products WHERE Goods_name = 'Example Product'));

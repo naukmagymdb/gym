@@ -120,11 +120,10 @@ export class ContractsService {
     }
   }
 
-  findHighValueGoodsByThreshold(
+  async findHighValueGoodsByThreshold(
     threshold: number,
     sortBy: string,
     order: string,
-    groupBy: string,
   ) {
     console.log('Finding high value goods by threshold:', threshold);
     const query = `
@@ -136,10 +135,9 @@ export class ContractsService {
             WHERE cp.contract_num = c.contract_num
             AND NOT (cp.goods_price > $1)
             )       
-        GROUP BY c.${groupBy}
         ORDER BY c.${sortBy} ${order}
         `;
-    return this.db.any<ProductInContractDto>(query, [threshold]);
+    return await this.db.any<ProductInContractDto>(query, [threshold]);
   }
 
   async create(createContractDto: CreateContractDto): Promise<GetContractDto> {

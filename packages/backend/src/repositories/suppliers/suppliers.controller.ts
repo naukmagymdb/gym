@@ -44,6 +44,13 @@ export class SuppliersController {
     return this.suppliersService.getProductsBySupplier(edrpou, sortBy, order);
   }
 
+  @Post('supplyOnly')
+  getSuppliersOnlySuppySpecifiedProduct(@Body() body: { goods_name: string }) {
+    return this.suppliersService.getSuppliersOnlySupplySpecifiedProduct(
+      body.goods_name,
+    );
+  }
+
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) edrpou: number,

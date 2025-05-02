@@ -71,21 +71,13 @@ export class ContractsController {
       ),
     )
     sortBy?: string,
-    @Query(
-      'sortBy',
-      new DefaultEnumPipe(
-        ['contract_num', 'contract_date', 'total_sum'],
-        'contract_num',
-      ),
-    )
-    groupBy?: string,
+
     @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ) {
     return this.contractsService.findHighValueGoodsByThreshold(
       threshold,
       sortBy,
       order,
-      groupBy,
     );
   }
 
