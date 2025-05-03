@@ -3,7 +3,6 @@
 import { apiGetFetcher } from '@/api/apiFetch';
 import DataTable from '@/components/data-table';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -12,17 +11,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { ColumnDef } from '@tanstack/react-table';
-import { useDebounce } from '@uidotdev/usehooks';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 export interface EntityListPageProps<Data> {
   columns: ColumnDef<Data>[];
   route: string;
   title: string;
   defaultSort?: string;
+  filterOptions?: string[];
+  useManagerFilter?: boolean;
+  filterNum?: boolean;
 }
 
 export default function EntityListPage<Data>({
@@ -30,7 +32,13 @@ export default function EntityListPage<Data>({
   columns,
   route,
   defaultSort,
+  filterOptions,
+  useManagerFilter = false,
+  filterNum = false,
 }: EntityListPageProps<Data>) {
+  const [managerFilter, setManagerFilter] = useState<string>('all');
+  const [threshold, setThreshold] = useState<number>(50);
+
   const sortFields = useMemo(() => {
     return columns
       .map((column) => {
@@ -42,14 +50,30 @@ export default function EntityListPage<Data>({
       .filter(Boolean) as string[];
   }, [columns]);
 
-  const { sort, setSort, order, setOrder, search, setSearch, queryParams } =
+  const { sort, setSort, order, setOrder, filter, setFilter, queryParams } =
     useQueryParams(sortFields, defaultSort);
-  const handleSearch = useDebounce(setSearch, 300);
 
-  const { data, isLoading } = useSWR<Data[]>(
-    `${route}?${queryParams.toString()}`,
-    apiGetFetcher,
-  );
+  const fetchRoute = useMemo(() => {
+    let baseRoute = route;
+    if (useManagerFilter && managerFilter === 'department manager') {
+      baseRoute = `${route}/self_dep_managers`;
+    }
+    if (filterNum) {
+      queryParams.set('threshold', threshold.toString());
+    } else {
+      queryParams.delete('threshold');
+    }
+    return `${baseRoute}?${queryParams.toString()}`;
+  }, [
+    route,
+    queryParams,
+    useManagerFilter,
+    managerFilter,
+    filterNum,
+    threshold,
+  ]);
+
+  const { data, isLoading } = useSWR<Data[]>(fetchRoute, apiGetFetcher);
 
   return (
     <div className="flex flex-col gap-4 p-12">
@@ -95,6 +119,61 @@ export default function EntityListPage<Data>({
             </Select>
           </div>
 
+          {filterOptions && filterOptions.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Label className="text-nowrap">Filter:</Label>
+              <Select
+                value={filter}
+                onValueChange={(value) => setFilter(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter:" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {filterOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {filterNum && (
+            <div className="flex items-center gap-2 w-64">
+              <Label className="text-nowrap">Threshold: {threshold}</Label>
+              <Slider
+                value={[threshold]}
+                onValueChange={(value) => setThreshold(value[0])}
+                min={0}
+                max={1000}
+                step={1}
+              />
+            </div>
+          )}
+
+          {useManagerFilter && (
+            <div className="flex items-center gap-2">
+              <Label className="text-nowrap">Status:</Label>
+              <Select
+                value={managerFilter}
+                onValueChange={(value) => setManagerFilter(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Status:" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="department manager">
+                    Department Manager
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           {/* <div className="flex items-center gap-2">
             <Label className="text-nowrap">Items per page:</Label>
             <Select
@@ -114,11 +193,11 @@ export default function EntityListPage<Data>({
             </Select>
           </div> */}
 
-          <Input
+          {/* <Input
             placeholder="Search..."
             defaultValue={search}
             onChange={(e) => handleSearch(e.target.value)}
-          />
+          /> */}
           <Link href={`${route}/create`}>
             <Button>Create</Button>
           </Link>

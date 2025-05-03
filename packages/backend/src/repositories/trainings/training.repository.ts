@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { IDatabase } from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
 import { RepositoryService } from '../repository.service';
@@ -57,6 +57,17 @@ export class TrainingRepository {
   }
 
   async create(createTrainingDto: CreateTrainingDto) {
+    const coach = await this.db.oneOrNone(
+      `SELECT id FROM staff WHERE id = $1 AND qualification_cert_number_of_coach IS NOT NULL`,
+      [createTrainingDto.staff_id],
+    );
+
+    if (!coach) {
+      throw new BadRequestException(
+        'Selected staff member is not a certified coach',
+      );
+    }
+
     try {
       const sql = `
         INSERT INTO training 

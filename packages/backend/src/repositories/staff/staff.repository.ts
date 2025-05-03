@@ -9,6 +9,18 @@ import { UpdateStaffDto } from './dtos/update-staff.dto';
 @Injectable()
 export class StaffRepository {
   private db: IDatabase<any>;
+  private static columns = [
+    'id',
+    'contract_num',
+    'staff_Name',
+    'surname',
+    'patronymic',
+    'salary',
+    'phone_num',
+    'qualification_cert_number_of_coach',
+    'email',
+    'department_id',
+  ];
 
   constructor(
     private readonly databaseService: DatabaseService,
@@ -24,7 +36,7 @@ export class StaffRepository {
   }: {
     depId?: number;
     sortBy?: string;
-    order?: 'asc' | 'desc';
+    order?: string;
   }) {
     let conditions: string[] = [];
     if (depId) conditions.push('department_id = $(depId)');
@@ -105,5 +117,69 @@ export class StaffRepository {
   async delete(id: number) {
     const sql = 'DELETE FROM staff WHERE id = $1 RETURNING *';
     return await this.db.oneOrNone(sql, [id]);
+  }
+
+  async findAllSessions(
+    staff_id: number,
+    {
+      visitor_id,
+      sortBy,
+      order,
+    }: { visitor_id?: number; sortBy: string; order: string },
+  ) {
+    const sql = `
+    SELECT 
+      t.visitor_id,
+      v.phone_num AS visitor_phone,
+      t.staff_id,
+      s.phone_num AS staff_phone,
+      t.date_of_begin,
+      t.date_of_end
+    FROM Training t
+      JOIN Visitor v ON v.id = t.visitor_id
+      JOIN Staff s ON s.id = t.staff_id
+    WHERE t.staff_id = $1 
+    ${visitor_id ? 'AND t.visitor_id = $2' : ''}
+    GROUP BY 
+      t.visitor_id, v.phone_num, 
+      t.staff_id, s.phone_num,
+      t.date_of_begin, t.date_of_end
+    ORDER BY ${sortBy} ${order};
+  `;
+
+    return this.db.any(sql, visitor_id ? [staff_id, visitor_id] : [staff_id]);
+  }
+
+  static getColumns() {
+    return this.columns;
+  }
+
+  async getSelfDepartmentManagers() {
+    const query = `
+      SELECT 
+        m.id,
+        MAX(m.phone_num) AS phone_num,
+        MAX(m.Department_id) AS Department_id,
+        MAX(m.staff_name) AS staff_name,
+        MAX(m.surname) AS surname,
+        MAX(m.patronymic) AS patronymic,
+        MAX(m.salary) AS salary,
+        MAX(m.email) AS email,
+        MAX(d.Address) AS department_address
+      FROM Staff m
+        JOIN Department d ON m.Department_id = d.Department_id
+        JOIN Staff_Manager_Subordinate sms ON sms.Manager_ID = m.ID
+        LEFT JOIN Staff s ON sms.Subordinate_ID = s.ID
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM Staff_Manager_Subordinate sms2
+          JOIN Staff s2 ON sms2.Subordinate_ID = s2.ID
+        WHERE sms2.Manager_ID = m.ID
+          AND s2.Department_id != m.Department_id
+      )
+      GROUP BY m.id;
+    `;
+
+    return await this.db.any(query);
   }
 }

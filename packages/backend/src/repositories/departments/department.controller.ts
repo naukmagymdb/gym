@@ -61,4 +61,18 @@ export class DepartmentController {
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.depRepository.delete(id);
   }
+
+  @Get(':id/managers_info')
+  getManagersInfo(
+    @Param('id', ParseIntPipe) department_id: number,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(['department_id', 'address'], 'department_id'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc'))
+    order?: string,
+  ) {
+    return this.depRepository.getManagersInfo(department_id, { sortBy, order });
+  }
 }

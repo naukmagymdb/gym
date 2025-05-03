@@ -13,7 +13,12 @@ export function createTextFieldSchema(field: {
   pattern?: { value: RegExp; message: string };
   type?: string;
 }) {
-  let schema = z.string();
+  let schema;
+  if (field.type === 'number') {
+    schema = z.number();
+  } else {
+    schema = z.string();
+  }
 
   const requiredMessage =
     typeof field.required === 'string'
@@ -36,8 +41,8 @@ export function createTextFieldSchema(field: {
     });
   }
 
-  if (field.pattern) {
-    schema = schema.regex(field.pattern.value, {
+  if (field.pattern && field.type !== 'number') {
+    schema = (schema as z.ZodString).regex(field.pattern.value, {
       message: field.pattern.message,
     });
   }

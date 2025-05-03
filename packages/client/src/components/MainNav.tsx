@@ -35,6 +35,21 @@ export function MainNav() {
                     Visitors
                   </Link>
                 </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/departments" passHref>
+                    Departments
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/suppliers" passHref>
+                    Suppliers
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/contracts" passHref>
+                    Contracts
+                  </Link>
+                </NavigationMenuItem>
               </>
             )}
           </NavigationMenuList>

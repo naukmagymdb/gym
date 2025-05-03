@@ -12,6 +12,7 @@ export class AuthService {
 
     if (loggedDB) {
       console.log(loggedDB);
+      console.log(password);
       const matched = comparePasswords(password, loggedDB.login_password);
       if (matched) {
         console.log('Auth Success');
