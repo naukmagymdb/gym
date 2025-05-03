@@ -9,10 +9,14 @@ import {
 } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
 import { useContext } from 'react';
+import { toast } from 'sonner';
 import { Button } from './ui/button';
+
+import { useRouter } from 'next/navigation';
 
 export function MainNav() {
   const { userId, role } = useContext(AuthContext);
+  const router = useRouter();
 
   return (
     <div className="border-b w-full sticky top-0 z-50 bg-background">
@@ -60,11 +64,17 @@ export function MainNav() {
                 <Button
                   size="default"
                   variant="destructive"
-                  onClick={() => {
+                  onClick={async () => {
                     if (role) {
-                      logout(userId, role); // Call logout only if role is not null
+                      try {
+                        await logout(userId, role);
+                        router.push('/login');
+                      } catch (error) {
+                        toast.error('Failed to logout');
+                        console.error(error);
+                      }
                     }
-                  }} // Attach the logout function here
+                  }}
                 >
                   Logout
                 </Button>
