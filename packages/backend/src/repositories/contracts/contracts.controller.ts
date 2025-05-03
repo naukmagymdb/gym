@@ -8,7 +8,12 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/utils/role.enum';
 import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
 import { ContractsService } from './contracts.repository';
@@ -16,6 +21,8 @@ import { CreateContractDto } from './dto/create-contract.dto';
 import { AddProductToContractDTO } from './dto/product-in-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
 
+@Roles(Role.Admin)
+@UseGuards(AuthenticatedGuard, RolesGuard)
 @Controller('contracts')
 export class ContractsController {
   constructor(private readonly contractsService: ContractsService) {}

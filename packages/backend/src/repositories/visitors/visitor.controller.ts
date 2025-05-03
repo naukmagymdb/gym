@@ -30,8 +30,7 @@ import {
 } from './dtos/visitor-response.dto';
 import { VisitorRepository } from './visitor.repository';
 
-@Roles(Role.Admin)
-@UseGuards(AuthenticatedGuard, RolesGuard)
+@UseGuards(AuthenticatedGuard)
 @Controller('visitors')
 export class VisitorController {
   constructor(
@@ -40,6 +39,8 @@ export class VisitorController {
     private readonly abonementRepository: AbonementRepository,
   ) {}
 
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   @Get()
   async findAll(
     @Query('abon_type') abonement_type?: string,
@@ -75,6 +76,8 @@ export class VisitorController {
     return await this.visitorRepository.findOne({ id });
   }
 
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   @Post()
   async create(
     @Body() createVisitorDto: CreateVisitorDto,
@@ -92,6 +95,8 @@ export class VisitorController {
     return new VisitorResponseDto(visitor);
   }
 
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   @Delete(':id')
   async delete(
     @Param('id', ParseIntPipe) id: number,

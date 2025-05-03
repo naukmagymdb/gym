@@ -29,10 +29,7 @@ import { StaffRepository } from './staff.repository';
 @UseGuards(AuthenticatedGuard, RolesGuard)
 @Controller('staff')
 export class StaffController {
-  constructor(
-    private readonly staffRepository: StaffRepository,
-    private readonly trainingRepository: TrainingRepository,
-  ) {}
+  constructor(private readonly staffRepository: StaffRepository) {}
 
   @Get()
   async findAll(

@@ -63,11 +63,13 @@ export function MainNav() {
               </>
             )}
             {role === 'user' && (
-              <NavigationMenuItem>
-                <Link href="/dashboard" passHref>
-                  Dashboard
-                </Link>
-              </NavigationMenuItem>
+              <>
+                <NavigationMenuItem>
+                  <Link href="/dashboard" passHref>
+                    Dashboard
+                  </Link>
+                </NavigationMenuItem>
+              </>
             )}
           </NavigationMenuList>
           <NavigationMenuList>
