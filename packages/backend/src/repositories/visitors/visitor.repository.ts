@@ -63,7 +63,8 @@ export class VisitorRepository {
       LIMIT 1
     `;
 
-    return await this.db.oneOrNone(query, values);
+    const res = await this.db.oneOrNone(query, values);
+    return res;
   }
 
   async create(createVisitorDto: CreateVisitorDto) {
@@ -125,6 +126,7 @@ export class VisitorRepository {
         v.phone_num,
         v.email,
         v.age,
+        v.login_password,
         COALESCE(
           json_agg(
             json_build_object(
@@ -143,7 +145,7 @@ export class VisitorRepository {
       LEFT JOIN abonement a ON v.id = a.visitor_id
       LEFT JOIN department d ON a.department_id = d.department_id
       ${whereClause}
-      GROUP BY v.id, v.visitor_name, v.surname, v.patronymic, v.phone_num, v.email, v.age
+      GROUP BY v.id, v.visitor_name, v.surname, v.patronymic, v.phone_num, v.email, v.age, v.login_password
     `;
   }
 }
