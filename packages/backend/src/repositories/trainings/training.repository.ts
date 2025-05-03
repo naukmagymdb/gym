@@ -3,13 +3,14 @@ import { IDatabase } from 'pg-promise';
 import { DatabaseService } from 'src/database/database.service';
 import { RepositoryService } from '../repository.service';
 import { CreateTrainingDto } from './dtos/create-training.dto';
-import { TrainingLookupDto } from './dtos/training-lookup.dto';
+import { TrainingResponseDto } from './dtos/training-response.dto';
 import { UpdateTrainingDto } from './dtos/update-training.dto';
 
 @Injectable()
 export class TrainingRepository {
   private db: IDatabase<any>;
   private static columns = [
+    'id',
     'visitor_id',
     'staff_id',
     'date_of_begin',
@@ -29,7 +30,7 @@ export class TrainingRepository {
   }: {
     queries: Record<string, any>;
     sortOptions: { sortBy: string; order: string };
-  }) {
+  }): Promise<TrainingResponseDto[]> {
     const { whereClause, values } = this.repositoryService.getWhereClause(
       queries,
       TrainingRepository.columns,
@@ -44,14 +45,12 @@ export class TrainingRepository {
     return await this.db.any(sql, values);
   }
 
-  async findOne(condition: Record<string, any>) {
-    const keys = Object.keys(condition);
-    const values = Object.values(condition);
-
-    const whereClause = keys
-      .map((key, i) => `${key} = $${i + 1}`)
-      .join(' AND ');
-    const sql = `SELECT * FROM training WHERE ${whereClause} LIMIT 1`;
+  async findOne(condition: Record<string, any>): Promise<TrainingResponseDto> {
+    const { whereClause, values } = this.repositoryService.getWhereClause(
+      condition,
+      TrainingRepository.columns,
+    );
+    const sql = `SELECT * FROM training ${whereClause} LIMIT 1`;
 
     return this.db.oneOrNone(sql, values);
   }
@@ -82,7 +81,7 @@ export class TrainingRepository {
     }
   }
 
-  async update(lookup: TrainingLookupDto, updateDto: UpdateTrainingDto) {
+  async update(id: number, updateDto: UpdateTrainingDto) {
     const { setClause, values } =
       this.repositoryService.prepareUpdateData(updateDto);
 
@@ -94,28 +93,24 @@ export class TrainingRepository {
       const sql = `
         UPDATE training
         SET ${setClause.join(', ')}
-        WHERE visitor_id = $(visitor_id)
-          AND date_of_begin = $(date_of_begin)
-          AND date_of_end = $(date_of_end)
+        WHERE id = $(id)
         RETURNING *;
     `;
 
-      return await this.db.oneOrNone(sql, { ...values, ...lookup });
+      return await this.db.oneOrNone(sql, { ...values, id });
     } catch (err) {
       return null;
     }
   }
 
-  async delete(lookup: TrainingLookupDto) {
+  async delete(id: number) {
     const sql = `
       DELETE FROM training
-      WHERE visitor_id = $(visitor_id)
-        AND date_of_begin = $(date_of_begin)
-        AND date_of_end = $(date_of_end)
+      WHERE id = $1
       RETURNING *;
     `;
 
-    return await this.db.oneOrNone(sql, lookup);
+    return await this.db.oneOrNone(sql, [id]);
   }
 
   async findByVisitorId(visitorId: number) {

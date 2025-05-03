@@ -145,11 +145,12 @@ CREATE TABLE Contract_Products (
 
 -- Training sessions
 CREATE TABLE Training (
+  ID SERIAL PRIMARY KEY,
   Visitor_ID INTEGER NOT NULL,
   Staff_ID INTEGER NOT NULL,
   Date_Of_Begin TIMESTAMP NOT NULL,
   Date_Of_End TIMESTAMP NOT NULL,
-  PRIMARY KEY (Visitor_ID, Staff_ID, Date_Of_Begin, Date_Of_End),
+  UNIQUE (Visitor_ID, Staff_ID, Date_Of_Begin, Date_Of_End),
   FOREIGN KEY (Visitor_ID) REFERENCES Visitor(ID)
     ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (Staff_ID) REFERENCES Staff(ID)
