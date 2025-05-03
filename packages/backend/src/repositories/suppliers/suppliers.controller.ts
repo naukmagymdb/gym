@@ -8,11 +8,18 @@ import {
   Patch, // Import ParseIntPipe
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/utils/role.enum';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { SuppliersService } from './suppliers.repository';
 
+@Roles(Role.Admin)
+@UseGuards(AuthenticatedGuard, RolesGuard)
 @Controller('suppliers')
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
