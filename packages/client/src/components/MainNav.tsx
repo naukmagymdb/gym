@@ -1,5 +1,6 @@
 'use client';
 
+import { logout } from '@/api/logout';
 import { AuthContext } from '@/app/AuthContext';
 import {
   NavigationMenu,
@@ -56,7 +57,15 @@ export function MainNav() {
           <NavigationMenuList>
             {userId ? (
               <NavigationMenuItem>
-                <Button size="default" variant="destructive">
+                <Button
+                  size="default"
+                  variant="destructive"
+                  onClick={() => {
+                    if (role) {
+                      logout(userId, role); // Call logout only if role is not null
+                    }
+                  }} // Attach the logout function here
+                >
                   Logout
                 </Button>
               </NavigationMenuItem>
