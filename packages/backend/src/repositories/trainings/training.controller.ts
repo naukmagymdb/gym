@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -16,7 +17,6 @@ import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
 import { ParseDateStringPipe } from 'src/common/pipes/parse-date-string.pipe';
 import { CreateTrainingDto } from './dtos/create-training.dto';
-import { TrainingLookupDto } from './dtos/training-lookup.dto';
 import { TrainingResponseDto } from './dtos/training-response.dto';
 import { UpdateTrainingDto } from './dtos/update-training.dto';
 import { TrainingRepository } from './training.repository';
@@ -29,16 +29,14 @@ export class TrainingController {
 
   @Get()
   findAll(
+    @Query('id', OptionalParseIntPipe) id?: number,
     @Query('visitor_id', OptionalParseIntPipe) visitor_id?: number,
     @Query('staff_id', OptionalParseIntPipe) staff_id?: number,
     @Query('date_of_begin', ParseDateStringPipe) date_of_begin?: string,
     @Query('date_of_end', ParseDateStringPipe) date_of_end?: string,
     @Query(
       'sortBy',
-      new DefaultEnumPipe<string>(
-        TrainingRepository.getColumns(),
-        'visitor_id',
-      ),
+      new DefaultEnumPipe<string>(TrainingRepository.getColumns(), 'id'),
     )
     sortBy?: string,
     @Query('order', new DefaultEnumPipe<string>(['asc', 'desc'], 'asc'))
@@ -46,21 +44,22 @@ export class TrainingController {
   ): Promise<TrainingResponseDto[]> {
     return this.trainingRepository.findAll({
       queries: {
-        visitor_id: visitor_id,
-        staff_id: staff_id,
-        date_of_begin: date_of_begin,
-        date_of_end: date_of_end,
+        id,
+        visitor_id,
+        staff_id,
+        date_of_begin,
+        date_of_end,
       },
       sortOptions: {
-        sortBy: sortBy,
-        order: order,
+        sortBy,
+        order,
       },
     });
   }
 
-  @Get('by-id')
-  findOne(@Body() body: TrainingLookupDto): Promise<TrainingResponseDto> {
-    return this.trainingRepository.findOne(body);
+  @Get(':id')
+  findOne(@Param('id') id: number): Promise<TrainingResponseDto> {
+    return this.trainingRepository.findOne({ id });
   }
 
   @Post()
@@ -68,15 +67,16 @@ export class TrainingController {
     return this.trainingRepository.create(dto);
   }
 
-  @Patch()
+  @Patch(':id')
   update(
-    @Body() body: { lookup: TrainingLookupDto; update: UpdateTrainingDto },
+    @Param('id') id: number,
+    @Body() dto: UpdateTrainingDto,
   ): Promise<TrainingResponseDto> {
-    return this.trainingRepository.update(body.lookup, body.update);
+    return this.trainingRepository.update(id, dto);
   }
 
-  @Delete()
-  delete(@Body() body: TrainingLookupDto): Promise<TrainingResponseDto> {
-    return this.trainingRepository.delete(body);
+  @Delete(':id')
+  delete(@Param('id') id: number): Promise<TrainingResponseDto> {
+    return this.trainingRepository.delete(id);
   }
 }

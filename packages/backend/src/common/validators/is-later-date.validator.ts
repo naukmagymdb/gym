@@ -19,6 +19,7 @@ export function IsLaterDate(
         validate(value: any, args: ValidationArguments) {
           const [relatedPropertyName] = args.constraints;
           const relatedValue = (args.object as any)[relatedPropertyName];
+          if (relatedValue == null) return true;
           return new Date(value) >= new Date(relatedValue);
         },
         defaultMessage(args: ValidationArguments) {
