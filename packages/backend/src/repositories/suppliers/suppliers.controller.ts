@@ -4,9 +4,9 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe, // Import ParseIntPipe
+  ParseIntPipe,
+  Patch, // Import ParseIntPipe
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
@@ -24,14 +24,19 @@ export class SuppliersController {
 
   @Get()
   findAll(
+    @Query('filter') filter?: string,
     @Query('sortBy') sortBy: string = 'edrpou',
     @Query('order') order: 'asc' | 'desc' = 'asc',
   ) {
+    if (filter)
+      return this.suppliersService.getSuppliersOnlySupplySpecifiedProduct(
+        filter,
+      );
     return this.suppliersService.findAll(sortBy, order);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) edrpou: number) {
+  @Get(':edrpou')
+  findOne(@Param('edrpou', ParseIntPipe) edrpou: number) {
     return this.suppliersService.findOne({ edrpou });
   }
 
@@ -44,16 +49,12 @@ export class SuppliersController {
     return this.suppliersService.getProductsBySupplier(edrpou, sortBy, order);
   }
 
-  @Get('supplyOnly/:goods_name')
-  getSuppliersOnlySuppySpecifiedProduct(
-    @Param('goods_name') goods_name: string,
-  ) {
-    return this.suppliersService.getSuppliersOnlySupplySpecifiedProduct(
-      goods_name,
-    );
+  @Get('')
+  getSuppliersOnlySuppySpecifiedProduct(@Query('filter') filter: string) {
+    return this.suppliersService.getSuppliersOnlySupplySpecifiedProduct(filter);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param('id', ParseIntPipe) edrpou: number,
     @Body() updateSupplierDto: UpdateSupplierDto,
