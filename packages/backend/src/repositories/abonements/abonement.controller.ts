@@ -85,7 +85,9 @@ export class AbonementController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<AbonementResponseDto> {
+  delete(@Param('id', ParseIntPipe) id: number): Promise<AbonementResponseDto> {
     return this.repo.delete(id);
   }
 }
+
+//гварди?

@@ -30,8 +30,7 @@ import {
 } from './dtos/visitor-response.dto';
 import { VisitorRepository } from './visitor.repository';
 
-@Roles(Role.Admin)
-@UseGuards(AuthenticatedGuard, RolesGuard)
+@UseGuards(AuthenticatedGuard)
 @Controller('visitors')
 export class VisitorController {
   constructor(
@@ -40,6 +39,8 @@ export class VisitorController {
     private readonly abonementRepository: AbonementRepository,
   ) {}
 
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   @Get()
   async findAll(
     @Query('abon_type') abonement_type?: string,
@@ -68,6 +69,7 @@ export class VisitorController {
     });
   }
 
+  //????????
   @Get(':id')
   async findById(
     @Param('id', ParseIntPipe) id: number,
@@ -75,6 +77,8 @@ export class VisitorController {
     return await this.visitorRepository.findOne({ id });
   }
 
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   @Post()
   async create(
     @Body() createVisitorDto: CreateVisitorDto,
@@ -83,6 +87,7 @@ export class VisitorController {
     return new VisitorResponseDto(visitor);
   }
 
+  //????????
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -92,6 +97,8 @@ export class VisitorController {
     return new VisitorResponseDto(visitor);
   }
 
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   @Delete(':id')
   async delete(
     @Param('id', ParseIntPipe) id: number,
@@ -100,6 +107,7 @@ export class VisitorController {
     return new VisitorResponseDto(visitor);
   }
 
+  //????????
   @Get(':id/trainings')
   getTrainingHistory(
     @Param('id', ParseIntPipe) id: number,
@@ -107,6 +115,7 @@ export class VisitorController {
     return this.trainingRepository.findByVisitorId(id);
   }
 
+  //????????
   @Get(':id/abonement')
   viewAbonement(
     @Param('id', ParseIntPipe) visitor_id: number,
@@ -114,6 +123,7 @@ export class VisitorController {
     return this.abonementRepository.findOne({ visitor_id, is_active: true });
   }
 
+  //????????
   @Patch(':id/abonement')
   updateAbonement(
     @Param('id', ParseIntPipe) abonement_id: number,
@@ -122,6 +132,7 @@ export class VisitorController {
     return this.abonementRepository.update(abonement_id, dto);
   }
 
+  //????????
   @Post(':id/abonement')
   createAbonement(
     @Param('id', ParseIntPipe) visitor_id: number,
@@ -130,3 +141,5 @@ export class VisitorController {
     return this.abonementRepository.create({ ...dto, visitor_id });
   }
 }
+
+//гварди?

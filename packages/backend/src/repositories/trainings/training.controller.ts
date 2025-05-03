@@ -80,3 +80,5 @@ export class TrainingController {
     return this.trainingRepository.delete(body);
   }
 }
+
+//гварди?
