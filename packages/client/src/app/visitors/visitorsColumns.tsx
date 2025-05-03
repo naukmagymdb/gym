@@ -3,6 +3,16 @@ import ActionCell from '@/components/data-table/cells/actionsCell';
 import { ColumnDef } from '@tanstack/react-table';
 import { toast } from 'sonner';
 
+export type Abonement = {
+  abonement_id: number;
+  abonement_type: string;
+  start_date: string;
+  end_date: string;
+  is_active: boolean;
+  department_id: number;
+  department_address: string;
+};
+
 export type Visitor = {
   id: number;
   birth_date: Date;
@@ -12,6 +22,7 @@ export type Visitor = {
   phone_num: string;
   email?: string;
   login_password?: string;
+  abonements: Abonement[];
 };
 
 export const visitorsColumns: ColumnDef<Visitor>[] = [

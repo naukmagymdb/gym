@@ -20,10 +20,10 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { format, isAfter } from 'date-fns';
 import { CalendarIcon, MailIcon, PhoneIcon } from 'lucide-react';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Visitor } from '../visitorsColumns';
+import { useContext, useEffect, useState } from 'react';
+import { Visitor } from './visitors/visitorsColumns';
 
+import { AuthContext } from './AuthContext';
 export type Abonement = {
   abonement_id: number;
   abonement_type: string;
@@ -51,7 +51,7 @@ export type Training = {
 };
 
 export default function Dashboard() {
-  const { id } = useParams();
+  const { userId: id } = useContext(AuthContext);
   const [user, setUser] = useState<Visitor>({} as Visitor);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [abonementTypes, setAbonementTypes] = useState<AbonementType[]>([]);
