@@ -1,5 +1,6 @@
-import { IsDateString, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
-import { IsLaterDate } from 'src/common/validators/is-later-date.validator';
+import { Transform } from 'class-transformer';
+import { IsDateString, IsInt, IsOptional } from 'class-validator';
+import { TransformDateString } from 'src/common/pipes/parse-date-string.pipe';
 
 export class UpdateTrainingDto {
   @IsOptional()
@@ -7,11 +8,11 @@ export class UpdateTrainingDto {
   staff_id?: number;
 
   @IsDateString()
-  @IsNotEmpty()
+  @IsOptional()
   date_of_begin?: string;
 
   @IsDateString()
-  @IsNotEmpty()
-  @IsLaterDate('date_of_begin')
+  @IsOptional()
+  @Transform(({ value }) => TransformDateString(value))
   date_of_end?: string;
 }

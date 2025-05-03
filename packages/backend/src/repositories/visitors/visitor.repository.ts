@@ -126,7 +126,6 @@ export class VisitorRepository {
        MAX(v.phone_num) AS phone_num, 
        MAX(v.email) AS email, 
        MAX(v.age) AS age, 
-       MAX(v.login_password) AS login_password, 
        MAX(v.birth_date) AS birth_date,
        MAX(v.login_password) AS login_password,
         COALESCE(
