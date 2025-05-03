@@ -158,29 +158,26 @@ export class StaffRepository {
     const query = `
       SELECT 
         m.id,
-        m.phone_num,
-        m.Department_id,
-        m.staff_name,
-        m.surname,
-        m.patronymic,
-        m.salary,
-        m.email,
-        d.Address AS department_address
+        MAX(m.phone_num) AS phone_num,
+        MAX(m.Department_id) AS Department_id,
+        MAX(m.staff_name) AS staff_name,
+        MAX(m.surname) AS surname,
+        MAX(m.patronymic) AS patronymic,
+        MAX(m.salary) AS salary,
+        MAX(m.email) AS email,
+        MAX(d.Address) AS department_address
       FROM Staff m
         JOIN Department d ON m.Department_id = d.Department_id
-      WHERE 
-        EXISTS (
-          SELECT 1
-          FROM Staff_Manager_Subordinate sms
-          WHERE sms.Manager_ID = m.ID
-        )
-        AND NOT EXISTS (
-          SELECT 1
-          FROM Staff_Manager_Subordinate sms
-          JOIN Staff s ON sms.Subordinate_ID = s.ID
-          WHERE sms.Manager_ID = m.ID
-            AND NOT (s.Department_id = m.Department_id)
-        );
+        JOIN Staff_Manager_Subordinate sms ON sms.Manager_ID = m.ID
+        LEFT JOIN Staff s ON sms.Subordinate_ID = s.ID
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM Staff_Manager_Subordinate sms2
+          JOIN Staff s2 ON sms2.Subordinate_ID = s2.ID
+        WHERE sms2.Manager_ID = m.ID
+          AND s2.Department_id != m.Department_id
+      )
+      GROUP BY m.id;
     `;
 
     return await this.db.any(query);

@@ -38,6 +38,7 @@ export default function LoginPage({ role }: { role: Role }) {
     try {
       await login(data.phone, data.password, role);
       router.push('/');
+      window.location.href = '/';
     } catch (error) {
       toast.error('Failed to login: invalid phone or password');
       console.error(error);

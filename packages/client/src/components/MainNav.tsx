@@ -1,5 +1,6 @@
 'use client';
 
+import { logout } from '@/api/logout';
 import { AuthContext } from '@/app/AuthContext';
 import {
   NavigationMenu,
@@ -8,10 +9,14 @@ import {
 } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
 import { useContext } from 'react';
+import { toast } from 'sonner';
 import { Button } from './ui/button';
+
+import { useRouter } from 'next/navigation';
 
 export function MainNav() {
   const { userId, role } = useContext(AuthContext);
+  const router = useRouter();
 
   return (
     <div className="border-b w-full sticky top-0 z-50 bg-background print:hidden">
@@ -68,7 +73,21 @@ export function MainNav() {
           <NavigationMenuList>
             {userId ? (
               <NavigationMenuItem>
-                <Button size="default" variant="destructive">
+                <Button
+                  size="default"
+                  variant="destructive"
+                  onClick={async () => {
+                    if (role) {
+                      try {
+                        await logout(userId, role);
+                        router.push('/login');
+                      } catch (error) {
+                        toast.error('Failed to logout');
+                        console.error(error);
+                      }
+                    }
+                  }}
+                >
                   Logout
                 </Button>
               </NavigationMenuItem>
