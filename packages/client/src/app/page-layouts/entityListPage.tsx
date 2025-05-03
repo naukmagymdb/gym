@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
@@ -23,6 +24,7 @@ export interface EntityListPageProps<Data> {
   defaultSort?: string;
   filterOptions?: string[];
   useManagerFilter?: boolean;
+  filterNum?: boolean;
 }
 
 export default function EntityListPage<Data>({
@@ -32,8 +34,10 @@ export default function EntityListPage<Data>({
   defaultSort,
   filterOptions,
   useManagerFilter = false,
+  filterNum = false,
 }: EntityListPageProps<Data>) {
   const [managerFilter, setManagerFilter] = useState<string>('all');
+  const [threshold, setThreshold] = useState<number>(50);
 
   const sortFields = useMemo(() => {
     return columns
@@ -48,15 +52,26 @@ export default function EntityListPage<Data>({
 
   const { sort, setSort, order, setOrder, filter, setFilter, queryParams } =
     useQueryParams(sortFields, defaultSort);
-  //   const handleSearch = useDebounce(setSearch, 300);
 
   const fetchRoute = useMemo(() => {
     let baseRoute = route;
     if (useManagerFilter && managerFilter === 'department manager') {
       baseRoute = `${route}/self_dep_managers`;
     }
+    if (filterNum) {
+      queryParams.set('threshold', threshold.toString());
+    } else {
+      queryParams.delete('threshold');
+    }
     return `${baseRoute}?${queryParams.toString()}`;
-  }, [route, queryParams, useManagerFilter, managerFilter]);
+  }, [
+    route,
+    queryParams,
+    useManagerFilter,
+    managerFilter,
+    filterNum,
+    threshold,
+  ]);
 
   const { data, isLoading } = useSWR<Data[]>(fetchRoute, apiGetFetcher);
 
@@ -123,6 +138,19 @@ export default function EntityListPage<Data>({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          )}
+
+          {filterNum && (
+            <div className="flex items-center gap-2 w-64">
+              <Label className="text-nowrap">Threshold: {threshold}</Label>
+              <Slider
+                value={[threshold]}
+                onValueChange={(value) => setThreshold(value[0])}
+                min={0}
+                max={1000}
+                step={1}
+              />
             </div>
           )}
 
