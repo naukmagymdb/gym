@@ -4,6 +4,20 @@
     display: none !important;
   }
 
+  table th:last-child,
+  table td:last-child {
+    display: none !important;
+  }
+  .page-break:last-child {
+    display: none; /* Prevent a trailing page break */
+  }
+
+  table {
+    width: auto; /* Shrinks to fit content */
+    table-layout: auto; /* Let content define column widths */
+    border-collapse: collapse;
+  }
+
   /* Optimize page for print */
   body {
     margin: 0;
