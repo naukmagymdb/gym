@@ -10,6 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
+import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
 import { ContractsService } from './contracts.repository';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { ProductInContractDTO } from './dto/product-in-contract.dto';
@@ -21,6 +22,7 @@ export class ContractsController {
 
   @Get()
   findAll(
+    @Query('threshold', OptionalParseIntPipe) threshold?: number,
     @Query(
       'sortBy',
       new DefaultEnumPipe(ContractsService.getColumns(), 'contract_num'),
@@ -28,6 +30,12 @@ export class ContractsController {
     sortBy?: string,
     @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ) {
+    if (threshold)
+      return this.contractsService.findHighValueGoodsByThreshold(
+        threshold,
+        sortBy,
+        order,
+      );
     return this.contractsService.findAll(sortBy, order);
   }
 
@@ -58,27 +66,6 @@ export class ContractsController {
     @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ) {
     return this.contractsService.findContractItems(id, sortBy, order);
-  }
-
-  @Get('high-value-goods/:threshold')
-  findHighValueGoodsByThreshold(
-    @Param('threshold', ParseIntPipe) threshold: number,
-    @Query(
-      'sortBy',
-      new DefaultEnumPipe(
-        ['contract_num', 'contract_date', 'total_sum'],
-        'contract_num',
-      ),
-    )
-    sortBy?: string,
-
-    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
-  ) {
-    return this.contractsService.findHighValueGoodsByThreshold(
-      threshold,
-      sortBy,
-      order,
-    );
   }
 
   @Post()
