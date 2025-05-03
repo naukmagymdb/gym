@@ -4,9 +4,9 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe, // Import ParseIntPipe
+  ParseIntPipe,
+  Patch, // Import ParseIntPipe
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
@@ -53,7 +53,7 @@ export class SuppliersController {
     );
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param('id', ParseIntPipe) edrpou: number,
     @Body() updateSupplierDto: UpdateSupplierDto,
