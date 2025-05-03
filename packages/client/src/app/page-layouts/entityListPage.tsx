@@ -14,7 +14,7 @@ import {
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 export interface EntityListPageProps<Data> {
   columns: ColumnDef<Data>[];
@@ -22,6 +22,7 @@ export interface EntityListPageProps<Data> {
   title: string;
   defaultSort?: string;
   filterOptions?: string[];
+  useManagerFilter?: boolean;
 }
 
 export default function EntityListPage<Data>({
@@ -30,7 +31,10 @@ export default function EntityListPage<Data>({
   route,
   defaultSort,
   filterOptions,
+  useManagerFilter = false,
 }: EntityListPageProps<Data>) {
+  const [managerFilter, setManagerFilter] = useState<string>('all');
+
   const sortFields = useMemo(() => {
     return columns
       .map((column) => {
@@ -46,10 +50,15 @@ export default function EntityListPage<Data>({
     useQueryParams(sortFields, defaultSort);
   //   const handleSearch = useDebounce(setSearch, 300);
 
-  const { data, isLoading } = useSWR<Data[]>(
-    `${route}?${queryParams.toString()}`,
-    apiGetFetcher,
-  );
+  const fetchRoute = useMemo(() => {
+    let baseRoute = route;
+    if (useManagerFilter && managerFilter === 'department manager') {
+      baseRoute = `${route}/self_dep_managers`;
+    }
+    return `${baseRoute}?${queryParams.toString()}`;
+  }, [route, queryParams, useManagerFilter, managerFilter]);
+
+  const { data, isLoading } = useSWR<Data[]>(fetchRoute, apiGetFetcher);
 
   return (
     <div className="flex flex-col gap-4 p-12">
@@ -112,6 +121,26 @@ export default function EntityListPage<Data>({
                       {option}
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {useManagerFilter && (
+            <div className="flex items-center gap-2">
+              <Label className="text-nowrap">Status:</Label>
+              <Select
+                value={managerFilter}
+                onValueChange={(value) => setManagerFilter(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Status:" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="department manager">
+                    Department Manager
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>

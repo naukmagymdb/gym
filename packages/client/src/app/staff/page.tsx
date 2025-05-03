@@ -10,6 +10,7 @@ export default function StaffPage() {
       route="/staff"
       title="Staff"
       defaultSort="surname"
+      useManagerFilter
     />
   );
 }
