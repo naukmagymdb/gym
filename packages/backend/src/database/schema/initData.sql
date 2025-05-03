@@ -101,7 +101,7 @@ INSERT INTO Products (goods_name) VALUES
 -- Link Suppliers to Products
 INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
 -- fitgear
-(31000432, 1), (31000432, 5), (31000432, 7), (31000432, 11),
+(31000432, 1),
 -- activepro
 (32450981, 2), (32450981, 6), (32450981, 8), (32450981, 10), (32450981, 17),
 -- powerup
@@ -114,7 +114,6 @@ INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
 (37550987, 1), (37550987, 6), (37550987, 10), (37550987, 15), (37550987, 18),
 
 -- Shared supplies
-(31000432, 13),
 (32450981, 1),
 (33789412, 5),
 (34982017, 7),
