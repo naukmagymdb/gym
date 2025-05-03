@@ -1,0 +1,34 @@
+@media print {
+  /* Hide all non-essential elements during printing */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Optimize page for print */
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  /* Ensure the data table takes up full width and shows properly */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* Remove any padding/margins that would waste space */
+  .p-12 {
+    padding: 0 !important;
+  }
+
+  /* Add page break controls */
+  .page-break {
+    page-break-after: always;
+  }
+
+  /* Adjust title styling for print */
+  h1 {
+    margin-bottom: 16px;
+  }
+}

@@ -13,10 +13,12 @@ import {
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { useQueryParams } from '@/hooks/useQueryParams';
+import '@/styles/print.css';
 import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import useSWR from 'swr';
+
 export interface EntityListPageProps<Data> {
   columns: ColumnDef<Data>[];
   route: string;
@@ -79,7 +81,7 @@ export default function EntityListPage<Data>({
     <div className="flex flex-col gap-4 p-12">
       <div className="flex items-center justify-between py-4">
         <h1 className="text-2xl font-semibold">{title}</h1>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center print:hidden">
           <div className="flex items-center gap-2">
             <Label className="text-nowrap">Sort by:</Label>
             <Select value={sort} onValueChange={(value) => setSort(value)}>
@@ -173,25 +175,6 @@ export default function EntityListPage<Data>({
               </Select>
             </div>
           )}
-
-          {/* <div className="flex items-center gap-2">
-            <Label className="text-nowrap">Items per page:</Label>
-            <Select
-              value={limit.toString()}
-              onValueChange={(value) => setLimit(Number(value))}
-              disabled={isLoading}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Items per page:" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5</SelectItem>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-              </SelectContent>
-            </Select>
-          </div> */}
 
           {/* <Input
             placeholder="Search..."
