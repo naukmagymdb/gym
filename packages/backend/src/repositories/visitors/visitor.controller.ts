@@ -79,7 +79,8 @@ export class VisitorController {
   async create(
     @Body() createVisitorDto: CreateVisitorDto,
   ): Promise<VisitorResponseDto> {
-    return await this.visitorRepository.create(createVisitorDto);
+    const visitor = await this.visitorRepository.create(createVisitorDto);
+    return new VisitorResponseDto(visitor);
   }
 
   @Patch(':id')
@@ -87,14 +88,16 @@ export class VisitorController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateVisitorDto: UpdateVisitorDto,
   ): Promise<VisitorResponseDto> {
-    return await this.visitorRepository.update(id, updateVisitorDto);
+    const visitor = await this.visitorRepository.update(id, updateVisitorDto);
+    return new VisitorResponseDto(visitor);
   }
 
   @Delete(':id')
   async delete(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<VisitorResponseDto> {
-    return await this.visitorRepository.delete(id);
+    const visitor = await this.visitorRepository.delete(id);
+    return new VisitorResponseDto(visitor);
   }
 
   @Get(':id/trainings')
