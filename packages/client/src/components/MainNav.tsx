@@ -40,6 +40,11 @@ export function MainNav() {
                     Departments
                   </Link>
                 </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/suppliers" passHref>
+                    Suppliers
+                  </Link>
+                </NavigationMenuItem>
               </>
             )}
           </NavigationMenuList>

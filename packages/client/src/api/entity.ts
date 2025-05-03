@@ -30,6 +30,21 @@ export const editEntity = async <EntityType>(
   return response;
 };
 
+export const putEntity = async <EntityType>(
+  url: string,
+  entity: EntityType,
+) => {
+  const response = await apiFetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(entity),
+  });
+
+  return response;
+};
+
 export const deleteEntity = async (url: string) => {
   const response = await apiFetch(url, {
     method: 'DELETE',

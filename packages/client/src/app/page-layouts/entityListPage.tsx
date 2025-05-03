@@ -21,6 +21,7 @@ export interface EntityListPageProps<Data> {
   route: string;
   title: string;
   defaultSort?: string;
+  filterOptions?: string[];
 }
 
 export default function EntityListPage<Data>({
@@ -28,6 +29,7 @@ export default function EntityListPage<Data>({
   columns,
   route,
   defaultSort,
+  filterOptions,
 }: EntityListPageProps<Data>) {
   const sortFields = useMemo(() => {
     return columns
@@ -40,10 +42,8 @@ export default function EntityListPage<Data>({
       .filter(Boolean) as string[];
   }, [columns]);
 
-  const { sort, setSort, order, setOrder, queryParams } = useQueryParams(
-    sortFields,
-    defaultSort,
-  );
+  const { sort, setSort, order, setOrder, filter, setFilter, queryParams } =
+    useQueryParams(sortFields, defaultSort);
   //   const handleSearch = useDebounce(setSearch, 300);
 
   const { data, isLoading } = useSWR<Data[]>(
@@ -94,6 +94,28 @@ export default function EntityListPage<Data>({
               </SelectContent>
             </Select>
           </div>
+
+          {filterOptions && filterOptions.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Label className="text-nowrap">Filter:</Label>
+              <Select
+                value={filter}
+                onValueChange={(value) => setFilter(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Filter:" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  {filterOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* <div className="flex items-center gap-2">
             <Label className="text-nowrap">Items per page:</Label>
