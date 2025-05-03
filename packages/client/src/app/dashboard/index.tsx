@@ -6,6 +6,7 @@ import { BadgeCheck, BadgeX } from 'lucide-react';
 
 import { apiGetFetcher } from '@/api/apiFetch';
 import { Staff } from '@/app/staff/staffColumns';
+import { Visitor } from '@/app/visitors/visitorsColumns';
 import TrainingCard from '@/components/training-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -21,9 +22,8 @@ import { Progress } from '@/components/ui/progress';
 import { format, isAfter } from 'date-fns';
 import { CalendarIcon, MailIcon, PhoneIcon } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
-import { Visitor } from './visitors/visitorsColumns';
+import { AuthContext } from '../AuthContext';
 
-import { AuthContext } from './AuthContext';
 export type Abonement = {
   abonement_id: number;
   abonement_type: string;
@@ -74,7 +74,7 @@ export default function Dashboard() {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [id]);
 
   // Calculate days remaining for active abonement
   // const calculateDaysRemaining = () => {
