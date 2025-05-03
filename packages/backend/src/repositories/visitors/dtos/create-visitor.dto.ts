@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import {
   IsDateString,
   IsEmail,
@@ -40,9 +39,9 @@ export class CreateVisitorDto {
 
   @IsEmail()
   @IsOptional()
-  email?: string = null;
+  email?: string;
 
+  @IsNotEmpty()
   @IsString()
-  @Exclude()
   login_password: string;
 }
