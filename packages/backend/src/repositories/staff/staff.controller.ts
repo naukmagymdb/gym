@@ -10,14 +10,18 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Authenticated.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/utils/role.enum';
-import { ParseDateStringPipe } from 'src/common/pipes/parse-date-string.pipe';
+import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
+import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
+import { ContractsService } from '../contracts/contracts.repository';
 import { TrainingResponseDto } from '../trainings/dtos/training-response.dto';
 import { TrainingRepository } from '../trainings/training.repository';
 import { CreateStaffDto } from './dtos/create-staff.dto';
+import { StaffResponseDto } from './dtos/staff-response.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
 import { StaffRepository } from './staff.repository';
 
@@ -32,56 +36,79 @@ export class StaffController {
 
   @Get()
   async findAll(
-    @Query('depId') depId: number | null = null,
-    @Query('sortBy') sortBy: string = 'surname',
-    @Query('order') order: 'asc' | 'desc' = 'asc',
-  ) {
-    return this.staffRepository.findAll({
-      depId: depId,
-      sortBy: sortBy,
-      order: order,
+    @Query('depId', OptionalParseIntPipe) depId?: number,
+    @Query('sortBy', new DefaultEnumPipe(TrainingRepository.getColumns(), 'id'))
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
+  ): Promise<StaffResponseDto[]> {
+    const staff = await this.staffRepository.findAll({
+      depId,
+      sortBy,
+      order,
     });
+
+    return plainToInstance(StaffResponseDto, staff);
+  }
+
+  @Get('self_dep_managers')
+  getSelfDepartmentManagers() {
+    return this.staffRepository.getSelfDepartmentManagers();
   }
 
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number) {
-    return this.staffRepository.findOne({ id });
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<StaffResponseDto> {
+    const staff = await this.staffRepository.findOne({ id });
+    return plainToInstance(StaffResponseDto, staff);
+  }
+
+  @Get(':id/contracts')
+  async findSignedContracts(
+    @Param('id', ParseIntPipe) id: number,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(ContractsService.getColumns(), 'contract_date'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
+  ) {
+    return this.staffRepository.findSignedContracts(id, sortBy, order);
   }
 
   @Post()
-  async create(@Body() createStaffDto: CreateStaffDto) {
+  create(@Body() createStaffDto: CreateStaffDto): Promise<StaffResponseDto> {
     return this.staffRepository.create(createStaffDto);
   }
 
   @Patch(':id')
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateStaffDto: UpdateStaffDto,
-  ) {
+  ): Promise<StaffResponseDto> {
     return this.staffRepository.update(id, updateStaffDto);
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id', ParseIntPipe) id: number): Promise<StaffResponseDto> {
     return this.staffRepository.delete(id);
   }
 
-  @Get(':id/trainings')
-  async getStaffSessions(
-    @Param('id', ParseIntPipe) staff_id: number,
-    @Query('date_of_begin', new ParseDateStringPipe()) date_of_begin?: string,
-    @Query('date_of_end', new ParseDateStringPipe()) date_of_end?: string,
+  @Get(':staff_id/trainings')
+  getStaffSessions(
+    @Param('staff_id', ParseIntPipe) staff_id: number,
+    @Query('visitor_id', OptionalParseIntPipe) visitor_id?: number,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(TrainingRepository.getColumns(), 'visitor_id'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ): Promise<TrainingResponseDto[]> {
-    return this.trainingRepository.findAll({
-      queries: {
-        staff_id: staff_id,
-        date_of_begin: date_of_begin,
-        date_of_end: date_of_end,
-      },
-      sortOptions: {
-        sortBy: 'visitor_id',
-        order: 'asc',
-      },
+    return this.staffRepository.findAllSessions(staff_id, {
+      visitor_id,
+      sortBy,
+      order,
     });
   }
 }
