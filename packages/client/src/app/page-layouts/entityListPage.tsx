@@ -150,7 +150,7 @@ export default function EntityListPage<Data>({
                 value={[threshold]}
                 onValueChange={(value) => setThreshold(value[0])}
                 min={0}
-                max={1000}
+                max={500}
                 step={1}
               />
             </div>

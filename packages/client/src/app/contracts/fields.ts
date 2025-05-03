@@ -22,16 +22,6 @@ export type EditContractDto = {
 
 export const contractTextFields: TextField[] = [
   {
-    key: 'edrpou',
-    label: 'EDRPOU',
-    placeholder: 'Enter EDRPOU',
-    type: 'number',
-    required: true,
-    validation: {
-      required: 'EDRPOU is required',
-    },
-  },
-  {
     key: 'contract_date',
     label: 'Contract date',
     placeholder: 'Enter contract date',
@@ -43,7 +33,16 @@ export const contractTextFields: TextField[] = [
   },
 ];
 
-export const departmentSelectFields: SelectField[] = [
+export const contractSelectFields: SelectField[] = [
+  {
+    key: 'edrpou',
+    label: 'EDRPOU',
+    options: Array.from({ length: 20 }, (_, i) => ({
+      label: (i + 1).toString(),
+      value: (i + 1).toString(),
+    })),
+    required: true,
+  },
   // {
   //   key: 'department_id',
   //   label: 'Department',

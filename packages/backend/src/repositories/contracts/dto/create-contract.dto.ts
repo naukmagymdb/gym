@@ -1,15 +1,15 @@
 import {
   IsDateString,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
+  IsString,
 } from 'class-validator';
 import { ProductInContractDTO } from './product-in-contract.dto';
 
 export class CreateContractDto {
   @IsNotEmpty()
-  @IsNumber()
-  edrpou: number;
+  @IsString()
+  edrpou: string;
 
   @IsOptional()
   products?: ProductInContractDTO[];

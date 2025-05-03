@@ -1,10 +1,10 @@
-import { IsDateString, IsNumber, IsOptional } from 'class-validator';
+import { IsDateString, IsOptional, IsString } from 'class-validator';
 import { ProductInContractDTO } from './product-in-contract.dto';
 
 export class UpdateContractDto {
   @IsOptional()
-  @IsNumber()
-  edrpou?: number;
+  @IsString()
+  edrpou?: string;
 
   @IsOptional()
   products?: ProductInContractDTO[];

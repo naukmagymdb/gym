@@ -5,3 +5,8 @@ export class ProductInContractDTO {
   goods_amount: number;
   total_goods_price?: number;
 }
+
+export class AddProductToContractDTO {
+  goods_id: number;
+  goods_amount: number;
+}
