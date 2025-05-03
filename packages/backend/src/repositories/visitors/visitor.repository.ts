@@ -119,13 +119,15 @@ export class VisitorRepository {
   private getQueryPart(whereClause: string): string {
     return `
       SELECT v.id,
-        v.visitor_name,
-        v.surname,
-        v.patronymic,
-        v.phone_num,
-        v.email,
-        v.age,
-        v.login_password,
+      MAX(v.visitor_name) AS visitor_name, 
+       MAX(v.surname) AS surname, 
+       MAX(v.patronymic) AS patronymic, 
+       MAX(v.phone_num) AS phone_num, 
+       MAX(v.email) AS email, 
+       MAX(v.age) AS age, 
+       MAX(v.login_password) AS login_password, 
+       MAX(v.birth_date) AS birth_date,
+       MAX(v.login_password) AS login_password,
         COALESCE(
           json_agg(
             json_build_object(
@@ -144,7 +146,7 @@ export class VisitorRepository {
       LEFT JOIN abonement a ON v.id = a.visitor_id
       LEFT JOIN department d ON a.department_id = d.department_id
       ${whereClause}
-      GROUP BY v.id, v.visitor_name, v.surname, v.patronymic, v.phone_num, v.email, v.age, v.login_password
+      GROUP BY v.id
     `;
   }
 }
