@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsPhoneNumber } from 'class-validator';
+import { IsEmail, IsOptional } from 'class-validator';
 
 export class UpdateSupplierDto {
   @IsOptional()
@@ -6,6 +6,6 @@ export class UpdateSupplierDto {
   email?: string | null;
 
   @IsOptional()
-  @IsPhoneNumber()
+  // @IsPhoneNumber()
   phone_num?: string | null;
 }

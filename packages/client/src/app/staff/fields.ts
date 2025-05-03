@@ -135,7 +135,10 @@ export const staffSelectFields: SelectField[] = [
   {
     key: 'department_id',
     label: 'Department',
-    options: [],
+    options: Array.from({ length: 100 }, (_, i) => ({
+      label: (i + 1).toString(),
+      value: (i + 1).toString(),
+    })),
     required: true,
   },
 ];

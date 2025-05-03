@@ -120,6 +120,14 @@ INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
 (36212045, 10),
 (37550987, 11);
 
+-- Add missing product associations to make contracts valid
+INSERT INTO Supplier_Products (EDRPOU, Goods_id) VALUES
+-- FitGear needs products 5, 7, 11
+(31000432, 5), 
+(31000432, 7), 
+(31000432, 11),
+-- GymBasics needs product 12
+(34982017, 12);
 
 -- Abonement types
 INSERT INTO Abonement_type (Abonement_type, Price) VALUES

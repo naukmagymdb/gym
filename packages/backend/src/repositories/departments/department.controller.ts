@@ -27,6 +27,7 @@ export class DepartmentController {
   constructor(private readonly depRepository: DepartmentRepository) {}
 
   @Get()
+  @Roles(Role.Admin, Role.User)
   findAll(
     @Query(
       'sortBy',

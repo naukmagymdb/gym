@@ -18,7 +18,7 @@ import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
 import { ContractsService } from './contracts.repository';
 import { CreateContractDto } from './dto/create-contract.dto';
-import { ProductInContractDTO } from './dto/product-in-contract.dto';
+import { AddProductToContractDTO } from './dto/product-in-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
 
 @Roles(Role.Admin)
@@ -83,7 +83,7 @@ export class ContractsController {
   @Patch(':id/products')
   addProductsToContract(
     @Param('id', ParseIntPipe) id: number,
-    @Body() products: ProductInContractDTO[],
+    @Body() products: AddProductToContractDTO[],
   ) {
     return this.contractsService.setProductsToContract(id, products);
   }

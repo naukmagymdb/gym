@@ -1,16 +1,16 @@
 import { Transform } from 'class-transformer';
-import { IsDateString, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 import { TransformDateString } from 'src/common/pipes/parse-date-string.pipe';
 import { IsLaterDate } from 'src/common/validators/is-later-date.validator';
 
 export class CreateTrainingDto {
   @IsNotEmpty()
-  @IsInt()
-  visitor_id: number;
+  @IsString()
+  visitor_id: string;
 
-  @IsInt()
   @IsNotEmpty()
-  staff_id: number;
+  @IsString()
+  staff_id: string;
 
   @IsNotEmpty()
   @IsDateString()

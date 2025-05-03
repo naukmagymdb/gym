@@ -19,7 +19,7 @@ export function MainNav() {
   const router = useRouter();
 
   return (
-    <div className="border-b w-full sticky top-0 z-50 bg-background">
+    <div className="border-b w-full sticky top-0 z-50 bg-background print:hidden">
       <div className="flex h-16 items-center px-4 mx-auto">
         <NavigationMenu className="flex justify-between w-full">
           <NavigationMenuList className="flex gap-4 items-center">
@@ -53,6 +53,11 @@ export function MainNav() {
                 <NavigationMenuItem>
                   <Link href="/contracts" passHref>
                     Contracts
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/trainings" passHref>
+                    Trainings
                   </Link>
                 </NavigationMenuItem>
               </>

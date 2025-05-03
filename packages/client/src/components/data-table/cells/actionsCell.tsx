@@ -20,6 +20,11 @@ interface ActionCellProps<T> {
   openRoute?: string;
   onEdit: () => void;
   onDelete: () => void;
+  customActions?: {
+    icon: React.ReactNode;
+    label: string;
+    navigateTo: string;
+  }[];
 }
 
 export default function ActionCell<T>({
@@ -29,6 +34,7 @@ export default function ActionCell<T>({
   openRoute,
   onEdit,
   onDelete,
+  customActions,
 }: ActionCellProps<T>) {
   const pathname = usePathname();
   const router = useRouter();
@@ -69,6 +75,22 @@ export default function ActionCell<T>({
             Edit
           </Button>
         </DropdownMenuItem>
+
+        {customActions?.map((action) => (
+          <DropdownMenuItem asChild key={action.label}>
+            <Button
+              variant="ghost"
+              className="justify-start"
+              onClick={() => {
+                router.push(action.navigateTo);
+              }}
+            >
+              {action.icon}
+              {action.label}
+            </Button>
+          </DropdownMenuItem>
+        ))}
+
         <DropdownMenuItem asChild>
           <Button variant="ghost" className="justify-start" onClick={onDelete}>
             <TrashIcon className="w-4 h-4" />

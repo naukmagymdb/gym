@@ -5,7 +5,10 @@ import { RepositoryService } from '../repository.service';
 import { SuppliersService } from '../suppliers/suppliers.repository';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { GetContractDto } from './dto/get-contract.dto';
-import { ProductInContractDTO as ProductInContractDto } from './dto/product-in-contract.dto';
+import {
+  AddProductToContractDTO,
+  ProductInContractDTO as ProductInContractDto,
+} from './dto/product-in-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
 
 @Injectable()
@@ -126,18 +129,59 @@ export class ContractsService {
     order: string,
   ) {
     console.log('Finding high value goods by threshold:', threshold);
-    const query = `
-      SELECT c.contract_num, c.contract_date, c.total_sum
+
+    // First get the contracts with high-value goods
+    const contractsQuery = `
+      SELECT c.contract_num, c.contract_date, c.total_sum, c.edrpou
       FROM contract c 
         WHERE NOT EXISTS (
             SELECT 1
-            FROM contract_products cp  JOIN Products p  ON cp.goods_id = p.goods_id
+            FROM contract_products cp JOIN products p ON cp.goods_id = p.goods_id
             WHERE cp.contract_num = c.contract_num
             AND NOT (cp.goods_price > $1)
             )       
         ORDER BY c.${sortBy} ${order}
-        `;
-    return await this.db.any<ProductInContractDto>(query, [threshold]);
+    `;
+
+    const contracts = await this.db.any(contractsQuery, [threshold]);
+
+    // If no contracts found, return empty array
+    if (!contracts.length) {
+      return [];
+    }
+
+    // Get contract numbers to use in the IN clause
+    const contractNums = contracts.map((c) => c.contract_num);
+
+    // Get all products for these contracts
+    const productsQuery = `
+      SELECT cp.contract_num, cp.goods_id, cp.goods_price, cp.goods_amount, 
+             cp.total_goods_price, p.goods_name
+      FROM contract_products cp 
+      JOIN products p ON cp.goods_id = p.goods_id
+      WHERE cp.contract_num IN ($(contractNums:csv))
+      AND cp.goods_price > $(threshold)
+    `;
+
+    const products = await this.db.any(productsQuery, {
+      contractNums,
+      threshold,
+    });
+
+    // Group products by contract number
+    const contractProductsMap = products.reduce((map, product) => {
+      if (!map[product.contract_num]) {
+        map[product.contract_num] = [];
+      }
+      map[product.contract_num].push(product);
+      return map;
+    }, {});
+
+    // Add products to each contract
+    return contracts.map((contract) => ({
+      ...contract,
+      products: contractProductsMap[contract.contract_num] || [],
+    }));
   }
 
   async create(createContractDto: CreateContractDto): Promise<GetContractDto> {
@@ -154,12 +198,19 @@ export class ContractsService {
     });
   }
 
-  async setProductsToContract(id: number, products: ProductInContractDto[]) {
+  async setProductsToContract(id: number, products: AddProductToContractDTO[]) {
     console.log('Adding products to contract:', id);
 
     const contract = await this.findOne(id, 'goods_id', 'asc');
 
-    await this.checkForProductsExistenceinSuppliers(products, contract.edrpou);
+    // Get product details from supplier_products table
+    const enrichedProducts: ProductInContractDto[] =
+      await this.enrichProductDetails(products, contract.edrpou);
+
+    await this.checkForProductsExistenceinSuppliers(
+      enrichedProducts,
+      contract.edrpou,
+    );
 
     const queryDeleteProducts = `
       DELETE FROM contract_products
@@ -169,7 +220,7 @@ export class ContractsService {
 
     const total_sum =
       await this.insertProductsIntoContractProductsTableAndReturnTotalSum(
-        products,
+        enrichedProducts,
         id,
       );
 
@@ -186,6 +237,83 @@ export class ContractsService {
     });
 
     return this.findOne(id, 'goods_id', 'asc');
+  }
+
+  // New method to get product details from supplier_products
+  async enrichProductDetails(
+    products: AddProductToContractDTO[],
+    edrpou: number,
+  ): Promise<ProductInContractDto[]> {
+    const enrichedProducts: ProductInContractDto[] = [];
+
+    for (const product of products) {
+      // Check if the product exists in supplier_products
+      const supplierProductQuery = `
+        SELECT sp.goods_id
+        FROM supplier_products sp
+        WHERE sp.edrpou = $(edrpou) AND sp.goods_id = $(goods_id)
+      `;
+
+      try {
+        // Verify the product exists for this supplier
+        await this.db.one(supplierProductQuery, {
+          edrpou,
+          goods_id: product.goods_id,
+        });
+
+        // Get product name from the products table
+        const productQuery = `
+          SELECT p.goods_name
+          FROM products p
+          WHERE p.goods_id = $(goods_id)
+        `;
+
+        const productDetails = await this.db.one(productQuery, {
+          goods_id: product.goods_id,
+        });
+
+        // Get price from the most recent contract for this supplier and product, if any
+        const priceQuery = `
+          SELECT cp.goods_price
+          FROM contract_products cp
+          JOIN contract c ON cp.contract_num = c.contract_num
+          WHERE c.edrpou = $(edrpou) AND cp.goods_id = $(goods_id)
+          ORDER BY c.contract_date DESC
+          LIMIT 1
+        `;
+
+        let price = 0;
+
+        try {
+          const priceDetails = await this.db.one(priceQuery, {
+            edrpou,
+            goods_id: product.goods_id,
+          });
+          price = priceDetails.goods_price;
+        } catch (err) {
+          // If no price found, use a default or ask user to provide it
+          console.log('No previous price found for product:', product.goods_id);
+          // Use a reasonable default price - in production, you might want to handle this differently
+          price = 0;
+        }
+
+        enrichedProducts.push({
+          goods_id: product.goods_id,
+          goods_name: productDetails.goods_name,
+          goods_price: price,
+          goods_amount: product.goods_amount,
+          total_goods_price: price * product.goods_amount,
+        });
+      } catch (error) {
+        console.log('Error:', error);
+        console.error('Product not found in supplier:', product.goods_id);
+        throw new NotFoundException(
+          `Product with id ${product.goods_id} not found in supplier ${edrpou}`,
+        );
+      }
+    }
+
+    return enrichedProducts;
   }
 
   async remove(id: number) {

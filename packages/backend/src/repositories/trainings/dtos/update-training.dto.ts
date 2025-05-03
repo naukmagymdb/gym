@@ -1,11 +1,11 @@
 import { Transform } from 'class-transformer';
-import { IsDateString, IsInt, IsOptional } from 'class-validator';
+import { IsDateString, IsOptional, IsString } from 'class-validator';
 import { TransformDateString } from 'src/common/pipes/parse-date-string.pipe';
 
 export class UpdateTrainingDto {
   @IsOptional()
-  @IsInt()
-  staff_id?: number;
+  @IsString()
+  staff_id?: string;
 
   @IsDateString()
   @IsOptional()

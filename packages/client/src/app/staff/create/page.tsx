@@ -20,7 +20,7 @@ export default function StaffCreatePage() {
 
   useEffect(() => {
     const fetchDepartments = async () => {
-      const departments = await apiGetFetcher('/department');
+      const departments = await apiGetFetcher('/departments');
       setSelectFields(
         staffSelectFields.map((field) => ({
           ...field,

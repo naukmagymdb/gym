@@ -70,7 +70,10 @@ export default function DataTable<TData>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      style={{ width: header.column.getSize() }}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -95,7 +98,10 @@ export default function DataTable<TData>({
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} className="h-14">
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} width={cell.column.getSize()}>
+                  <TableCell
+                    key={cell.id}
+                    style={{ width: cell.column.getSize() }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

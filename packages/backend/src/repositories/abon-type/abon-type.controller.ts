@@ -25,6 +25,7 @@ import { UpdateAbonTypeDto } from './dtos/update-abon-type.dto';
 export class AbonementTypeController {
   constructor(private readonly service: AbonementTypeRepository) {}
 
+  @Roles(Role.Admin, Role.User)
   @Get()
   findAll(
     @Query(

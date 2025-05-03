@@ -1,6 +1,7 @@
 import ActionCell from '@/components/data-table/cells/actionsCell';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
+import { PlusIcon } from 'lucide-react';
 import { ProductInContractDTO } from './fields';
 
 export type Contract = {
@@ -47,6 +48,7 @@ export const contractColumns: ColumnDef<Contract>[] = [
   {
     header: 'Actions',
     size: 50,
+    maxSize: 100,
     cell: ({ row }) => {
       return (
         <ActionCell
@@ -56,6 +58,13 @@ export const contractColumns: ColumnDef<Contract>[] = [
           isLoading={false}
           onEdit={() => {}}
           onDelete={() => {}}
+          customActions={[
+            {
+              icon: <PlusIcon />,
+              label: 'Add products',
+              navigateTo: `/contracts/${row.original.contract_num}/add-products`,
+            },
+          ]}
         />
       );
     },

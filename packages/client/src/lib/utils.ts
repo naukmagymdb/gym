@@ -15,7 +15,7 @@ export function createTextFieldSchema(field: {
 }) {
   let schema;
   if (field.type === 'number') {
-    schema = z.number();
+    schema = z.string();
   } else {
     schema = z.string();
   }
