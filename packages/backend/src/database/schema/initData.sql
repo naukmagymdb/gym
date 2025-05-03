@@ -41,12 +41,12 @@ INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, E
 -- Manager-Subordinate relationships
 INSERT INTO Staff_Manager_Subordinate (Manager_ID, Subordinate_ID) VALUES 
 (1, 2),
+(2, 7),
 (1, 7),
 (1, 10),
 (3, 4),
 (3, 8),
 (5, 6),
-
 (5, 9);
 
 INSERT INTO Visitor (Birth_date, Visitor_name, Surname, Patronymic, Phone_num, Email, Login_password)
