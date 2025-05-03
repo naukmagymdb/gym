@@ -50,7 +50,19 @@ export function MainNav() {
                     Contracts
                   </Link>
                 </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link href="/trainings" passHref>
+                    Trainings
+                  </Link>
+                </NavigationMenuItem>
               </>
+            )}
+            {role === 'user' && (
+              <NavigationMenuItem>
+                <Link href="/dashboard" passHref>
+                  Dashboard
+                </Link>
+              </NavigationMenuItem>
             )}
           </NavigationMenuList>
           <NavigationMenuList>
