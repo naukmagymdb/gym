@@ -9,7 +9,10 @@ import {
 export class AuthenticatedGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    if (request.isAuthenticated && request.isAuthenticated()) {
+    if (
+      typeof request.isAuthenticated === 'function' &&
+      request.isAuthenticated()
+    ) {
       return true;
     }
     throw new UnauthorizedException(
