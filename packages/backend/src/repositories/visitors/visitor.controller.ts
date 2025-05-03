@@ -69,7 +69,6 @@ export class VisitorController {
     });
   }
 
-  //????????
   @Get(':id')
   async findById(
     @Param('id', ParseIntPipe) id: number,
@@ -87,7 +86,6 @@ export class VisitorController {
     return new VisitorResponseDto(visitor);
   }
 
-  //????????
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -107,7 +105,6 @@ export class VisitorController {
     return new VisitorResponseDto(visitor);
   }
 
-  //????????
   @Get(':id/trainings')
   getTrainingHistory(
     @Param('id', ParseIntPipe) id: number,
@@ -115,7 +112,6 @@ export class VisitorController {
     return this.trainingRepository.findByVisitorId(id);
   }
 
-  //????????
   @Get(':id/abonement')
   viewAbonement(
     @Param('id', ParseIntPipe) visitor_id: number,
@@ -123,7 +119,6 @@ export class VisitorController {
     return this.abonementRepository.findOne({ visitor_id, is_active: true });
   }
 
-  //????????
   @Patch(':id/abonement')
   updateAbonement(
     @Param('id', ParseIntPipe) abonement_id: number,
@@ -132,7 +127,6 @@ export class VisitorController {
     return this.abonementRepository.update(abonement_id, dto);
   }
 
-  //????????
   @Post(':id/abonement')
   createAbonement(
     @Param('id', ParseIntPipe) visitor_id: number,
@@ -141,5 +135,3 @@ export class VisitorController {
     return this.abonementRepository.create({ ...dto, visitor_id });
   }
 }
-
-//гварди?

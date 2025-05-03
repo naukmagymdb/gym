@@ -89,5 +89,3 @@ export class AbonementController {
     return this.repo.delete(id);
   }
 }
-
-//гварди?
