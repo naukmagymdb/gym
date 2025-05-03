@@ -138,7 +138,7 @@ export class VisitorRepository {
               'department_address', d.address
             ) 
           ) FILTER (WHERE a.abonement_id IS NOT NULL),
-          '[]'::json 
+          '[]'::json  
         ) AS abonements
       FROM visitor_with_age v
       LEFT JOIN abonement a ON v.id = a.visitor_id
