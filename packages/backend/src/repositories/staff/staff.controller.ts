@@ -37,8 +37,7 @@ export class StaffController {
   @Get()
   async findAll(
     @Query('depId', OptionalParseIntPipe) depId?: number,
-    @Query('sortBy', new DefaultEnumPipe(TrainingRepository.getColumns(), 'id'))
-    sortBy?: string,
+    @Query('sortBy') sortBy: string = 'surname',
     @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
   ): Promise<StaffResponseDto[]> {
     const staff = await this.staffRepository.findAll({

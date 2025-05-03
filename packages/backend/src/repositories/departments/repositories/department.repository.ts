@@ -134,6 +134,9 @@ export class DepartmentRepository {
   ) {
     const query = `
       SELECT 
+        s.staff_name,
+        s.surname,
+        s.patronymic,
         s.id AS manager_id,
         s.phone_num,
         s.department_id,
