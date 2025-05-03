@@ -12,3 +12,16 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
 
   return response.json();
 };
+
+export const apiGetFetcher = async (url: string) => {
+  // Add artificial delay for testing
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
+
+  const response = await fetch(`${apiUrl}${url}`, {
+    credentials: 'include',
+    method: 'GET',
+  });
+  console.log(url, response);
+
+  return response.json();
+};

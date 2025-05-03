@@ -52,6 +52,19 @@ export class SuppliersService {
     return this.db.oneOrNone(sql, values);
   }
 
+  async getSuppliersOnlySupplySpecifiedProduct(goods_name: string) {
+    const query = `
+    SELECT sup.EDRPOU, sup.email, sup.phone_num
+    FROM supplier sup
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM supplier_Products sp  JOIN products p ON sp.goods_id = p.goods_id
+        WHERE sp.EDRPOU = sup.EDRPOU
+        AND NOT (p.goods_name = $1)
+      )`;
+    return await this.db.any(query, [goods_name]);
+  }
+
   async update(edrpou: number, updateSupplierDto: UpdateSupplierDto) {
     const fields = [];
     const values: any = { edrpou };

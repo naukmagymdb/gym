@@ -64,6 +64,18 @@ export class StaffRepository {
     return this.db.oneOrNone(sql, values);
   }
 
+  async findSignedContracts(staff_id: number, sortBy: string, order: string) {
+    const query = `
+    SELECT staff.id, staff.staff_name,  staff.surname , contract.contract_num, contract.total_sum
+    FROM staff INNER JOIN staff_contract ON staff.id = staff_contract.staff_id
+      INNER JOIN contract ON staff_contract.contract_num = contract.contract_num
+    WHERE staff.id = $1
+    ORDER BY contract.${sortBy} ${order}
+    `;
+
+    return await this.db.any(query, [staff_id]);
+  }
+
   async create(createStaffDto: CreateStaffDto) {
     createStaffDto.login_password = encodePassword(
       createStaffDto.login_password,

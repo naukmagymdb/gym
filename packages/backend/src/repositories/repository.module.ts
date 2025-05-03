@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ContractsModule } from './contracts/contracts.module';
 import { AbonementTypeModule } from './abon-type/abon-type.module';
 import { AbonementModule } from './abonements/abonement.module';
 import { DepartmentModule } from './departments/department.module';
@@ -16,6 +17,7 @@ import { VisitorModule } from './visitors/visitor.module';
     ProductsModule,
     SuppliersModule,
     TrainingModule,
+    ContractsModule,
     AbonementTypeModule,
     AbonementModule,
   ],

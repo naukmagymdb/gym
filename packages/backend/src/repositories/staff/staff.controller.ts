@@ -17,6 +17,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/utils/role.enum';
 import { DefaultEnumPipe } from 'src/common/pipes/default-enum.pipe';
 import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
+import { ContractsService } from '../contracts/contracts.repository';
 import { TrainingResponseDto } from '../trainings/dtos/training-response.dto';
 import { TrainingRepository } from '../trainings/training.repository';
 import { CreateStaffDto } from './dtos/create-staff.dto';
@@ -60,6 +61,19 @@ export class StaffController {
   ): Promise<StaffResponseDto> {
     const staff = await this.staffRepository.findOne({ id });
     return plainToInstance(StaffResponseDto, staff);
+  }
+
+  @Get(':id/contracts')
+  async findSignedContracts(
+    @Param('id', ParseIntPipe) id: number,
+    @Query(
+      'sortBy',
+      new DefaultEnumPipe(ContractsService.getColumns(), 'contract_date'),
+    )
+    sortBy?: string,
+    @Query('order', new DefaultEnumPipe(['asc', 'desc'], 'asc')) order?: string,
+  ) {
+    return this.staffRepository.findSignedContracts(id, sortBy, order);
   }
 
   @Post()
