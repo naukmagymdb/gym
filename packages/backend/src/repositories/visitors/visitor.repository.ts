@@ -126,6 +126,7 @@ export class VisitorRepository {
         v.email,
         v.age,
         v.login_password,
+        MAX(v.birth_date) AS birth_date,
         COALESCE(
           json_agg(
             json_build_object(
