@@ -1,8 +1,8 @@
 -- Mock data for Department
-INSERT INTO Department (Department_id, Address) VALUES 
-(1, '123 Main Street, Downtown'),
-(2, '456 Fitness Avenue, Uptown'),
-(3, '789 Wellness Road, Westside');
+INSERT INTO Department (Address) VALUES 
+('123 Main Street, Downtown'),
+('456 Fitness Avenue, Uptown'),
+('789 Wellness Road, Westside');
 
 -- Department Phone Numbers
 INSERT INTO Department_Phone_number (Phone_number, Department_id) VALUES
