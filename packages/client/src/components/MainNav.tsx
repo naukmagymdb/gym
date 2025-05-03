@@ -57,6 +57,15 @@ export function MainNav() {
                 </NavigationMenuItem>
               </>
             )}
+            {role === 'user' && (
+              <>
+                <NavigationMenuItem>
+                  <Link href="/dashboard" passHref>
+                    Dashboard
+                  </Link>
+                </NavigationMenuItem>
+              </>
+            )}
           </NavigationMenuList>
           <NavigationMenuList>
             {userId ? (
