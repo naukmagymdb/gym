@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/select';
 import { createSelectFieldSchema, createTextFieldSchema } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format, parseISO } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -111,7 +112,73 @@ export default function EntityCreateEditPage<EntityType>({
   const buildDefaultValues = async () => {
     if (fetchData) {
       try {
-        return await fetchData();
+        const data = await fetchData();
+
+        // Process date fields to ensure correct format
+        const processedData = { ...data };
+
+        textFields.forEach((field) => {
+          if (
+            field.type === 'date' &&
+            processedData[field.key as keyof typeof processedData]
+          ) {
+            try {
+              // Format date from ISO string to YYYY-MM-DD
+              const dateValue = processedData[
+                field.key as keyof typeof processedData
+              ] as string;
+              (processedData as Record<string, string>)[field.key] = format(
+                parseISO(dateValue),
+                'yyyy-MM-dd',
+              );
+            } catch (error) {
+              console.error(
+                `Failed to format date for field ${field.key}:`,
+                error,
+              );
+            }
+          } else if (
+            field.type === 'time' &&
+            processedData[field.key as keyof typeof processedData]
+          ) {
+            try {
+              // Format time from ISO string to HH:mm
+              const timeValue = processedData[
+                field.key as keyof typeof processedData
+              ] as string;
+              (processedData as Record<string, string>)[field.key] = format(
+                parseISO(timeValue),
+                'HH:mm',
+              );
+            } catch (error) {
+              console.error(
+                `Failed to format time for field ${field.key}:`,
+                error,
+              );
+            }
+          } else if (
+            field.type === 'datetime-local' &&
+            processedData[field.key as keyof typeof processedData]
+          ) {
+            try {
+              // Format datetime from ISO string to yyyy-MM-dd'T'HH:mm
+              const datetimeValue = processedData[
+                field.key as keyof typeof processedData
+              ] as string;
+              (processedData as Record<string, string>)[field.key] = format(
+                parseISO(datetimeValue),
+                "yyyy-MM-dd'T'HH:mm",
+              );
+            } catch (error) {
+              console.error(
+                `Failed to format datetime for field ${field.key}:`,
+                error,
+              );
+            }
+          }
+        });
+
+        return processedData;
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
