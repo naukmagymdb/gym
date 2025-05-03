@@ -63,7 +63,8 @@ export class VisitorRepository {
       LIMIT 1
     `;
 
-    return await this.db.oneOrNone(query, values);
+    const res = await this.db.oneOrNone(query, values);
+    return res;
   }
 
   async create(createVisitorDto: CreateVisitorDto) {
