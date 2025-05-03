@@ -46,7 +46,7 @@ export class VisitorRepository {
 
     const query = `
         ${this.getQueryPart(whereClause)}
-        ORDER BY v.${sortOptions.sortBy} ${sortOptions.order}
+        ORDER BY ${sortOptions.sortBy} ${sortOptions.order}
       `;
 
     return await this.db.any(query, { whereClause, ...queries });
