@@ -24,6 +24,7 @@ export const departmentColumns: ColumnDef<Department>[] = [
       return (
         <ActionCell
           id={row.original.department_id.toString()}
+          openRoute={`/departments/${row.original.department_id}`}
           row={row}
           isLoading={false}
           onEdit={() => {}}

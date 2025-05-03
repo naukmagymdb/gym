@@ -160,6 +160,11 @@ export class StaffRepository {
         m.id,
         m.phone_num,
         m.Department_id,
+        m.staff_name,
+        m.surname,
+        m.patronymic,
+        m.salary,
+        m.email,
         d.Address AS department_address
       FROM Staff m
         JOIN Department d ON m.Department_id = d.Department_id

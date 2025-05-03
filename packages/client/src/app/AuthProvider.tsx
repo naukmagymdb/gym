@@ -1,7 +1,7 @@
 'use client';
 
 import { apiGetFetcher } from '@/api/apiFetch';
-import useSWRImmutable from 'swr/immutable';
+import useSWR from 'swr';
 import { AuthContext } from './AuthContext';
 
 export default function AuthProvider({
@@ -9,7 +9,7 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { data, error } = useSWRImmutable('/dashboard', apiGetFetcher);
+  const { data, error } = useSWR('/dashboard', apiGetFetcher);
   console.log(data, error);
 
   return (
