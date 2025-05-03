@@ -51,7 +51,7 @@ export type Training = {
 };
 
 export default function Dashboard() {
-  const { userId: id } = useContext(AuthContext);
+  const { userId: id, role } = useContext(AuthContext);
   const [user, setUser] = useState<Visitor>({} as Visitor);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [abonementTypes, setAbonementTypes] = useState<AbonementType[]>([]);
@@ -108,6 +108,10 @@ export default function Dashboard() {
         </div>
       </div>
     );
+  }
+
+  if (role === 'admin') {
+    return <div>Nothing to show here</div>;
   }
 
   // Get department for active abonement
