@@ -209,7 +209,7 @@ INSERT INTO staff_contract (staff_id, contract_num) VALUES
 
 --test data for getSuppliersOnlySuppySpecifiedProduct
 INSERT INTO Supplier (EDRPOU, Phone_num, Email)
-VALUES (987654321, '555-123-4567', 'supplier228@example.com');
+VALUES (987654321, '+380992342342', 'supplier228@example.com');
 
 -- Insert into the Products table
 INSERT INTO Products (Goods_name)
