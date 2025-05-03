@@ -90,6 +90,20 @@ export default function LoginPage({ role }: { role: Role }) {
               <Button type="submit">Login</Button>
             </form>
           </Form>
+          <div className="mt-4 text-center">
+            <Button
+              variant="link"
+              onClick={() => {
+                if (role === 'admin') {
+                  window.location.href = '/login'; // Redirect to the user login page
+                } else {
+                  window.location.href = '/admin'; // Redirect to the admin login page
+                }
+              }}
+            >
+              Switch to {role === 'admin' ? 'User Login' : 'Admin Login'}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
